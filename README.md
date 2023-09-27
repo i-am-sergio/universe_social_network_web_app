@@ -14,3 +14,6 @@
     - Cypess
 
 ## Functional Testing
+
+    - Selenium
+    - WebDriver
