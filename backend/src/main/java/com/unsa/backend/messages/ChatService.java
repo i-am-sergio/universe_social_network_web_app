@@ -2,10 +2,10 @@ package com.unsa.backend.messages;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.unsa.backend.users.UserModel;
 
 @Service
 public class ChatService {
@@ -28,15 +28,15 @@ public class ChatService {
         chatRepository.deleteById(chatId);
     }
 
-
-    /*
-    public List<ChatModel> getUserChats(Long members) {
-        return chatRepository.findByMembersContaining(members);
+    public List<ChatModel> getUserChats(Long userId) {
+        try {
+            List<ChatModel> allChats = (List<ChatModel>) chatRepository.findAll();
+            return allChats.stream()
+                .filter(chatModel -> chatModel.getMembers().contains(userId))
+                .collect(Collectors.toList());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new UserChatException("Error al obtener los chats del usuario.");
+        }
     }
-    
-    public ChatModel findChat(String firstUserId, String secondUserId) {
-        return chatRepository.findByMembers(firstUserId, secondUserId);
-    }
-
-    */
 }

@@ -23,24 +23,32 @@ public class ChatController {
     public ChatController(ChatService chatService) {
         this.chatService = chatService;
     }
-    
-    @GetMapping
-    public List<ChatModel> obtenerChats(){
-        return chatService.obtenerChats();
-    }
 
     @PostMapping("/create")
-    public ResponseEntity<ChatModel> createChat(@RequestBody ChatModel newChat) {
-        ChatModel chat = chatService.createChat(newChat);
-        return new ResponseEntity<>(chat, HttpStatus.OK);
+    public ResponseEntity<ChatModel> createChat(@RequestBody ChatModel chatModel) {
+        try {
+            ChatModel result = chatService.createChat(chatModel);
+            return ResponseEntity.ok(result);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(chatModel);
+        }
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<List<ChatModel>> getUserChats(@PathVariable Long userId) {
+        try {
+            List<ChatModel> chats = chatService.getUserChats(userId);
+            return new ResponseEntity<>(chats, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+        /*
     @DeleteMapping("/delete/{chatId}")
     public ResponseEntity<String> deleteChat(@PathVariable Long chatId) {
         chatService.deleteChat(chatId);
         return new ResponseEntity<>("Chat deleted successfully.", HttpStatus.OK);
     }
-    /*
     @GetMapping("/userChats/{members}")
     public ResponseEntity<List<ChatModel>> getUserChats(@PathVariable Long members) {
         List<ChatModel> chats = chatService.getUserChats(members);
@@ -55,6 +63,5 @@ public class ChatController {
         ChatModel chat = chatService.findChat(firstUserId, secondUserId);
         return new ResponseEntity<>(chat, HttpStatus.OK);
     }
-
     */
 }
