@@ -21,10 +21,8 @@ public class UserController {
     UserService userService;
 
     @GetMapping
-    public List<UserModel> getUsers() {
-        // UserModel user = userService.obtenerUsuarios().get(0);
-        // System.out.println(user.getFirstname());
-        return userService.getUsers();
+    public List<UserModel> obtenerUsuarios(){
+        return userService.obtenerUsuarios();
     }
 
     // SOLO 1 USUARIO
