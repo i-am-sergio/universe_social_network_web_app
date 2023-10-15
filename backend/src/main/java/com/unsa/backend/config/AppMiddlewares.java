@@ -14,8 +14,8 @@ public class AppMiddlewares implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("GET", "POST", "PUT", "PATCH" , "DELETE", "OPTIONS")
+                .allowedOriginPatterns("*")  // Permite todos los orígenes (HTTP y HTTPS)
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("Content-Type", "Authorization")
                 .allowCredentials(true)
                 .maxAge(3600);
