@@ -24,10 +24,6 @@ public class ChatService {
         return chatRepository.save(newChat);
     }
 
-    public void deleteChat(Long chatId) {
-        chatRepository.deleteById(chatId);
-    }
-
     public List<ChatModel> getUserChats(Long userId) {
         try {
             List<ChatModel> allChats = (List<ChatModel>) chatRepository.findAll();
@@ -37,6 +33,29 @@ public class ChatService {
         } catch (Exception e) {
             e.printStackTrace();
             throw new UserChatException("Error al obtener los chats del usuario.");
+        }
+    }
+
+    public ChatModel findChat(Long firstId, Long secondId) {
+        try {
+            List<ChatModel> chatList = (List<ChatModel>) chatRepository.findAll();
+            return chatList
+                .stream()
+                .filter(chatModel -> chatModel.getMembers().contains(firstId) && chatModel.getMembers().contains(secondId))
+                .findFirst()
+                .orElse(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new UserChatException("Error al obtener el chat entre los usuarios.");
+        }
+    }
+
+    public void deleteChat(Long chatId) {
+        try {
+            chatRepository.deleteById(chatId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new UserChatException("Error al eliminar el chat.");
         }
     }
 }
