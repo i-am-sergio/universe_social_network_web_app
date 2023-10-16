@@ -21,7 +21,11 @@ public class ChatService {
     }
 
     public ChatModel createChat(ChatModel newChat) {
-        return chatRepository.save(newChat);
+        try {
+            return chatRepository.save(newChat);
+        } catch (Exception e) {
+            throw new UserChatException("Error al crear el Chat.");
+        }
     }
 
     public List<ChatModel> getUserChats(Long userId) {

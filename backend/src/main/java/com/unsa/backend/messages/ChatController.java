@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -43,10 +42,10 @@ public class ChatController {
         }
     }
 
-    @GetMapping("/find")
+    @GetMapping("/find/{firstId}/{secondId}")
     public ResponseEntity<ChatModel> findChat(
-        @RequestParam("firstId") Long firstId,
-        @RequestParam("secondId") Long secondId
+        @PathVariable Long firstId,
+        @PathVariable Long secondId
     ) {
         try {
             ChatModel chat = chatService.findChat(firstId, secondId);

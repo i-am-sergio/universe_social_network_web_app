@@ -16,10 +16,10 @@ import lombok.Setter;
 @Table(name = "message")
 @Getter @Setter
 public class MessageModel {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
+    private Long messageId;
     private Long chatId;
     private Long senderId;
     private String text;
