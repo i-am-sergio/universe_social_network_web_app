@@ -43,22 +43,4 @@ public class UserModel {
     @ManyToMany
     @JoinTable(name = "user_followers", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
     private List<UserModel> following = new ArrayList<>();
-
-    // Métodos de acceso para seguidores
-    public List<UserModel> getFollowers() {
-        return followers;
-    }
-
-    public void setFollowers(List<UserModel> followers) {
-        this.followers = followers;
-    }
-
-    // Métodos de acceso para usuarios seguidos
-    public List<UserModel> getFollowing() {
-        return following;
-    }
-
-    public void setFollowing(List<UserModel> following) {
-        this.following = following;
-    }
 }
