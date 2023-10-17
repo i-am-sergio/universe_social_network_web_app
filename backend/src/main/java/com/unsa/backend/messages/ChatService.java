@@ -12,6 +12,9 @@ public class ChatService {
     @Autowired
     ChatRepository chatRepository;
 
+    @Autowired
+    private MessageRepository messageRepository;
+
     public List<ChatModel> obtenerChats(){
         return (ArrayList<ChatModel>)chatRepository.findAll();
     }
@@ -22,6 +25,13 @@ public class ChatService {
 
     public ChatModel createChat(ChatModel newChat) {
         try {
+            List<Long> members = newChat.getMembers();
+            List<ChatModel> existingChats = (List<ChatModel>) chatRepository.findAll();
+            boolean chatExists = existingChats.stream()
+                    .anyMatch(chatModel -> chatModel.getMembers().containsAll(members));
+            if (chatExists) {
+                throw new UserChatException("Ya existe un chat con los mismos miembros.");
+            }
             return chatRepository.save(newChat);
         } catch (Exception e) {
             throw new UserChatException("Error al crear el Chat.");
@@ -56,6 +66,11 @@ public class ChatService {
 
     public void deleteChat(Long chatId) {
         try {
+            List<MessageModel> allMessages = (List<MessageModel>) messageRepository.findAll();
+            List<MessageModel> messagesToDelete = allMessages.stream()
+                .filter(messageModel -> messageModel.getChatId().equals(chatId))
+                .collect(Collectors.toList());
+            messagesToDelete.stream().forEach(message -> messageRepository.delete(message));
             chatRepository.deleteById(chatId);
         } catch (Exception e) {
             e.printStackTrace();

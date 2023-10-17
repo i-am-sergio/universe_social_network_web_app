@@ -3,6 +3,7 @@ package com.unsa.backend.messages;
 import java.util.List;
 import java.util.Date;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -21,6 +22,7 @@ public class ChatModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
     private Long id;
+    @ElementCollection
     private List<Long> members;
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
