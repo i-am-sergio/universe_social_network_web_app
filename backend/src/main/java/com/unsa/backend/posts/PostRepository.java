@@ -1,7 +1,9 @@
 package com.unsa.backend.posts;
 
-import org.springframework.data.repository.CrudRepository;
+import java.util.List;
 
-public interface PostRepository extends CrudRepository<PostModel, Long> {
-    
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface PostRepository extends JpaRepository<PostModel, Long> {
+    List<PostModel> findByUserId(String userId);
 }

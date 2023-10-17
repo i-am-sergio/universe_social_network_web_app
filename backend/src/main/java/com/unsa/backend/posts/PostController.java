@@ -119,4 +119,8 @@ public class PostController {
      *  Get timeline posts.
         Falta implementar el metodo getTimelinePosts()
      */
+    @GetMapping("/timeline/{userId}")
+    public List<PostModel> getTimelinePosts(@PathVariable String userId) {
+        return postService.getTimelinePosts(userId);
+    }
 }
