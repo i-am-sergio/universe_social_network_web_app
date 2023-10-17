@@ -20,7 +20,9 @@ public class MessageModel {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
     private Long messageId;
+    @Column(nullable = false)
     private Long chatId;
+    @Column(nullable = false)
     private Long senderId;
     private String text;
     @Temporal(TemporalType.TIMESTAMP)
