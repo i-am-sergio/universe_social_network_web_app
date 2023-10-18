@@ -57,22 +57,7 @@ public class UserModel implements UserDetails{
     @ElementCollection
     @CollectionTable(name = "user_following", joinColumns = @JoinColumn(name = "user_id"))
     private List<Long> following;
-
-    // @ManyToMany
-    // @JoinTable(
-    //     name = "user_follows_post",
-    //     joinColumns = @JoinColumn(name = "user_id"),
-    //     inverseJoinColumns = @JoinColumn(name = "post_id")
-    // )
-    // private List<PostModel;
-
-    // @ManyToMany(mappedBy = "following")
-    // private List<UserModel> followers = new ArrayList<>();
-
-    // @ManyToMany
-    // @JoinTable(name = "user_followers", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "follower_id"))
-    // private List<UserModel> following = new ArrayList<>();
-
+    
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

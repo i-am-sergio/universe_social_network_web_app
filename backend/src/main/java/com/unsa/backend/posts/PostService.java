@@ -1,8 +1,5 @@
 package com.unsa.backend.posts;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +19,7 @@ public class PostService {
     UserRepository userRepository;
 
     public List<PostModel> getPosts(){
+
         return postRepository.findAll();
     }
 
@@ -70,34 +68,5 @@ public class PostService {
             postRepository.save(post);
         }
     }
-
-    public List<PostModel> getTimelinePosts(String userId) {
-        return null;
-        // try {
-        //     List<PostModel> currentUserPosts = postRepository.findByUserId(userId);
-        //     List<PostModel> followingPosts = userRepository.findFollowingPosts(userId);
-        //     // Combine and sort the posts
-        //     List<PostModel> timelinePosts = combineAndSortPosts(currentUserPosts, followingPosts);
-
-        //     return timelinePosts;
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        //     throw new RuntimeException("Error retrieving timeline posts");
-        // }
-    }
-
-    private List<PostModel> combineAndSortPosts(List<PostModel> currentUserPosts, List<PostModel> followingPosts) {
-        List<PostModel> combinedPosts = new ArrayList<>();
-
-        // Combina los posts del usuario actual y los de los usuarios seguidos
-        combinedPosts.addAll(currentUserPosts);
-        combinedPosts.addAll(followingPosts);
-
-        // Ordena la lista combinada por createdAt en orden descendente
-        Collections.sort(combinedPosts, Comparator.comparing(PostModel::getCreatedAt).reversed());
-
-        return combinedPosts;
-    }
-
 
 }
