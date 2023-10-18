@@ -22,7 +22,7 @@ public class PostService {
     UserRepository userRepository;
 
     public List<PostModel> getPosts(){
-        return (ArrayList<PostModel>) postRepository.findAll();
+        return postRepository.findAll();
     }
 
     public PostModel getPostById(Long id) {

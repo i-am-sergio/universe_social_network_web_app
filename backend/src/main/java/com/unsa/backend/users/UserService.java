@@ -6,13 +6,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class UserService {
     @Autowired
     UserRepository userRepository;
 
     public List<UserModel> getUsers() {
-        return (ArrayList<UserModel>) userRepository.findAll();
+        return userRepository.findAll();
     }
 
     public UserModel getUser(Long id) {
@@ -62,70 +64,43 @@ public class UserService {
         return null;
     }
 
-    // public class FollowUserException extends RuntimeException {
-    // public FollowUserException(String message) {
-    // super(message);
-    // }
-    // }
+    public void followUser(Long followerId, Long targetUserId) {
+        UserModel follower = userRepository
+                                .findById(followerId)
+                                .orElseThrow(() -> 
+                                    new EntityNotFoundException("Follower not found"));
+        UserModel targetUser = userRepository
+                                .findById(targetUserId)
+                                .orElseThrow(() -> 
+                                    new EntityNotFoundException("Target user not found"));
+        // Agregar seguidor
+        if (!targetUser.getFollowers().contains(followerId)) {
+            targetUser.getFollowers().add(followerId);
+            userRepository.save(targetUser);
+        }
+        // Agregar a lista de following
+        if (!follower.getFollowing().contains(targetUserId)) {
+            follower.getFollowing().add(targetUserId);
+            userRepository.save(follower);
+        }
+    }
 
-    // public UserModel followUser(Long id, Long user) {
-    // try {
-    // UserModel followUser = userRepository.findById(id).orElse(null);
-    // UserModel followingUser = userRepository.findById(user).orElse(null);
+    public void unfollowUser(Long followerId, Long targetUserId) {
+        UserModel follower = userRepository
+                                .findById(followerId)
+                                .orElseThrow(() -> 
+                                    new EntityNotFoundException("Follower not found"));
+        UserModel targetUser = userRepository
+                                .findById(targetUserId)
+                                .orElseThrow(() -> 
+                                    new EntityNotFoundException("Target user not found"));
 
-    // if (followUser != null && followingUser != null) {
-    // if (!followUser.getFollowers().contains(followingUser)) {
-    // followUser.getFollowers().add(followingUser);
-    // followingUser.getFollowing().add(followUser);
-    // userRepository.save(followUser);
-    // userRepository.save(followingUser);
-    // return followUser;
-    // } else {
-    // // Lanza una excepción personalizada
-    // throw new FollowUserException("You are already following this user");
-    // }
-    // } else {
-    // // Lanza una excepción personalizada
-    // throw new FollowUserException("User not found");
-    // }
-    // } catch (FollowUserException e) {
-    // // Puedes personalizar la respuesta de error en función de tus necesidades
-    // e.printStackTrace();
-    // throw e;
-    // }
-    // }
+        // Quitar seguidor
+        targetUser.getFollowers().remove(followerId);
+        userRepository.save(targetUser);
 
-    // public class UnfollowUserException extends RuntimeException {
-    // public UnfollowUserException(String message) {
-    // super(message);
-    // }
-    // }
-
-    // public UserModel unfollowUser(Long id, Long _id) {
-    // try {
-    // UserModel unFollowUser = userRepository.findById(id).orElse(null);
-    // UserModel unFollowingUser = userRepository.findById(_id).orElse(null);
-
-    // if (unFollowUser != null && unFollowingUser != null) {
-    // if (unFollowUser.getFollowers().contains(unFollowingUser)) {
-    // unFollowUser.getFollowers().remove(unFollowingUser);
-    // unFollowingUser.getFollowing().remove(unFollowUser);
-    // userRepository.save(unFollowUser);
-    // userRepository.save(unFollowingUser);
-    // return unFollowUser;
-    // } else {
-    // // Lanza una excepción personalizada
-    // throw new UnfollowUserException("You are not following this User");
-    // }
-    // } else {
-    // // Lanza una excepción personalizada
-    // throw new UnfollowUserException("User not found");
-    // }
-    // } catch (UnfollowUserException e) {
-    // // Puedes personalizar la respuesta de error en función de tus necesidades
-    // e.printStackTrace();
-    // throw e;
-    // }
-    // }
-
+        // Quitar de la lista de following
+        follower.getFollowing().remove(targetUserId);
+        userRepository.save(follower);
+    }
 }

@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/user")
@@ -51,20 +55,31 @@ public class UserController {
         }
     }
 
-    
+    @PutMapping("/{id}/follow")
+    public ResponseEntity<String> followUser(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            Long followerId = ((UserModel) userDetails).getId();
+            userService.followUser(followerId, id);
+            return new ResponseEntity<>("User followed!", HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            // Manejar la excepción cuando no se encuentra el usuario
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
-    // @PostMapping("/{id}/follow")
-    // public UserModel followUser(@PathVariable Long id, @RequestBody
-    // UserFollowRequest followRequest) {
-    // Long followerId = followRequest.getFollowerId();
-    // return userService.followUser(id, followerId);
-    // }
-
-    // @PostMapping("/{id}/unfollow")
-    // public UserModel unfollowUser(@PathVariable Long id, @RequestBody
-    // UserUnfollowRequest unfollowRequest) {
-    // Long unfollowerId = unfollowRequest.getUnfollowerId();
-    // return userService.unfollowUser(id, unfollowerId);
-    // }
+    @PutMapping("/{id}/unfollow")
+    public ResponseEntity<String> unfollowUser(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+        try {
+            Long followerId = ((UserModel) userDetails).getId();
+            userService.unfollowUser(followerId, id);
+            return new ResponseEntity<>("User unfollowed!", HttpStatus.OK);
+        } catch (EntityNotFoundException e) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Something went wrong", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }
