@@ -17,11 +17,11 @@ const Posts = () => {
   if(params.id) posts = posts.filter((post)=> post.userId===params.id)
   return (
     <div className="Posts">
-      {loading
-        ? "Fetching posts...."
-        : posts.map((post) => {
-            return <Post data={post} key={post.id} />;
-          })}
+    {loading
+      ? "Fetching posts...."
+      : posts.map((post) => {
+          return <Post data={post} key={post._id || post.id} />;
+        })}
     </div>
   );
 };
