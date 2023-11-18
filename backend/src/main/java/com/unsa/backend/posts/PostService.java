@@ -3,20 +3,16 @@ package com.unsa.backend.posts;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.unsa.backend.users.UserRepository;
-
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 
 @Service
+@AllArgsConstructor
 public class PostService {
-    @Autowired
-    PostRepository postRepository;
-
-    @Autowired
-    UserRepository userRepository;
+    
+    private final PostRepository postRepository;
 
     public List<PostModel> getPosts(){
 
@@ -52,8 +48,8 @@ public class PostService {
     }
 
     @Transactional
-    public void addLike(PostModel post, String userId) {
-        List<String> likes = post.getLikes();
+    public void addLike(PostModel post, Long userId) {
+        List<Long> likes = post.getLikes();
         if (!likes.contains(userId)) {
             likes.add(userId);
             postRepository.save(post);
@@ -61,8 +57,8 @@ public class PostService {
     }
 
     @Transactional
-    public void removeLike(PostModel post, String userId) {
-        List<String> likes = post.getLikes();
+    public void removeLike(PostModel post, Long userId) {
+        List<Long> likes = post.getLikes();
         if (likes.contains(userId)) {
             likes.remove(userId);
             postRepository.save(post);

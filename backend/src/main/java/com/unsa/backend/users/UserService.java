@@ -2,15 +2,15 @@ package com.unsa.backend.users;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
+import lombok.AllArgsConstructor;
 
 @Service
+@AllArgsConstructor
 public class UserService {
-    @Autowired
-    UserRepository userRepository;
+    final UserRepository userRepository;
 
     public List<UserModel> getUsers() {
         return userRepository.findAll();

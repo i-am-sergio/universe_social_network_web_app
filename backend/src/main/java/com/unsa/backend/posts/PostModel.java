@@ -27,14 +27,14 @@ public class PostModel {
     private Long id;
 
     @Column(name = "user_id", nullable = false)
-    private String userId;
+    private Long userId; // Era String, con string funcionaba
 
     @Column(name = "description", nullable = false)
     private String desc;
 
     @ElementCollection
     @CollectionTable(name = "post_likes", joinColumns = @JoinColumn(name = "post_id"))
-    private List<String> likes;
+    private List<Long> likes;
 
     @Column(name = "created_at")
     @Temporal(TemporalType.TIMESTAMP)

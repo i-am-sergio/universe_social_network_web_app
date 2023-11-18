@@ -1,0 +1,121 @@
+Registrar usuarios:
+localhost:5000/auth/register (POST)
+{
+  "username" : "user1@gmail.com",
+  "password" : "admin",
+  "firstname" : "firstname_user1"
+}
+{
+  "username" : "user2@gmail.com",
+  "password" : "admin",
+  "firstname" : "firstname_user2"
+}
+{
+  "username" : "user3@gmail.com",
+  "password" : "admin",
+  "firstname" : "firstname_user3"
+}
+(Response)
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJpYXQiOjE3MDAxMTQzODEsImV4cCI6MTcwMDExNzk4MX0.8KNy8ou7HvlmxeYaetQB8OsLXQAeMgcDUATZp4uGwDo"
+}
+
+
+Logearse con user1
+localhost:5000/auth/login (POST)
+{
+  "username" : "user1@gmail.com",
+  "password" : "admin"
+}
+(Response)
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyMUBnbWFpbC5jb20iLCJpYXQiOjE3MDAxMTQ2MDksImV4cCI6MTcwMDExODIwOX0.C4F5wKO7YbipQor3gVpovCoIaRMhWgyyIJkVTfxRv8c"
+}
+
+# usar el token de la response del login para realizar las demas consultas
+
+
+
+publciaciones:
+localhost:5000/posts (POST) para crear post
+{
+  "userId": 1,
+  "desc": "Contenido de publicación A",
+  "createdAt": "2023-11-18T09:01:00"
+}
+{
+  "userId": 1,
+  "desc": "Contenido de publicación B",
+  "createdAt": "2023-11-18T09:02:00"
+}
+
+logearse con user2:
+{
+  "userId": 2,
+  "desc": "Contenido de publicación A del user2",
+  "createdAt": "2023-11-18T09:03:00"
+}
+{
+  "userId": 2,
+  "desc": "Contenido de publicación B del user2",
+  "createdAt": "2023-11-18T09:04:00"
+}
+
+logearse con user3:
+{
+  "userId": 3,
+  "desc": "Contenido de publicación A del user3",
+  "createdAt": "2023-11-18T09:05:00"
+}
+{
+  "userId": 3,
+  "desc": "Contenido de publicación B del user3",
+  "createdAt": "2023-11-18T09:06:00"
+}
+{
+  "userId": 3,
+  "desc": "Contenido de publicación C del user3",
+  "createdAt": "2023-11-18T09:07:00"
+}
+
+
+loguearse con user3
+Seguir a otro usuario
+http://localhost:5000/user/2/follow (PUT)	// para seguir al user 2
+
+testear timeline
+http://localhost:5000/posts/timeline/3 (GET)
+
+la api debe responder con las publicaciones en este orden:
+idpost=7 pertenece a user3	9:07
+idpost=6 pertenece a user3	9:06
+idpost=5 pertenece a user3	9:05
+idpost=4 pertenece a user2	9:04
+idpost=3 pertenece a user2	9:03
+
+
+
+logearse en user1
+crear nuevo post desde el user1
+{
+  "userId": 1,
+  "desc": "Contenido de publicación C del user1",
+  "createdAt": "2023-11-18T09:10:00"
+}
+
+logearse en user3
+follow a user1
+http://localhost:5000/user/1/follow (PUT)
+
+testear timeline
+http://localhost:5000/posts/timeline/3 (GET)
+
+la api debe responder con las publicaciones en este orden:
+idpost=8 pertenece a user=1	9:10
+idpost=7 pertenece a user=3	9:07
+idpost=6 pertenece a user=3	9:06
+idpost=5 pertenece a user=3	9:05
+idpost=4 pertenece a user=2	9:04
+idpost=3 pertenece a user=2	9:03
+idpost=2 pertenece a user=1	9:02
+idpost=1 pertenece a user=1	9:01

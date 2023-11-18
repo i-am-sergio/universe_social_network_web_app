@@ -2,7 +2,6 @@ package com.unsa.backend.posts;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,12 +13,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.unsa.backend.services.TimelineService;
+
+import lombok.RequiredArgsConstructor;
+
 
 @RestController
 @RequestMapping("/posts")
+@RequiredArgsConstructor
 public class PostController {
-    @Autowired
-    PostService postService;
+
+    private final PostService postService;
+    private final TimelineService timelineService;
+
 
     @GetMapping
     public ResponseEntity<List<PostModel>> getPosts() {
@@ -115,8 +121,9 @@ public class PostController {
         }
     }
 
-    /*
-     *  Get timeline posts.
-        Falta implementar el metodo getTimelinePosts()
-     */
+    @GetMapping("/timeline/{userId}")
+    public ResponseEntity<List<PostModel>> getTimelinePosts(@PathVariable Long userId) {
+        List<PostModel> timelinePosts = timelineService.getTimelinePosts(userId);
+        return new ResponseEntity<>(timelinePosts, HttpStatus.OK);
+    }
 }
