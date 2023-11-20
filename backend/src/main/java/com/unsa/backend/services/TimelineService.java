@@ -13,7 +13,6 @@ import com.unsa.backend.posts.PostRepository;
 import com.unsa.backend.users.UserModel;
 import com.unsa.backend.users.UserRepository;
 
-import jakarta.transaction.Transactional;
 
 @Service
 public class TimelineService {

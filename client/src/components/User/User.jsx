@@ -2,17 +2,18 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { followUser, unfollowUser } from "../../actions/UserAction";
 const User = ({ person }) => {
+  // console.log("PERSON IN USER => ", person.id)
   const publicFolder = process.env.REACT_APP_PUBLIC_FOLDER;
-  const { user } = useSelector((state) => state.authReducer.authData);
+  const user  = useSelector((state) => state.authReducer.authData);
   const dispatch = useDispatch()
   
   const [following, setFollowing] = useState(
-    person.followers.includes(user._id)
+    person.followers.includes(user.id)
   );
   const handleFollow = () => {
     following
-      ? dispatch(unfollowUser(person._id, user))
-      : dispatch(followUser(person._id, user));
+      ? dispatch(unfollowUser(person.id, user))
+      : dispatch(followUser(person.id, user));
     setFollowing((prev) => !prev);
   };
   return (
