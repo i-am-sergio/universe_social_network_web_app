@@ -6,7 +6,13 @@ import { uploadImage, uploadPost } from "../../actions/UploadAction";
 
 const PostShare = () => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.authReducer.authData);
+  const user = useSelector((state) => state.authReducer.authData);
+  
+  // Verificar si user está definido
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+  
   const loading = useSelector((state) => state.postReducer.uploading);
   const [image, setImage] = useState(null);
   const desc = useRef();

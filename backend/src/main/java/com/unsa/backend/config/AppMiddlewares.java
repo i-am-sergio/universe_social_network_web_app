@@ -14,16 +14,23 @@ public class AppMiddlewares implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
+                //.allowedOrigins("http://localhost:3000")
                 .allowedOriginPatterns("*")  // Permite todos los orígenes (HTTP y HTTPS)
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("Content-Type", "Authorization")
+                //.allowedOriginPatterns("http://localhost:3000")
+                // .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                // .allowedHeaders("Content-Type", "Authorization")
+                .allowedMethods("*")
+                .allowedHeaders("*")
                 .allowCredentials(true)
                 .maxAge(3600);
     }
+    
 
     // Configurar recursos estaticos
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("classpath:/images/");
         registry.addResourceHandler("/public/**")
                 .addResourceLocations("classpath:/public/");
         registry.addResourceHandler("/images/**")

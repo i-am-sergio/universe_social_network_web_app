@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -121,7 +122,7 @@ public class PostController {
         }
     }
 
-    @GetMapping("/timeline/{userId}")
+    @GetMapping("/{userId}/timeline")
     public ResponseEntity<List<PostModel>> getTimelinePosts(@PathVariable Long userId) {
         List<PostModel> timelinePosts = timelineService.getTimelinePosts(userId);
         return new ResponseEntity<>(timelinePosts, HttpStatus.OK);

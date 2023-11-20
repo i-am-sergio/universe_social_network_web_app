@@ -25,14 +25,14 @@ public class UserController {
     final UserService userService;
 
     @GetMapping
-    public List<UserModel> getUser(){
-        return userService.getUsers();
+    public ResponseEntity<List<UserModel>> getUser(){
+        return ResponseEntity.ok(userService.getUsers());
     }
 
     // SOLO 1 USUARIO
     @GetMapping("/{id}")
-    public UserModel getUser(@PathVariable Long id) {
-        return userService.getUser(id);
+    public ResponseEntity<UserModel> getUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUser(id));
     }
 
     @PutMapping("/{id}")

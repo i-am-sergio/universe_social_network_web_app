@@ -32,7 +32,9 @@ public class SecurityConfig {
                     authRequest
                         .requestMatchers("/auth/**").permitAll()
                         // .requestMatchers("/user/**").permitAll()
-                        // .requestMatchers("/posts/**").permitAll()
+                        .requestMatchers("/posts/**").permitAll()
+                        .requestMatchers("/images/**").permitAll()
+                        .requestMatchers( "/public/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager -> 
