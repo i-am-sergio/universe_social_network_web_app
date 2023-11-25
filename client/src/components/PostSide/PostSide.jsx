@@ -6,8 +6,8 @@ import "./PostSide.css";
 const PostSide = () => {
   return (
     <div className="PostSide">
-      <PostShare/>
-      <Posts/>
+      <PostShare />
+      <Posts />
     </div>
   );
 };

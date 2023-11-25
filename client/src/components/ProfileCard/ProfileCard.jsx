@@ -2,20 +2,23 @@ import React from "react";
 import "./ProfileCard.css";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-
-const ProfileCard = ({location}) => {
+import PropTypes from "prop-types";
+const ProfileCard = ({ location }) => {
   const user = useSelector((state) => state.authReducer.authData);
-  const posts = useSelector((state) => state.postReducer.posts)
+  const posts = useSelector((state) => state.postReducer.posts);
   const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
 
   return (
     <div className="ProfileCard">
       <div className="ProfileImages">
-        <img src={
+        <img
+          src={
             user.coverPicture
               ? serverPublic + user.coverPicture
               : serverPublic + "defaultCover.jpg"
-          } alt="CoverImage" />
+          }
+          alt="CoverImage"
+        />
         <img
           src={
             user.profilePicture
@@ -26,13 +29,15 @@ const ProfileCard = ({location}) => {
         />
       </div>
       <div className="ProfileName">
-        <span>{user.firstname} {user.lastname}</span>
-        <span>{user.worksAt? user.worksAt : 'Write about yourself'}</span>
+        <span>
+          {user.firstname} {user.lastname}
+        </span>
+        <span>{user.worksAt ? user.worksAt : "Write about yourself"}</span>
       </div>
 
       <div className="followStatus">
         <hr />
-        
+
         <div>
           <div className="follow">
             <span>{user.followers.length}</span>
@@ -48,9 +53,9 @@ const ProfileCard = ({location}) => {
             <>
               <div className="vl"></div>
               <div className="follow">
-                <span>{
-                  posts.filter((post)=>post.userId === user._id).length
-                }</span>
+                <span>
+                  {posts.filter((post) => post.userId === user._id).length}
+                </span>
                 <span>Posts</span>
               </div>{" "}
             </>
@@ -63,7 +68,10 @@ const ProfileCard = ({location}) => {
         ""
       ) : (
         <span>
-          <Link to={`/profile/${user._id}`} style={{ textDecoration: "none", color: "inherit" }}>
+          <Link
+            to={`/profile/${user._id}`}
+            style={{ textDecoration: "none", color: "inherit" }}
+          >
             Mi Perfil
           </Link>
         </span>
@@ -71,5 +79,7 @@ const ProfileCard = ({location}) => {
     </div>
   );
 };
-
+ProfileCard.propTypes = {
+  location: PropTypes.string.isRequired,
+};
 export default ProfileCard;

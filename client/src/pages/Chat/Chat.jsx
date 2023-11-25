@@ -10,8 +10,7 @@ import { io } from "socket.io-client";
 
 const Chat = () => {
   const socket = useRef();
-  const { user } = useSelector((state) => state.authReducer.authData);
-
+  const user = useSelector((state) => state.authReducer.authData);
   const [chats, setChats] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
@@ -21,7 +20,7 @@ const Chat = () => {
   useEffect(() => {
     const getChats = async () => {
       try {
-        const { data } = await userChats(user._id);
+        const { data } = await userChats(user.id);
         setChats(data);
         console.log(data);
       } catch (error) {
@@ -29,12 +28,12 @@ const Chat = () => {
       }
     };
     getChats();
-  }, [user._id]);
+  }, [user]);
 
   // Connect to Socket.io
   useEffect(() => {
     socket.current = io("ws://localhost:8800");
-    socket.current.emit("new-user-add", user._id);
+    socket.current.emit("new-user-add", user.id);
     socket.current.on("get-users", (users) => {
       setOnlineUsers(users);
     });
@@ -42,24 +41,21 @@ const Chat = () => {
 
   // Send Message to socket server
   useEffect(() => {
-    if (sendMessage!==null) {
-      socket.current.emit("send-message", sendMessage);}
+    if (sendMessage !== null) {
+      socket.current.emit("send-message", sendMessage);
+    }
   }, [sendMessage]);
-
 
   // Get the message from socket server
   useEffect(() => {
     socket.current.on("recieve-message", (data) => {
-      console.log(data)
+      console.log(data);
       setReceivedMessage(data);
-    }
-
-    );
+    });
   }, []);
 
-
   const checkOnlineStatus = (chat) => {
-    const chatMember = chat.members.find((member) => member !== user._id);
+    const chatMember = chat.members.find((member) => member !== user.id);
     const online = onlineUsers.find((user) => user.userId === chatMember);
     return online;
   };
@@ -73,7 +69,7 @@ const Chat = () => {
           <h2>Chats</h2>
           <div className="Chat-list">
             {chats.map((chat) => (
-              <div
+              <button
                 key={chat.id}
                 onClick={() => {
                   setCurrentChat(chat);
@@ -81,10 +77,10 @@ const Chat = () => {
               >
                 <Conversation
                   data={chat}
-                  currentUser={user._id}
+                  currentUser={user.id}
                   online={checkOnlineStatus(chat)}
                 />
-              </div>
+              </button>
             ))}
           </div>
         </div>
@@ -98,7 +94,7 @@ const Chat = () => {
         </div>
         <ChatBox
           chat={currentChat}
-          currentUser={user._id}
+          currentUser={user.id}
           setSendMessage={setSendMessage}
           receivedMessage={receivedMessage}
         />
