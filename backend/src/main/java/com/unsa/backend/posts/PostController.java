@@ -121,7 +121,7 @@ public class PostController {
         }
     }
 
-    @GetMapping("/timeline/{userId}")
+    @GetMapping("/{userId}/timeline")
     public ResponseEntity<List<PostModel>> getTimelinePosts(@PathVariable Long userId) {
         List<PostModel> timelinePosts = timelineService.getTimelinePosts(userId);
         return new ResponseEntity<>(timelinePosts, HttpStatus.OK);

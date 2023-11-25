@@ -13,6 +13,7 @@ import com.unsa.backend.posts.PostRepository;
 import com.unsa.backend.users.UserModel;
 import com.unsa.backend.users.UserRepository;
 
+
 @Service
 public class TimelineService {
 
@@ -24,6 +25,7 @@ public class TimelineService {
         this.postRepository = postRepository;
     }
 
+    // @Transactional
     public List<PostModel> getTimelinePosts(Long userId) {
         // Obtener el usuario actual como Optional<UserModel>
         Optional<UserModel> currentUserOptional = userRepository.findById(userId);

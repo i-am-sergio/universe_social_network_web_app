@@ -31,8 +31,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authRequest -> 
                     authRequest
                         .requestMatchers("/auth/**").permitAll()
-                        // .requestMatchers("/user/**").permitAll()
-                        // .requestMatchers("/posts/**").permitAll()
+                        .requestMatchers("/user/**").permitAll()
+                        .requestMatchers("/posts/**").permitAll()
+                        .requestMatchers("/images/**").permitAll()
+                        .requestMatchers( "/public/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager -> 
