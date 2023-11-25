@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import "./InfoCard.css";
 import { UilPen } from "@iconscout/react-unicons";
 import ProfileModal from "../ProfileModal/ProfileModal";
@@ -13,7 +13,7 @@ const InfoCard = () => {
   const [modalOpened, setModalOpened] = useState(false);
   const profileUserId = params.id;
   const [profileUser, setProfileUser] = useState({});
-  const [isMounted, setIsMounted] = useState(true); // Nuevo estado
+  const isMounted = useRef(true);
   
   const user = useSelector((state) => state.authReducer.authData);
 
@@ -24,21 +24,24 @@ const InfoCard = () => {
 
   useEffect(() => {
     const fetchProfileUser = async () => {
-      setIsMounted(true); // El componente está montado
+      isMounted.current = true;
       if (profileUserId === user.id) {
         setProfileUser(user);
       } else {
         console.log("fetching");
         const profileUser = await UserApi.getUser(profileUserId);
         // setProfileUser(profileUser);
-        if (isMounted) {
+        if (isMounted.current) {
           setProfileUser(profileUser);
         }
         console.log(profileUser)
       }
     };
     fetchProfileUser();
-  }, [user]);
+    return () => {
+      isMounted.current = false;
+    };
+  }, [profileUserId, user]);
 
   return (
     <div className="InfoCard">
