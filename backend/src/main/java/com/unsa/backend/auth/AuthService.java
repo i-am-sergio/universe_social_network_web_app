@@ -41,7 +41,7 @@ public class AuthService {
         //         .lastname(user.getLastname())
         //         .build();
     }   
-    public AuthResponse register(RegisterRequest request){
+    public AuthUserResponse register(RegisterRequest request){
         UserModel user = UserModel.builder()
                             .username(request.getUsername())
                             .password(passwordEncoder.encode( request.getPassword() ))
@@ -51,11 +51,12 @@ public class AuthService {
                             .build();
         
         userRepository.save(user);
-        return AuthResponse.builder()
-                .token(jwtService.getToken(user))
-                .username(user.getUsername())
-                .firstname(user.getFirstname())
-                .lastname(user.getLastname())
-                .build();
+        return AuthUserResponse.from(user, jwtService.getToken(user));
+        // return AuthResponse.builder()
+        //         .token(jwtService.getToken(user))
+        //         .username(user.getUsername())
+        //         .firstname(user.getFirstname())
+        //         .lastname(user.getLastname())
+        //         .build();
     }
 }

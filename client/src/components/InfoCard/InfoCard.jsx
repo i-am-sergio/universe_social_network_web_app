@@ -13,8 +13,9 @@ const InfoCard = () => {
   const [modalOpened, setModalOpened] = useState(false);
   const profileUserId = params.id;
   const [profileUser, setProfileUser] = useState({});
-  const { user } = useSelector((state) => state.authReducer.authData);
-
+  const [isMounted, setIsMounted] = useState(true); // Nuevo estado
+  
+  const user = useSelector((state) => state.authReducer.authData);
 
   const handleLogOut = ()=> {
     dispatch(logout())
@@ -23,12 +24,16 @@ const InfoCard = () => {
 
   useEffect(() => {
     const fetchProfileUser = async () => {
-      if (profileUserId === user._id) {
+      setIsMounted(true); // El componente está montado
+      if (profileUserId === user.id) {
         setProfileUser(user);
       } else {
         console.log("fetching")
         const profileUser = await UserApi.getUser(profileUserId);
-        setProfileUser(profileUser);
+        // setProfileUser(profileUser);
+        if (isMounted) {
+          setProfileUser(profileUser);
+        }
         console.log(profileUser)
       }
     };

@@ -25,7 +25,7 @@ const Posts = () => {
   if(!posts) return 'No Posts';
   if(params.id) {
     console.log("SE EJECUTO EL IF")
-    posts = posts.filter((post)=> post.userId===params.id)
+    posts = posts.data.filter((post)=> post.userId===params.id)
   } else {
     console.log("SE EJECUTO EL ELSE")
     posts = posts.data;

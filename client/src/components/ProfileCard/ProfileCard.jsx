@@ -5,8 +5,9 @@ import { useSelector } from "react-redux";
 
 const ProfileCard = ({location}) => {
   const user = useSelector((state) => state.authReducer.authData);
-  const posts = useSelector((state) => state.postReducer.posts)
+  const posts = useSelector((state) => state.postReducer.posts);
   const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
+  console.log("POSTS => ", posts);
 
   return (
     <div className="ProfileCard">
@@ -35,12 +36,12 @@ const ProfileCard = ({location}) => {
         
         <div>
           <div className="follow">
-            <span>{user.followers.length}</span>
+            <span>{user.followers ? user.followers.length : 0}</span>
             <span>Followers</span>
           </div>
           <div className="vl"></div>
           <div className="follow">
-            <span>{user.following.length}</span>
+            <span>{user.following ? user.following.length : 0}</span>
             <span>Following</span>
           </div>
           {/* for profilepage */}
@@ -49,7 +50,7 @@ const ProfileCard = ({location}) => {
               <div className="vl"></div>
               <div className="follow">
                 <span>{
-                  posts.filter((post)=>post.userId === user._id).length
+                  posts.data.filter((post)=>post.userId === user.id).length
                 }</span>
                 <span>Posts</span>
               </div>{" "}
@@ -63,7 +64,7 @@ const ProfileCard = ({location}) => {
         ""
       ) : (
         <span>
-          <Link to={`/profile/${user._id}`} style={{ textDecoration: "none", color: "inherit" }}>
+          <Link to={`/profile/${user.id}`} style={{ textDecoration: "none", color: "inherit" }}>
             Mi Perfil
           </Link>
         </span>
