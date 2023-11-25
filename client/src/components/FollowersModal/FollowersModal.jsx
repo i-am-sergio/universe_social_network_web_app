@@ -1,6 +1,7 @@
 import React from "react";
 import { Modal, useMantineTheme } from "@mantine/core";
 import FollowersCard from "../FollowersCard/FollowersCard";
+import PropTypes from "prop-types";
 
 const FollowersModal = ({ modalOpened, setModalOpened }) => {
   const theme = useMantineTheme();
@@ -21,6 +22,11 @@ const FollowersModal = ({ modalOpened, setModalOpened }) => {
     <FollowersCard location='modal'/>
     </Modal>
   );
+};
+
+FollowersModal.propTypes = {
+  modalOpened: PropTypes.bool.isRequired,
+  setModalOpened: PropTypes.func.isRequired,
 };
 
 export default FollowersModal;
