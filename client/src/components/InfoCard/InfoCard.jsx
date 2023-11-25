@@ -8,7 +8,7 @@ import * as UserApi from "../../api/UserRequests.js";
 import { logout } from "../../actions/AuthActions";
 
 const InfoCard = () => {
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   const params = useParams();
   const [modalOpened, setModalOpened] = useState(false);
   const profileUserId = params.id;
@@ -28,7 +28,7 @@ const InfoCard = () => {
       if (profileUserId === user.id) {
         setProfileUser(user);
       } else {
-        console.log("fetching")
+        console.log("fetching");
         const profileUser = await UserApi.getUser(profileUserId);
         // setProfileUser(profileUser);
         if (isMounted) {
@@ -54,7 +54,7 @@ const InfoCard = () => {
             <ProfileModal
               modalOpened={modalOpened}
               setModalOpened={setModalOpened}
-              data = {user}
+              data={user}
             />
           </div>
         ) : (
@@ -82,7 +82,9 @@ const InfoCard = () => {
         <span>{profileUser.worksAt}</span>
       </div>
 
-      <button className="button logout-button" onClick={handleLogOut}>Log Out</button>
+      <button className="button logout-button" onClick={handleLogOut}>
+        Log Out
+      </button>
     </div>
   );
 };
