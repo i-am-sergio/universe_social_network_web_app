@@ -7,16 +7,17 @@ import { uploadImage, uploadPost } from "../../actions/UploadAction";
 const PostShare = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.authReducer.authData);
+  const loading = useSelector((state) => state.postReducer.uploading);
+  const [image, setImage] = useState(null);
+  const desc = useRef();
+  const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
+  const imageRef = useRef();
   
   // Verificar si user está definido
   if (!user) {
     return <div>Loading...</div>;
   }
   
-  const loading = useSelector((state) => state.postReducer.uploading);
-  const [image, setImage] = useState(null);
-  const desc = useRef();
-  const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
 
   // handle Image Change
   // if (event.target.files && event.target.files[0]) {
@@ -27,7 +28,6 @@ const PostShare = () => {
     }
   };
 
-  const imageRef = useRef();
 
   // handle post upload
   const handleUpload = async (e) => {
@@ -82,8 +82,13 @@ const PostShare = () => {
         <div className="postOptions">
           <div
             className="option"
-            style={{ color: "var(--photo)" }}
+            style={{ color: "var(--photo)", cursor: "pointer" }}
             onClick={() => imageRef.current.click()}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                imageRef.current.click();
+              }
+            }}
           >
             <UilScenery />
             Photo
