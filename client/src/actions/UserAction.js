@@ -27,7 +27,6 @@ export const followUser = (id, data)=> async(dispatch)=> {
 export const unfollowUser = (id, data)=> async (dispatch)=> {
     dispatch({type: "UNFOLLOW_USER", data: id})
     UserApi.unfollowUser(id, data)
-    // const result = await ChatApi.findChat(data.id,id);
-    // console.log(result.data.id);
-    // ChatApi.deleteChat(result.data.id);
+    const result = await ChatApi.findChat(data.id,id);
+    ChatApi.deleteChat(result.data.id);
 }

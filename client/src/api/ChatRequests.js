@@ -12,7 +12,7 @@ API.interceptors.request.use((req) => {
   });
 
 
-export const createChat = (senderId, receiverId) => API.post('/chat/create', {senderId, receiverId});
+export const createChat = (senderId, receiverId) => API.post('/chat', {members: [senderId, receiverId]});
 
 export const deleteChat = (chatId) => API.delete(`/chat/${chatId}`,);
 
