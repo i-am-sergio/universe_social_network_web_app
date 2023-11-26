@@ -9,6 +9,7 @@ import PropTypes from "prop-types";
 const FollowersCard = ({ location }) => {
   const [modalOpened, setModalOpened] = useState(false);
   const [persons, setPersons] = useState([]);
+  console.log("PERSONS => ", persons)
   const user = useSelector((state) => state.authReducer.authData);
   const isMounted = useRef(true);
 

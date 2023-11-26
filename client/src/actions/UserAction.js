@@ -15,18 +15,19 @@ export const updateUser=(id, formData)=> async(dispatch)=> {
 
 export const followUser = (id, data)=> async(dispatch)=> {
     dispatch({type: "FOLLOW_USER", data: id})
-    const result = await ChatApi.findChat(data._id,id);
+    const result = await ChatApi.findChat(data.id,id);
     UserApi.followUser(id, data)
-    console.log(result);
-    if(result.data == null){
-        ChatApi.createChat(data._id,id);
+    console.log("result => ", result)
+    if(result.data == ""){
+        console.log("--------------->",data.id,id)
+        ChatApi.createChat(data.id,id);
     }
 }
 
 export const unfollowUser = (id, data)=> async (dispatch)=> {
     dispatch({type: "UNFOLLOW_USER", data: id})
     UserApi.unfollowUser(id, data)
-    const result = await ChatApi.findChat(data._id,id);
-    console.log(result.data._id);
-    ChatApi.deleteChat(result.data._id);
+    // const result = await ChatApi.findChat(data.id,id);
+    // console.log(result.data.id);
+    // ChatApi.deleteChat(result.data.id);
 }
