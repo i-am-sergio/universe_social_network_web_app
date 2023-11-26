@@ -34,7 +34,7 @@ public class SecurityConfig {
                         .requestMatchers("/user/**").permitAll()
                         .requestMatchers("/posts/**").permitAll()
                         .requestMatchers("/images/**").permitAll()
-                        .requestMatchers( "/public/**").permitAll()
+                        .requestMatchers("/public/**").permitAll()
                         .requestMatchers("/chat/**").permitAll()
                         .requestMatchers("/message/**").permitAll()
                         .anyRequest().authenticated()
