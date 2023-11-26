@@ -35,6 +35,8 @@ public class SecurityConfig {
                         .requestMatchers("/posts/**").permitAll()
                         .requestMatchers("/images/**").permitAll()
                         .requestMatchers( "/public/**").permitAll()
+                        .requestMatchers("/chat/**").permitAll()
+                        .requestMatchers("/message/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager -> 

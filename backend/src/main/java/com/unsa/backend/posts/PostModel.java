@@ -11,6 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -42,5 +43,10 @@ public class PostModel {
 
     @Column(name = "image")
     private String image;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = new Date();
+    }
 
 }

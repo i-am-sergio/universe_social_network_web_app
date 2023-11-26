@@ -20,6 +20,7 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
     const getUserData = async () => {
       try {
         const { data } = await getUser(userId);
+        console.log("DDDDATAAAAAA => ", data)
         setUserData(data);
       } catch (error) {
         console.log(error);
@@ -33,7 +34,7 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const { data } = await getMessages(chat._id);
+        const { data } = await getMessages(chat.id);
         setMessages(data);
       } catch (error) {
         console.log(error);
@@ -57,7 +58,7 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
     const message = {
       senderId : currentUser,
       text: newMessage,
-      chatId: chat._id,
+      chatId: chat.id,
   }
   const receiverId = chat.members.find((id)=>id!==currentUser);
   // send message to socket server
@@ -77,7 +78,7 @@ const ChatBox = ({ chat, currentUser, setSendMessage,  receivedMessage }) => {
 // Receive Message from parent component
 useEffect(()=> {
   console.log("Message Arrived: ", receivedMessage)
-  if (receivedMessage !== null && receivedMessage.chatId === chat._id) {
+  if (receivedMessage !== null && receivedMessage.chatId === chat.id) {
     setMessages([...messages, receivedMessage]);
   }
 
@@ -88,7 +89,7 @@ useEffect(()=> {
   const scroll = useRef();
   const imageRef = useRef();
   return (
-    <>
+    <div>
       <div className="ChatBox-container">
         {chat ? (
           <>
@@ -126,7 +127,7 @@ useEffect(()=> {
             {/* chat-body */}
             <div className="chat-body" >
               {messages.map((message) => (
-                <>
+                <div key={message.id}>
                   <div ref={scroll}
                     className={
                       message.senderId === currentUser
@@ -137,7 +138,7 @@ useEffect(()=> {
                     <span>{message.text}</span>{" "}
                     <span>{format(message.createdAt)}</span>
                   </div>
-                </>
+                </div>
               ))}
             </div>
             {/* chat-sender */}
@@ -163,7 +164,7 @@ useEffect(()=> {
           </span>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

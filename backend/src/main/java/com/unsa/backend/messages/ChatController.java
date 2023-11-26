@@ -20,7 +20,7 @@ public class ChatController {
     
     private final ChatService chatService;
 
-    @PostMapping("/create")
+    @PostMapping
     public ResponseEntity<ChatModel> createChat(@RequestBody ChatModel chatModel) {
         try {
             ChatModel result = chatService.createChat(chatModel);
@@ -53,7 +53,7 @@ public class ChatController {
         }
     }
     
-    @DeleteMapping("/delete/{chatId}")
+    @DeleteMapping("/{chatId}")
     public ResponseEntity<String> deleteChat(@PathVariable Long chatId) {
         try {
             chatService.deleteChat(chatId);

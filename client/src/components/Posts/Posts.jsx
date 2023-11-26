@@ -10,6 +10,8 @@ const Posts = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.authReducer.authData);
   let { posts, loading } = useSelector((state) => state.postReducer);
+  console.log("En posts.jsx => ", posts)
+  console.log("En posts.jsx => ", loading)
   // const state = useSelector((state) => state);
   // console.log("Estado completo de postReducer:", state.postReducer);
   // let loading = false;
