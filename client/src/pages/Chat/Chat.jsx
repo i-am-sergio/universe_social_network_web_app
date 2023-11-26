@@ -21,9 +21,7 @@ const Chat = () => {
     const getChats = async () => {
       try {
         const { data } = await userChats(user.id);
-        console.log("DATAAA EN Chat.jsx=> ",data)
         setChats(data);
-        console.log(data);
       } catch (error) {
         console.log(error);
       }
@@ -50,7 +48,6 @@ const Chat = () => {
   // Get the message from socket server
   useEffect(() => {
     socket.current.on("recieve-message", (data) => {
-      console.log(data);
       setReceivedMessage(data);
     });
   }, []);
