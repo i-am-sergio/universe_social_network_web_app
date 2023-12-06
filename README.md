@@ -75,4 +75,4 @@ Inside the directory 'client':
 npm install
 npm start
 ```
-In the browser enter the following url: <localhost:3000>
+In the browser enter the following url: <https://localhost:3000>
