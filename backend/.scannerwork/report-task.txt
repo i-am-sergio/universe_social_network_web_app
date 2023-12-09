@@ -2,5 +2,5 @@ projectKey=SocialMediaII
 serverUrl=http://localhost:9000
 serverVersion=10.2.0.77647
 dashboardUrl=http://localhost:9000/dashboard?id=SocialMediaII
-ceTaskId=AYxQVU1hH2JxmfcoUrjV
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYxQVU1hH2JxmfcoUrjV
+ceTaskId=AYxQXjmDH2JxmfcoUrjZ
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYxQXjmDH2JxmfcoUrjZ
