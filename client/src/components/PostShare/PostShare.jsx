@@ -38,28 +38,18 @@ const PostShare = () => {
   // handle post upload
   const handleUpload = async (e) => {
     e.preventDefault();
-
     const newPost = {
       userId: user.id,
       desc: desc.current.value,
     };
-
+    const formData = new FormData();
     if (image) {
-      console.log("Image selected:", image);
-
       const fileName = Date.now() + image.name;
-      const fileData = {
-        name: fileName,
-        file: image,
-      };
-
-      console.log("New Post:", newPost);
+      formData.append("name", fileName);
+      formData.append("file", image);
       newPost.image = fileName;
-      console.log("File data to upload:", fileData);
-
       try {
-        console.log("File data dispatch =>", fileData);
-        dispatch(uploadImage(fileData));
+        dispatch(uploadImage(formData));
       } catch (err) {
         console.log(err);
       }
