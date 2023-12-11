@@ -1,0 +1,8 @@
+Logearse con user1
+localhost:5000/auth/login (POST)
+{
+  "username" : "user1@gmail.com",
+  "password" : "admin"
+}
+
+...

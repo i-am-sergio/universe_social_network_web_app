@@ -1,46 +1,86 @@
 package com.unsa.backend.users;
 
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+
+import java.util.Collection;
+import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name="users")
-public class UserModel {
-    
+@Data
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserModel implements UserDetails {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true, nullable = false)
     private Long id;
-    private String nombre;
-    private String email;
-    private Integer prioridad;
+    @Column(nullable = false)
+    private String username;
+    private String password;
+    private String firstname;
+    private String lastname;
+    private boolean isAdmin;
+    private String profilePicture;
+    private String coverPicture;
+    private String about;
+    private String livesIn;
+    private String worksAt;
+    private String relationship;
+    private String country;
+    private Role role;
 
-    public Long getId() {
-        return id;
+    @ElementCollection
+    @CollectionTable(name = "user_followers", joinColumns = @JoinColumn(name = "user_id"))
+    private List<Long> followers;
+
+    @ElementCollection
+    @CollectionTable(name = "user_following", joinColumns = @JoinColumn(name = "user_id"))
+    private List<Long> following;
+    
+    
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
-    public void setId(Long id) {
-        this.id = id;
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
-    public String getNombre() {
-        return nombre;
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    public Integer getPrioridad() {
-        return prioridad;
-    }
-    public void setPrioridad(Integer prioridad) {
-        this.prioridad = prioridad;
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

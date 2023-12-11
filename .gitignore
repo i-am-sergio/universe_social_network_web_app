@@ -1,0 +1,4 @@
+backend@tmp/
+client@tmp/
+sonar-project.properties
+.scannerwork/
