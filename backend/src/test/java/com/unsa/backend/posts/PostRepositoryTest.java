@@ -1,18 +1,25 @@
 package com.unsa.backend.posts;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.mockito.Mockito.*;
+
 @SpringBootTest
 @DisplayName("Test Repository")
+@ExtendWith(MockitoExtension.class)
 class PostRepositoryTest {
 
     @Autowired
@@ -20,34 +27,84 @@ class PostRepositoryTest {
 
     @BeforeEach
     void setup() {
+        postRepository = Mockito.mock(PostRepository.class);
         System.out.println("Setup...................");
     }
 
     /**
-     * Test case for getting a post by its ID from the repository.
+     * Test case for finding posts by user ID from the repository.
      */
-    @DisplayName("Test get post by id")
+    @DisplayName("Test find posts by user ID")
     @Test
-    void testGetPostById() {
+    void testFindPostsByUserId() {
         // given
-        PostModel post = null;
+        long userId = 1L;
+        List<PostModel> mockPosts = Arrays.asList(new PostModel(), new PostModel());
+        when(postRepository.findByUserId(userId)).thenReturn(mockPosts);
+
         // when
-        post = postRepository.findById(1L).orElse(null);
+        List<PostModel> posts = postRepository.findByUserId(userId);
+
         // then
-        assertNull(post);
+        assertNotNull(posts);
+        assertEquals(mockPosts, posts);
+        verify(postRepository, times(1)).findByUserId(userId);
     }
 
     /**
-     * Test case for getting all posts from the repository.
+     * Test case for finding posts by user ID when no posts are found.
      */
-    @DisplayName("Test get all posts")
+    @DisplayName("Test find posts by user ID")
     @Test
-    void testGetPosts() {
+    void testFindPostsByUserIdNoResults() {
         // given
-        List<PostModel> posts = null;
+        long userId = 1L;
+        when(postRepository.findByUserId(userId)).thenReturn(List.of());
+
         // when
-        posts = postRepository.findAll();
+        List<PostModel> posts = postRepository.findByUserId(userId);
+        // then
+        assertEquals(0, posts.size());
+        verify(postRepository, times(1)).findByUserId(userId);
+    }
+
+    /**
+     * Test case for finding posts by user ID from the repository.
+     */
+    @DisplayName("Test find posts by user ID")
+    @Test
+    void testFindPostsByUserIds(){
+        // given
+        List<Long> userIds = Arrays.asList(1L, 2L);
+        List<PostModel> mockPosts = Arrays.asList(new PostModel(), new PostModel());
+        when(postRepository.findByUserIdIn(userIds)).thenReturn(mockPosts);
+
+        // when
+        List<PostModel> posts = postRepository.findByUserIdIn(userIds);
+
         // then
         assertNotNull(posts);
+        assertEquals(mockPosts, posts);
+        verify(postRepository, times(1)).findByUserIdIn(userIds);
     }
+
+
+    /**
+     * Test case for finding posts by user IDs when no posts are found.
+     */
+    @DisplayName("Test find posts by user IDs")
+    @Test
+    void testFindPostsByUserIdsNoResults() {
+        // given
+        List<Long> userIds = Arrays.asList(1L, 2L);
+        when(postRepository.findByUserIdIn(userIds)).thenReturn(List.of());
+
+        // when
+        List<PostModel> posts = postRepository.findByUserIdIn(userIds);
+        // then
+        assertEquals(0, posts.size());
+        verify(postRepository, times(1)).findByUserIdIn(userIds);
+    }
+
+
 }
