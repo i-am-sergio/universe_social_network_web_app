@@ -3,6 +3,9 @@ spring:
     url: jdbc:mysql://monorail.proxy.rlwy.net:32060/railway
     username: root
     password: gG6EaE4BbbGfG23dcF3HhDaH6EC6Ge64
+  devtools:
+    restart:
+      enabled: false
   jpa:
     hibernate:
       ddl-auto: update
@@ -11,9 +14,7 @@ spring:
     multipart:
       max-file-size: 30MB
       max-request-size: 30MB
-
 file:
   upload-dir: src/main/resources/images
-
 server:
   port: 5000
