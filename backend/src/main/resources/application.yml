@@ -13,7 +13,7 @@ spring:
       max-request-size: 30MB
 
 file:
-  upload-dir: src/main/resources/uploads
+  upload-dir: src/main/resources/images
 
 server:
   port: 5000
