@@ -1,6 +1,6 @@
-projectKey=SocialMediaII
+projectKey=SocialMedia_Backend
 serverUrl=http://localhost:9000
-serverVersion=10.2.0.77647
-dashboardUrl=http://localhost:9000/dashboard?id=SocialMediaII
-ceTaskId=AYxQXjmDH2JxmfcoUrjZ
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYxQXjmDH2JxmfcoUrjZ
+serverVersion=10.3.0.82913
+dashboardUrl=http://localhost:9000/dashboard?id=SocialMedia_Backend
+ceTaskId=AYxgnVRFkqbIIupNF1i0
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AYxgnVRFkqbIIupNF1i0
