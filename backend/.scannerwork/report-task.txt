@@ -1,6 +1,0 @@
-projectKey=SocialMedia_Backend
-serverUrl=http://localhost:9000
-serverVersion=10.3.0.82913
-dashboardUrl=http://localhost:9000/dashboard?id=SocialMedia_Backend
-ceTaskId=AYxmCYqxDqo1nXEAzbDu
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AYxmCYqxDqo1nXEAzbDu
