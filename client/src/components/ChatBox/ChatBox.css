@@ -77,3 +77,54 @@
   height: 70%;
   padding: 0px 15px 0px 15px;
 }
+
+.button button {
+  /* Haciendo que el botón se vea como parte del contenedor */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  background: var(--orange);
+  transition: all 100ms ease-out;
+  /* Estilos adicionales según sea necesario */
+}
+
+.button button:hover {
+  background: var(--orange-dark);
+  color: var(--orange);
+  /* Ajusta otros estilos según sea necesario */
+}
+
+.button-container {
+  /* Estilos del contenedor */
+  display: inline-block;
+  padding: 10px;
+  background-color: lightgray;
+  border-radius: 5px;
+  /* Ajusta otros estilos según sea necesario */
+}
+
+.button-container button {
+  /* Estilos del botón */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  background: var(--orange); /* Cambia a tu color deseado */
+  font-size: 1.5rem; /* Tamaño de la fuente */
+  width: 100%; /* Ancho del botón igual al contenedor */
+  height: 100%; /* Altura del botón igual al contenedor */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 10px;
+}
+
+.button-container button:hover {
+  /* Estilos al pasar el mouse por encima del botón */
+  background: var(--orange-dark); /* Cambia a tu color deseado */
+  /* Ajusta otros estilos según sea necesario */
+}
