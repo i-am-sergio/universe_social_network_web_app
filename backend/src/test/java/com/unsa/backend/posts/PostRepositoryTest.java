@@ -106,5 +106,4 @@ class PostRepositoryTest {
         verify(postRepository, times(1)).findByUserIdIn(userIds);
     }
 
-
 }
