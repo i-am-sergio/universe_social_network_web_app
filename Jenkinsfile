@@ -1,12 +1,16 @@
 pipeline {
     agent any
+    environment {
+        SONAR_TOKEN_BACKEND = 'sqp_b2872ad27625f15ff27b1e0b1204bc12b355c9cd'
+        SONAR_TOKEN_CLIENT = 'sqp_58e7210fe555a54e4e45daacda3304374aa78774'
+    }
     stages {
         stage("SonarQube analysis for Backend") {
             steps {
                 script {
                     withSonarQubeEnv('sonarqube') {
                         dir("D:\\Proyects\\fullstack_project_soft_engineering_ii\\backend") {
-                            bat 'sonar-scanner.bat -D"sonar.projectKey=SocialMediaII" -D"sonar.sources=." -D"sonar.host.url=http://localhost:9000" -D"sonar.token=sqp_e7dc35d2f7f50c2a2847eef4d29c77f0eb3347e8"'
+                            bat "sonar-scanner -Dsonar.projectKey=SocialMedia_Backend -Dsonar.projectName=SocialMedia_Backend -Dsonar.host.url=http://localhost:9000 -Dsonar.login=%SONAR_TOKEN_BACKEND% -Dsonar.java.binaries=target/classes -Dsonar.sources=."
                         }
                     }
                 }
@@ -17,7 +21,7 @@ pipeline {
                 script {
                     withSonarQubeEnv('sonarqube') {
                         dir("D:\\Proyects\\fullstack_project_soft_engineering_ii\\client") {
-                            bat 'sonar-scanner.bat -D"sonar.projectKey=SocialMedia" -D"sonar.sources=." -D"sonar.host.url=http://localhost:9000" -D"sonar.token=sqp_b72523254b10d5f541905cbb08f019c1bbbfb1d7"'
+                            bat "sonar-scanner -Dsonar.projectKey=SocialMedia_Client -Dsonar.projectName=SocialMedia_Client -Dsonar.host.url=http://localhost:9000 -Dsonar.login=%SONAR_TOKEN_CLIENT% -Dsonar.exclusions=node_modules/** -Dsonar.sources=."
                         }
                     }
                 }

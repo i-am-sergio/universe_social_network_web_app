@@ -1,7 +1,10 @@
-package com.unsa.backend.posts;
+package com.unsa.backend.poststest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,25 +13,25 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.mockito.Mockito.*;
+import com.unsa.backend.posts.PostModel;
+import com.unsa.backend.posts.PostRepository;
 
 @SpringBootTest
 @DisplayName("Test Repository")
 @ExtendWith(MockitoExtension.class)
 class PostRepositoryTest {
 
-    @Autowired
+    @Mock
     private PostRepository postRepository;
 
     @BeforeEach
     void setup() {
         postRepository = Mockito.mock(PostRepository.class);
-        System.out.println("Setup...................");
     }
 
     /**
@@ -73,7 +76,7 @@ class PostRepositoryTest {
      */
     @DisplayName("Test find posts by user ID")
     @Test
-    void testFindPostsByUserIds(){
+    void testFindPostsByUserIds() {
         // given
         List<Long> userIds = Arrays.asList(1L, 2L);
         List<PostModel> mockPosts = Arrays.asList(new PostModel(), new PostModel());
@@ -87,7 +90,6 @@ class PostRepositoryTest {
         assertEquals(mockPosts, posts);
         verify(postRepository, times(1)).findByUserIdIn(userIds);
     }
-
 
     /**
      * Test case for finding posts by user IDs when no posts are found.
@@ -105,5 +107,4 @@ class PostRepositoryTest {
         assertEquals(0, posts.size());
         verify(postRepository, times(1)).findByUserIdIn(userIds);
     }
-
 }
