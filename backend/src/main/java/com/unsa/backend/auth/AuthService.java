@@ -25,34 +25,25 @@ public class AuthService {
 
     private final AuthenticationManager authenticationManager;
 
-    public AuthUserResponse login(LoginRequest request){
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+    public AuthUserResponse login(LoginRequest request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getUsername(), request.getPassword()));
         UserDetails userDetails = userRepository.findByUsername(request.getUsername()).orElseThrow();
         String token = jwtService.getToken(userDetails);
         return AuthUserResponse.from((UserModel) userDetails, token);
-        // return AuthResponse.builder()
-        //         .token(token)
-        //         .username(user.getUsername())
-        //         .firstname(user.getFirstname())
-        //         .lastname(user.getLastname())
-        //         .build();
-    }   
-    public AuthUserResponse register(RegisterRequest request){
+    }
+
+    public AuthUserResponse register(RegisterRequest request) {
         UserModel user = UserModel.builder()
-                            .username(request.getUsername())
-                            .password(passwordEncoder.encode( request.getPassword() ))
-                            .firstname(request.getFirstname())
-                            .lastname(request.getLastname())
-                            .role(Role.USER)
-                            .build();
-        
+                .username(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .firstname(request.getFirstname())
+                .lastname(request.getLastname())
+                .role(Role.USER)
+                .build();
+
         userRepository.save(user);
         return AuthUserResponse.from(user, jwtService.getToken(user));
-        // return AuthResponse.builder()
-        //         .token(jwtService.getToken(user))
-        //         .username(user.getUsername())
-        //         .firstname(user.getFirstname())
-        //         .lastname(user.getLastname())
-        //         .build();
     }
 }
