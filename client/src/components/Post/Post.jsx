@@ -11,7 +11,6 @@ import PropTypes from 'prop-types';
 
 const Post = ({ data }) => {
   const user = useSelector((state) => state.authReducer.authData);
-  // const [liked, setLiked] = useState(data.likes.includes(user._id));
   const [liked, setLiked] = useState(
     data.likes && data.likes.includes(user._id)
   );
@@ -26,13 +25,22 @@ const Post = ({ data }) => {
     }
   }, [data.createdAt]);
 
-  const handleLike = (event) => {
-    if (event.key === 'Enter') {
-      likePost(data.id, user.id);
-      setLiked((prev) => !prev);
-      liked ? setLikes((prev) => prev - 1) : setLikes((prev) => prev + 1);
-    }
+  const updateLikes = () => {
+    likePost(data.id, user.id);
+    setLiked((prev) => !prev);
+    liked ? setLikes((prev) => prev - 1) : setLikes((prev) => prev + 1);
   };
+
+  const renderReactionButton = () => (
+    <button onClick={updateLikes} onKeyDown={updateLikes} tabIndex="0">
+      <img
+        src={liked ? Heart : NotLike}
+        alt=""
+        style={{ cursor: "pointer" }}
+      />
+    </button>
+  );
+
   return (
     <div className="Post">
       <img
@@ -41,18 +49,12 @@ const Post = ({ data }) => {
       />
 
       <div className="postReact">
-        <button onClick={handleLike} onKeyDown={handleLike} tabIndex="0">
-          <img
-            src={liked ? Heart : NotLike}
-            alt=""
-            style={{ cursor: "pointer" }}
-          />
-        </button> 
+        {renderReactionButton()}
         <button>
-        <img src={Comment} alt="" />
+          <img src={Comment} alt="" />
         </button>
         <button>
-        <img src={Share} alt="" />
+          <img src={Share} alt="" />
         </button>
       </div>
       <div className="detail">
