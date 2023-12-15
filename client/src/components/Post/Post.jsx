@@ -7,6 +7,7 @@ import NotLike from "../../img/notlike.png";
 import { likePost } from "../../api/PostsRequests";
 import { useSelector } from "react-redux";
 import { format } from "timeago.js";
+import PropTypes from 'prop-types';
 
 const Post = ({ data }) => {
   const user = useSelector((state) => state.authReducer.authData);
@@ -38,14 +39,19 @@ const Post = ({ data }) => {
       />
 
       <div className="postReact">
-        <img
-          src={liked ? Heart : NotLike}
-          alt=""
-          style={{ cursor: "pointer" }}
-          onClick={handleLike}
-        />
+        <button onClick={handleLike}>
+          <img
+            src={liked ? Heart : NotLike}
+            alt=""
+            style={{ cursor: "pointer" }}
+          />
+        </button> 
+        <button>
         <img src={Comment} alt="" />
+        </button>
+        <button>
         <img src={Share} alt="" />
+        </button>
       </div>
       <div className="detail">
         <span>
@@ -63,6 +69,12 @@ const Post = ({ data }) => {
       </div>
     </div>
   );
+};
+
+Post.propTypes = {
+  data: PropTypes.shape({
+    image: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default Post;
