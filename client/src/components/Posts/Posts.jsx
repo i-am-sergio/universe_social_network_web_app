@@ -10,9 +10,6 @@ const Posts = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.authReducer.authData);
   let { posts, loading } = useSelector((state) => state.postReducer);
-  // const state = useSelector((state) => state);
-  // console.log("Estado completo de postReducer:", state.postReducer);
-  // let loading = false;
 
   useEffect(() => {
     if (user) {
@@ -20,17 +17,21 @@ const Posts = () => {
     }
   }, [user]);
 
-  if (!posts) return "No Posts";
+  if (!posts){
+    return <div>No Posts</div>;
+  } 
   let postsToDisplay = params.id
     ? posts.data.filter((post) => post.userId === params.id)
     : posts.data;
   return (
     <div className="Posts">
-      {loading
-        ? "Fetching posts...."
-        : postsToDisplay.map((post) => {
-            return <Post data={post} key={post.id} />;
-          })}
+      {loading ? (
+        <div>Fetching posts....</div>
+      ) : (
+        postsToDisplay.map((post) => {
+          return <Post data={post} key={post.id} />;
+        })
+      )}
     </div>
   );
 };
