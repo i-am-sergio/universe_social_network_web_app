@@ -82,32 +82,32 @@ const PostShare = () => {
           ref={desc}
         />
         <div className="postOptions">
-          <div
-            className="option"
-            style={{ color: "var(--photo)", cursor: "pointer" }}
-            onClick={() => imageRef.current.click()}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                imageRef.current.click();
-              }
-            }}
-          >
-            <UilScenery />
-            Photo
-          </div>
+          <button
+              className="option"
+              style={{ color: "var(--photo)", cursor: "pointer" }}
+              onClick={() => imageRef.current.click()}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  imageRef.current.click();
+                }
+              }}
+            >
+              <UilScenery />
+              Photo
+          </button>
 
-          <div className="option" style={{ color: "var(--video)" }}>
+          <button className="option" style={{ color: "var(--video)" }}>
             <UilPlayCircle />
             Video
-          </div>
-          <div className="option" style={{ color: "var(--location)" }}>
+          </button>
+          <button className="option" style={{ color: "var(--location)" }}>
             <UilLocationPoint />
             Location
-          </div>
-          <div className="option" style={{ color: "var(--shedule)" }}>
+          </button>
+          <button className="option" style={{ color: "var(--shedule)" }}>
             <UilSchedule />
             Shedule
-          </div>
+          </button>
           <button
             className="button ps-button"
             onClick={handleUpload}
