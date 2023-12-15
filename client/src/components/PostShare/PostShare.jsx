@@ -25,13 +25,9 @@ const PostShare = () => {
   }
 
   // handle Image Change
-  // if (event.target.files && event.target.files[0]) {
   const onImageChange = (event) => {
-    console.log("onImageChange called");
     if (event.target.files?.[0]) {
-      let img = event.target.files[0];
-      console.log("Image selected:", img);
-      setImage(img);
+      setImage(event.target.files[0]);
     }
   };
 
@@ -59,6 +55,15 @@ const PostShare = () => {
     resetShare();
   };
 
+  const OptionButton = ({ icon, color, onClick, children }) => {
+    return (
+      <button className="option" style={{ color, cursor: "pointer" }} onClick={onClick}>
+        {icon}
+        {children}
+      </button>
+    );
+  };
+
   // Reset Post Share
   const resetShare = () => {
     setImage(null);
@@ -82,32 +87,21 @@ const PostShare = () => {
           ref={desc}
         />
         <div className="postOptions">
-          <button
-              className="option"
-              style={{ color: "var(--photo)", cursor: "pointer" }}
-              onClick={() => imageRef.current.click()}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  imageRef.current.click();
-                }
-              }}
-            >
-              <UilScenery />
-              Photo
-          </button>
+          <OptionButton icon={<UilScenery />} color="var(--photo)" onClick={() => imageRef.current.click()}>
+            Photo
+          </OptionButton>
 
-          <button className="option" style={{ color: "var(--video)" }}>
-            <UilPlayCircle />
+          <OptionButton icon={<UilPlayCircle />} color="var(--video)">
             Video
-          </button>
-          <button className="option" style={{ color: "var(--location)" }}>
-            <UilLocationPoint />
+          </OptionButton>
+          
+          <OptionButton icon={<UilLocationPoint />} color="var(--location)">
             Location
-          </button>
-          <button className="option" style={{ color: "var(--shedule)" }}>
-            <UilSchedule />
-            Shedule
-          </button>
+          </OptionButton>
+          
+          <OptionButton icon={<UilSchedule />} color="var(--shedule)">
+            Schedule
+          </OptionButton>
           <button
             className="button ps-button"
             onClick={handleUpload}
