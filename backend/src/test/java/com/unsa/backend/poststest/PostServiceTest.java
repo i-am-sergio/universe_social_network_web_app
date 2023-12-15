@@ -10,10 +10,10 @@ import java.util.Optional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.unsa.backend.posts.PostModel;
 import com.unsa.backend.posts.PostRepository;
@@ -24,57 +24,38 @@ import com.unsa.backend.posts.PostService;
 @ExtendWith(MockitoExtension.class)
 class PostServiceTest {
 
-    @Mock
+    @MockBean
     private PostRepository postRepository;
 
-    @InjectMocks
+    @Autowired
     private PostService postService;
 
-    @Test
     @DisplayName("Test get all posts")
+    @Test
     void testGetPosts() {
         // given
-        List<PostModel> mockPosts = Arrays.asList(new PostModel(), new PostModel());
-        when(postRepository.findAll()).thenReturn(mockPosts);
-
+        when(postRepository.findAll()).thenReturn(Arrays.asList(new PostModel(), new PostModel()));
         // when
         List<PostModel> posts = postService.getPosts();
-
         // then
-        assertNull(posts);
-        assertEquals(mockPosts, posts);
+        assertNotNull(posts);
+        assertEquals(2, posts.size());
         verify(postRepository, times(1)).findAll();
     }
 
-    @Test
     @DisplayName("Test get post by id")
+    @Test
     void testGetPostById() {
         // given
-        long postId = 1L;
-        PostModel mockPost = new PostModel();
-        when(postRepository.findById(postId)).thenReturn(Optional.of(mockPost));
+        Long postId = 1L;
+        PostModel post = new PostModel();
+        post.setId(postId);
+        when(postRepository.findById(postId)).thenReturn(Optional.of(post));
         // when
-        PostModel post = postService.getPostById(postId);
+        PostModel postFound = postService.getPostById(postId);
         // then
-        System.out.println("Post: " + post);
-        System.out.println("MockPost: " + mockPost);
-        assertNull(post);
-        assertEquals(mockPost, post);
+        assertNotNull(postFound);
+        assertEquals(postId, postFound.getId());
         verify(postRepository, times(1)).findById(postId);
     }
-
-    // @Test
-    // @DisplayName("Test get post by id when not found")
-    // void testGetPostByIdNotFound() {
-    // // given
-    // long postId = 1L;
-    // when(postRepository.findById(postId)).thenReturn(Optional.empty());
-
-    // // when
-    // PostModel post = postService.getPostById(postId);
-
-    // // then
-    // assertNull(post);
-    // verify(postRepository, times(1)).findById(postId);
-    // }
 }
