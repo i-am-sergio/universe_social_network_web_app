@@ -21,11 +21,10 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
   };
 
   const onImageChange = (event) => {
-    if (event.target.files?.event.target.files[0]) {
+    if (event.target.files && event.target.files[0]) {
       let img = event.target.files[0];
-      event.target.name === "profileImage"
-        ? setProfileImage(img)
-        : setCoverImage(img);
+      const isProfileImage = event.target.name === "profileImage";
+      isProfileImage ? setProfileImage(img) : setCoverImage(img);
     }
   };
 
