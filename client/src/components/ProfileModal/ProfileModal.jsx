@@ -4,6 +4,8 @@ import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { uploadImage } from "../../actions/UploadAction";
 import { updateUser } from "../../actions/UserAction";
+import PropTypes from 'prop-types';
+
 
 const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
   const theme = useMantineTheme();
@@ -148,5 +150,12 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
     </Modal>
   );
 };
+
+ProfileModal.propTypes = {
+  modalOpened: PropTypes.bool.isRequired,
+  setModalOpened: PropTypes.func.isRequired,
+  data: PropTypes.object.isRequired, 
+};
+
 
 export default ProfileModal;
