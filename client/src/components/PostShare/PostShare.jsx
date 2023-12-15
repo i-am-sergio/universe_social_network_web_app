@@ -43,20 +43,27 @@ const PostShare = () => {
       desc: desc.current.value,
     };
     const formData = new FormData();
-    if (image) {
-      const fileName = Date.now() + image.name;
-      formData.append("name", fileName);
-      formData.append("file", image);
-      newPost.image = fileName;
-      try {
-        dispatch(uploadImage(formData));
-      } catch (err) {
-        console.log(err);
+    try {
+      if (image) {
+        const fileName = Date.now() + image.name;
+        formData.append("name", fileName);
+        formData.append("file", image);
+        dispatch(uploadImage(formData))
+          .then((response) => {
+            newPost.image = response;
+            dispatch(uploadPost(newPost));
+            resetShare();
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      } else {
+        dispatch(uploadPost(newPost));
+        resetShare();
       }
+    } catch (error) {
+      console.error("Error:", error);
     }
-
-    dispatch(uploadPost(newPost));
-    resetShare();
   };
 
   // Reset Post Share
