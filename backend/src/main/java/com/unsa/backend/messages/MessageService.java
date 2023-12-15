@@ -2,13 +2,15 @@ package com.unsa.backend.messages;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class MessageService {
-    @Autowired
-    MessageRepository messageRepository;
+    
+    private final MessageRepository messageRepository;
 
     public MessageModel createMessage(MessageModel newMessage) {
         try {
