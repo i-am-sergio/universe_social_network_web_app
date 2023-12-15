@@ -1,4 +1,4 @@
-package com.unsa.backend.posts;
+package com.unsa.backend.poststest;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -14,6 +14,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import com.unsa.backend.posts.PostModel;
+import com.unsa.backend.posts.PostRepository;
+import com.unsa.backend.posts.PostService;
 
 @SpringBootTest
 @DisplayName("Test Service")
@@ -62,15 +66,15 @@ class PostServiceTest {
     // @Test
     // @DisplayName("Test get post by id when not found")
     // void testGetPostByIdNotFound() {
-    //     // given
-    //     long postId = 1L;
-    //     when(postRepository.findById(postId)).thenReturn(Optional.empty());
+    // // given
+    // long postId = 1L;
+    // when(postRepository.findById(postId)).thenReturn(Optional.empty());
 
-    //     // when
-    //     PostModel post = postService.getPostById(postId);
+    // // when
+    // PostModel post = postService.getPostById(postId);
 
-    //     // then
-    //     assertNull(post);
-    //     verify(postRepository, times(1)).findById(postId);
+    // // then
+    // assertNull(post);
+    // verify(postRepository, times(1)).findById(postId);
     // }
 }
