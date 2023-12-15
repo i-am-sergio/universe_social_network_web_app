@@ -15,11 +15,11 @@ const Posts = () => {
     if (user) {
       dispatch(getTimelinePosts(user.id));
     }
-  }, [user]);
+  }, [user, dispatch]);
 
-  if (!posts){
+  if (!posts) {
     return <div>No Posts</div>;
-  } 
+  }
   let postsToDisplay = params.id
     ? posts.data.filter((post) => post.userId === params.id)
     : posts.data;
