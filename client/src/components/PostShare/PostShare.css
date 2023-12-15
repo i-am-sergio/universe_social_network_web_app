@@ -50,7 +50,6 @@
 
 .option:hover{
     cursor: pointer;
-    /* border-color: rgb(153, 7, 7); */
     border: 1px solid rgb(153, 7, 7);
 }
 .ps-button{
@@ -63,7 +62,6 @@
 
 .previewImage{
     position: relative;
-    /* display: flex; */
 }
 
 .previewImage>svg{
