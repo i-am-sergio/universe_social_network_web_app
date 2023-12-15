@@ -64,11 +64,4 @@ public class JwtService {
         return getExpiration(token).before(new Date());
     }
 
-    // private Key getKey(){
-        // return this.SECRET_KEY;
-    // }
-    // private Key getKey(){
-    //     byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-    //     return Keys.hmacShaKeyFor(keyBytes);
-    // } 
 }
