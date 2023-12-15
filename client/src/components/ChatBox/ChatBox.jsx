@@ -34,14 +34,16 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const { data } = await getMessages(chat.id);
-        setMessages(data);
+        if (chat !== null) {
+          const { data } = await getMessages(chat.id);
+          setMessages(data);
+        }
       } catch (error) {
         console.log(error);
       }
     };
 
-    if (chat !== null) fetchMessages();
+    fetchMessages();
   }, [chat]);
 
   // Always scroll to last Message
