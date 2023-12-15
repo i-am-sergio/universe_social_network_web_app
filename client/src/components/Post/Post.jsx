@@ -26,10 +26,12 @@ const Post = ({ data }) => {
     }
   }, [data.createdAt]);
 
-  const handleLike = () => {
-    likePost(data.id, user.id);
-    setLiked((prev) => !prev);
-    liked ? setLikes((prev) => prev - 1) : setLikes((prev) => prev + 1);
+  const handleLike = (event) => {
+    if (event.key === 'Enter') {
+      likePost(data.id, user.id);
+      setLiked((prev) => !prev);
+      liked ? setLikes((prev) => prev - 1) : setLikes((prev) => prev + 1);
+    }
   };
   return (
     <div className="Post">
@@ -39,7 +41,7 @@ const Post = ({ data }) => {
       />
 
       <div className="postReact">
-        <button onClick={handleLike}>
+        <button onClick={handleLike} onKeyDown={handleLike} tabIndex="0">
           <img
             src={liked ? Heart : NotLike}
             alt=""
