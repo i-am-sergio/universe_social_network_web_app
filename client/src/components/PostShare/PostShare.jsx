@@ -9,6 +9,27 @@ import {
 } from "@iconscout/react-unicons";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadImage, uploadPost } from "../../actions/UploadAction";
+import PropTypes from "prop-types";
+
+const OptionButton = ({ icon, color, onClick, children }) => {
+  return (
+    <button
+      className="option"
+      style={{ color, cursor: "pointer" }}
+      onClick={onClick}
+    >
+      {icon}
+      {children}
+    </button>
+  );
+};
+
+OptionButton.propTypes = {
+  icon: PropTypes.element,
+  color: PropTypes.string,
+  onClick: PropTypes.func,
+  children: PropTypes.node,
+};
 
 const PostShare = () => {
   const dispatch = useDispatch();
@@ -62,15 +83,6 @@ const PostShare = () => {
     }
   };
 
-  const OptionButton = ({ icon, color, onClick, children }) => {
-    return (
-      <button className="option" style={{ color, cursor: "pointer" }} onClick={onClick}>
-        {icon}
-        {children}
-      </button>
-    );
-  };
-
   // Reset Post Share
   const resetShare = () => {
     setImage(null);
@@ -94,18 +106,22 @@ const PostShare = () => {
           ref={desc}
         />
         <div className="postOptions">
-          <OptionButton icon={<UilScenery />} color="var(--photo)" onClick={() => imageRef.current.click()}>
+          <OptionButton
+            icon={<UilScenery />}
+            color="var(--photo)"
+            onClick={() => imageRef.current.click()}
+          >
             Photo
           </OptionButton>
 
           <OptionButton icon={<UilPlayCircle />} color="var(--video)">
             Video
           </OptionButton>
-          
+
           <OptionButton icon={<UilLocationPoint />} color="var(--location)">
             Location
           </OptionButton>
-          
+
           <OptionButton icon={<UilSchedule />} color="var(--shedule)">
             Schedule
           </OptionButton>
