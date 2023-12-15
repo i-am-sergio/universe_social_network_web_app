@@ -76,9 +76,6 @@ const Post = ({ data }) => {
 Post.propTypes = {
   data: PropTypes.shape({
     image: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    desc: PropTypes.string.isRequired, 
-    createdAt: PropTypes.string,
   }).isRequired,
 };
 
