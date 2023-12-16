@@ -6,6 +6,7 @@ pipeline {
         PATH = "${SONAR_SCANNER_BIN}:${env.PATH}"
         PROJECT_DIR = "/home/neodev/Develop/fullstack_project_soft_engineering_ii"
         BACKEND_DIR = "${PROJECT_DIR}/backend"
+        JMETER_RESULTS_DIR = "${PROJECT_DIR}/backend/src/test/resources/jmeter"
     }
 
     stages {
@@ -24,6 +25,7 @@ pipeline {
             steps {
                 script {
                     dir(PROJECT_DIR) {
+                        sh "sonar-scanner --version"
                         //sh "sonar-scanner" // Funciona
                     }
                 }
@@ -32,16 +34,33 @@ pipeline {
         stage("Unit Testing") {
             steps {
                 echo "junit + mockito tests..."
+                script {
+                    dir(BACKEND_DIR) {
+                        sh "mvn --version"
+                        // sh "mvn test" // funciona
+                    }
+                }
             }
         }
         stage("Functional Testing"){
             steps {
                 echo "Selenium..."
+                script {
+                    dir(BACKEND_DIR) {
+                        sh "mvn --version"
+                        //sh "mvn test -Dtest=TestSelenium"
+                    }
+                }
             }
         }
         stage("Performance Testing"){
             steps {
-                echo "Jmeter..."
+                script {
+                    dir(JMETER_RESULTS_DIR) {
+                        sh "jmeter --version"  
+                        // sh "jmeter -n -t ./PerformanceTests.jmx -l results.csv -e -o report"
+                    }
+                }
             }
         }
         stage("Security Testing"){
@@ -54,11 +73,11 @@ pipeline {
                 script {
                     dir(PROJECT_DIR) {
                         sh "docker --version"
-                        // sh "docker compose build" // construye los contenedores // funciona
-                        // sh "docker compose up -d" // ejecuta los contenedores
-                        // sleep(time: 2, unit: 'MINUTES') // espera 1 minuto
-                        // sh "docker compose down" // detiene los contenedores
-                        // sh "docker compose down --volumes --rmi all" // elimina contenedores
+                        //sh "docker compose build" // construye los contenedores // funciona
+                        //sh "docker compose up -d" // ejecuta los contenedores
+                        //sleep(time: 2, unit: 'MINUTES') // espera 1 minuto
+                        //sh "docker compose down" // detiene los contenedores
+                        //sh "docker compose down --volumes --rmi all" // elimina contenedores
                     }
                 }
             }
