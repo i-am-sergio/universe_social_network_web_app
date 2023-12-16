@@ -48,7 +48,7 @@ const Conversation = ({ data, currentUser, online }) => {
 
 Conversation.propTypes = {
   data: PropTypes.shape({
-    members: PropTypes.arrayOf(PropTypes.string), // Adjust the type accordingly
+    members: PropTypes.arrayOf(PropTypes.string),
   }),
   currentUser: PropTypes.string.isRequired,
   online: PropTypes.bool.isRequired,
