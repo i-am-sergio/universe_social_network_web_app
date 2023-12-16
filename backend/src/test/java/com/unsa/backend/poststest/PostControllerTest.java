@@ -28,11 +28,18 @@ import com.unsa.backend.posts.PostModel;
 import com.unsa.backend.posts.PostService;
 import com.unsa.backend.services.TimelineService;
 
+
 @SpringBootTest
 @AutoConfigureMockMvc
 @DisplayName("Test Service")
 @ExtendWith(MockitoExtension.class)
 class PostControllerTest {
+
+    private static final String IMAGE1 = "image1";
+    private static final String IMAGE2 = "image2";
+    private static final String DESC1 = "desc1";
+    private static final String DESC2 = "desc2";
+    private static final String URL_BASE = "/posts";
 
     @MockBean
     private PostService postService;
@@ -40,8 +47,10 @@ class PostControllerTest {
     @MockBean
     private TimelineService timelineService;
 
-    @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    void setMockMvc(MockMvc mockMvc) { this.mockMvc = mockMvc; }
 
     /**
      * Test case for finding all posts from the Controller.
@@ -49,11 +58,11 @@ class PostControllerTest {
     @DisplayName("Test get all posts")
     @Test
     void testGetPosts() throws Exception {
-        PostModel post1 = PostModel.builder().id(1L).desc("desc1").image("image1").build();
-        PostModel post2 = PostModel.builder().id(2L).desc("desc2").image("image2").build();
+        PostModel post1 = PostModel.builder().id(1L).desc(DESC1).image(IMAGE1).build();
+        PostModel post2 = PostModel.builder().id(2L).desc(DESC2).image(IMAGE2).build();
         List<PostModel> posts = Arrays.asList(post1, post2);
         when(postService.getPosts()).thenReturn(posts);
-        mockMvc.perform(get("/posts"))
+        mockMvc.perform(get(URL_BASE))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].id", is(1)))
@@ -68,7 +77,7 @@ class PostControllerTest {
     void testGetPostsEmpty() throws Exception {
         List<PostModel> posts = Arrays.asList();
         when(postService.getPosts()).thenReturn(posts);
-        mockMvc.perform(get("/posts"))
+        mockMvc.perform(get(URL_BASE))
                 .andExpect(status().isNotFound());
     }
 
@@ -79,9 +88,9 @@ class PostControllerTest {
     @Test
     void testGetPostById() throws Exception {
         Long postId = 1L;
-        PostModel post = PostModel.builder().id(postId).desc("desc1").image("image1").build();
+        PostModel post = PostModel.builder().id(postId).desc(DESC1).image(IMAGE1).build();
         when(postService.getPostById(postId)).thenReturn(post);
-        mockMvc.perform(get("/posts/{id}", postId))
+        mockMvc.perform(get(URL_BASE+"/{id}", postId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id", is(1)));
     }
@@ -95,7 +104,7 @@ class PostControllerTest {
     void testGetPostByIdNotFound() throws Exception {
         Long postId = 1L;
         when(postService.getPostById(postId)).thenReturn(null);
-        mockMvc.perform(get("/posts/{id}", postId))
+        mockMvc.perform(get(URL_BASE+"/{id}", postId))
                 .andExpect(status().isNotFound());
     }
 
@@ -105,9 +114,9 @@ class PostControllerTest {
     @DisplayName("Test create post")
     @Test
     void testCreatePost() throws Exception {
-        PostModel post = PostModel.builder().desc("desc1").image("image1").build();
+        PostModel post = PostModel.builder().desc(DESC1).image(IMAGE1).build();
         when(postService.createPost(post)).thenReturn(null);
-        mockMvc.perform(post("/posts")
+        mockMvc.perform(post(URL_BASE)
                 .contentType("application/json")
                 .content("{\"desc\": \"desc1\", \"image\": \"image1\"}"))
                 .andExpect(status().isOk());
@@ -121,7 +130,7 @@ class PostControllerTest {
     void testUpdatePost() throws Exception {
         Long postId = 1L;
         Long userId = 1L;
-        PostModel post = PostModel.builder().id(postId).desc("desc1").image("image1").userId(userId).build();
+        PostModel post = PostModel.builder().id(postId).desc(DESC1).image(IMAGE1).userId(userId).build();
         PostModel updatedPost = PostModel.builder().id(postId).desc("updated desc").image("updated image")
                 .userId(userId).build();
         when(postService.getPostById(postId)).thenReturn(post);
@@ -133,7 +142,7 @@ class PostControllerTest {
             return null;
         }).when(postService).updatePost(any(PostModel.class), any(PostModel.class));
 
-        mockMvc.perform(put("/posts/{id}", postId)
+        mockMvc.perform(put(URL_BASE+"/{id}", postId)
                 .contentType("application/json")
                 .content(new ObjectMapper().writeValueAsString(updatedPost)))
                 .andExpect(status().isOk())
@@ -148,7 +157,7 @@ class PostControllerTest {
     @ValueSource(longs = { 1L, 2L, 3L })
     void testUpdatePostNotFound(Long postId) throws Exception {
         when(postService.getPostById(postId)).thenReturn(null);
-        mockMvc.perform(put("/posts/{id}", postId)
+        mockMvc.perform(put(URL_BASE+"/{id}", postId)
                 .contentType("application/json")
                 .content("{\"desc\": \"desc1\", \"image\": \"image1\"}"))
                 .andExpect(status().isNotFound());
@@ -161,10 +170,10 @@ class PostControllerTest {
     @Test
     void testDeletePost() throws Exception {
         Long postId = 1L;
-        PostModel post = PostModel.builder().id(postId).desc("desc1").image("image1").build();
+        PostModel post = PostModel.builder().id(postId).desc(DESC1).image(IMAGE1).build();
         when(postService.getPostById(postId)).thenReturn(post);
         when(postService.deletePost(postId)).thenReturn(true);
-        mockMvc.perform(delete("/posts/{id}", postId))
+        mockMvc.perform(delete(URL_BASE+"/{id}", postId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", is("Post deleted!")));
     }
@@ -178,7 +187,7 @@ class PostControllerTest {
         Long postId = 1L;
         when(postService.getPostById(postId)).thenReturn(null);
         when(postService.deletePost(postId)).thenReturn(false);
-        mockMvc.perform(delete("/posts/{id}", postId))
+        mockMvc.perform(delete(URL_BASE+"/{id}", postId))
                 .andExpect(status().isNotFound());
     }
 
@@ -189,7 +198,7 @@ class PostControllerTest {
     @Test
     void testLikePost() throws Exception {
         Long postId = 1L;
-        PostModel post = PostModel.builder().id(postId).desc("desc1").image("image1")
+        PostModel post = PostModel.builder().id(postId).desc(DESC1).image(IMAGE1)
                 .likes(Arrays.asList()).build();
         when(postService.getPostById(postId)).thenReturn(post);
         mockMvc.perform(put("/posts/{id}/like", postId)
@@ -221,7 +230,7 @@ class PostControllerTest {
     @Test
     void testDislikePost() throws Exception {
         Long postId = 1L;
-        PostModel post = PostModel.builder().id(postId).desc("desc1").image("image1")
+        PostModel post = PostModel.builder().id(postId).desc(DESC1).image(IMAGE1)
                 .likes(Arrays.asList(2L)).build();
         when(postService.getPostById(postId)).thenReturn(post);
         mockMvc.perform(put("/posts/{id}/like", postId)
@@ -252,8 +261,8 @@ class PostControllerTest {
     @DisplayName("Test get timeline")
     @Test
     void testGetTimeline() throws Exception {
-        PostModel post1 = PostModel.builder().id(1L).desc("desc1").image("image1").userId(1L).build();
-        PostModel post2 = PostModel.builder().id(2L).desc("desc2").image("image2").userId(1L).build();
+        PostModel post1 = PostModel.builder().id(1L).desc(DESC1).image(IMAGE1).userId(1L).build();
+        PostModel post2 = PostModel.builder().id(2L).desc(DESC2).image(IMAGE2).userId(1L).build();
         List<PostModel> posts = Arrays.asList(post1, post2);
         when(timelineService.getTimelinePosts(1L)).thenReturn(posts);
         mockMvc.perform(get("/posts/{userId}/timeline", 1L))
