@@ -32,3 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 .scannerwork
+
+## JMETER ##
+/src/test/resources/jmeter/report/
+/src/test/resources/jmeter/results.csv
