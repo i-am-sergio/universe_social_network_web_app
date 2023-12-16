@@ -34,35 +34,35 @@ const FollowersCard = ({ location }) => {
 
   }, []);
 
-  
+
 
   return (
-  <div className="FollowersCard">
-    <h3>Personas que quizás conozcas</h3>
+    <div className="FollowersCard">
+      <h3>Personas que quizás conozcas</h3>
 
-    {persons.map((person, id) => {
-      if (person.id !== user.id) return <User person={person} key={person.id} />;
-    })}
-    {!location ? (
-      <span
-        onClick={() => setModalOpened(true)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            setModalOpened(true);
-          }
-        }}
-      >
-        Show more
-      </span>
-    ) : (
-      ""
-    )}
+      {persons.map((person, id) => {
+        if (person.id !== user.id) return <User person={person} key={person.id} />;
+      })}
+      {!location ? (
+        <button
+          onClick={() => setModalOpened(true)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              setModalOpened(true);
+            }
+          }}
+        >
+          Show more
+        </button>
+      ) : (
+        ""
+      )}
 
-    <FollowersModal
-      modalOpened={modalOpened}
-      setModalOpened={setModalOpened}
-    />
-  </div>
+      <FollowersModal
+        modalOpened={modalOpened}
+        setModalOpened={setModalOpened}
+      />
+    </div>
   );
 
 };

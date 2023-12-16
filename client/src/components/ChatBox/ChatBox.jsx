@@ -94,9 +94,9 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
                     src={
                       userData?.profilePicture
                         ? process.env.REACT_APP_PUBLIC_FOLDER +
-                          userData.profilePicture
+                        userData.profilePicture
                         : process.env.REACT_APP_PUBLIC_FOLDER +
-                          "defaultProfile.png"
+                        "defaultProfile.png"
                     }
                     alt="Profile"
                     className="followerImage"
@@ -133,7 +133,7 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
               ))}
             </div>
             {/* chat-sender */}
-            <div className="chat-sender">
+            <div className="chat-sender" tabIndex={0} onKeyDown={handleKeyDown}>
               <div className="button-container">
                 <button onClick={() => imageRef.current.click()}>+</button>
               </div>
@@ -148,7 +148,7 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
                 style={{ display: "none" }}
                 ref={imageRef}
               />
-            </div>{" "}
+            </div>
           </>
         ) : (
           <span className="chatbox-empty-message">
