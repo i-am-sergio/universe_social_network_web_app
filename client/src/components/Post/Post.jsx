@@ -8,13 +8,11 @@ import NotLike from "../../img/notlike.png";
 import { likePost } from "../../api/PostsRequests";
 import { useSelector } from "react-redux";
 import { format } from "timeago.js";
-import PropTypes from "prop-types";
 
 const Post = ({ data }) => {
 
   const user = useSelector((state) => state.authReducer.authData);
   const [liked, setLiked] = useState(data.likes?.includes(user._id));
-  // const [likes, setLikes] = useState(data.likes.length)
   const [likes, setLikes] = useState(data.likes ? data.likes.length : 0);
 
   const [createdAt, setCreatedAt] = useState(null);
