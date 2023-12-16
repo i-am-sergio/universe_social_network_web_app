@@ -36,3 +36,6 @@ build/
 ## JMETER ##
 /src/test/resources/jmeter/report/
 /src/test/resources/jmeter/results.csv
+
+## SELERNIUM ##
+/src/test/resources/selenium/reports/

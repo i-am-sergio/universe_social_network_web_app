@@ -7,6 +7,7 @@ pipeline {
         PROJECT_DIR = "/home/neodev/Develop/fullstack_project_soft_engineering_ii"
         BACKEND_DIR = "${PROJECT_DIR}/backend"
         JMETER_RESULTS_DIR = "${PROJECT_DIR}/backend/src/test/resources/jmeter"
+        SELENIUM_RESULTS_DIR = "${PROJECT_DIR}/backend/src/test/resources/selenium"
     }
 
     stages {
@@ -46,9 +47,9 @@ pipeline {
             steps {
                 echo "Selenium..."
                 script {
-                    dir(BACKEND_DIR) {
-                        sh "mvn --version"
-                        //sh "mvn test -Dtest=TestSelenium"
+                    dir(SELENIUM_RESULTS_DIR) {
+                        sh "python --version"
+                        // sh "python ./login_test.py --verbose" // funciona
                     }
                 }
             }
