@@ -1,12 +1,6 @@
 import React, { useState, useRef } from "react";
 import "./PostShare.css";
-import {
-  UilScenery,
-  UilPlayCircle,
-  UilLocationPoint,
-  UilSchedule,
-  UilTimes,
-} from "@iconscout/react-unicons";
+import { UilScenery, UilPlayCircle, UilLocationPoint, UilSchedule, UilTimes } from "@iconscout/react-unicons";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadImage, uploadPost } from "../../actions/UploadAction";
 
@@ -18,43 +12,47 @@ const PostShare = () => {
   const desc = useRef();
   const serverPublic = process.env.REACT_APP_PUBLIC_FOLDER;
   const imageRef = useRef();
-
+  
   // Verificar si user está definido
   if (!user) {
     return <div>Loading...</div>;
   }
+  
 
   // handle Image Change
   // if (event.target.files && event.target.files[0]) {
   const onImageChange = (event) => {
-    console.log("onImageChange called");
     if (event.target.files?.[0]) {
       let img = event.target.files[0];
-      console.log("Image selected:", img);
       setImage(img);
     }
   };
 
+
   // handle post upload
   const handleUpload = async (e) => {
     e.preventDefault();
+
+    //post data
     const newPost = {
       userId: user.id,
       desc: desc.current.value,
     };
-    const formData = new FormData();
+
+    // if there is an image with post
     if (image) {
+      const data = new FormData();
       const fileName = Date.now() + image.name;
-      formData.append("name", fileName);
-      formData.append("file", image);
+      data.append("name", fileName);
+      data.append("file", image);
       newPost.image = fileName;
+      console.log(newPost);
       try {
-        dispatch(uploadImage(formData));
+        dispatch(uploadImage(data));
       } catch (err) {
         console.log(err);
       }
     }
-
     dispatch(uploadPost(newPost));
     resetShare();
   };
