@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { getUser } from "../../api/UserRequests";
+import PropTypes from 'prop-types';
 
 const Conversation = ({ data, currentUser, online }) => {
 
@@ -44,5 +45,14 @@ const Conversation = ({ data, currentUser, online }) => {
     </>
   );
 };
+
+Conversation.propTypes = {
+  data: PropTypes.shape({
+    members: PropTypes.arrayOf(PropTypes.string), // Adjust the type accordingly
+  }),
+  currentUser: PropTypes.string.isRequired,
+  online: PropTypes.bool.isRequired,
+};
+
 
 export default Conversation;
