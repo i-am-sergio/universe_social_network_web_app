@@ -1,5 +1,6 @@
 package com.unsa.backend.posts;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,10 +12,10 @@ import lombok.AllArgsConstructor;
 @Service
 @AllArgsConstructor
 public class PostService {
-    
+
     private final PostRepository postRepository;
 
-    public List<PostModel> getPosts(){
+    public List<PostModel> getPosts() {
 
         return postRepository.findAll();
     }
@@ -49,18 +50,20 @@ public class PostService {
 
     @Transactional
     public void addLike(PostModel post, Long userId) {
-        List<Long> likes = post.getLikes();
+        List<Long> likes = new ArrayList<>(post.getLikes());
         if (!likes.contains(userId)) {
             likes.add(userId);
+            post.setLikes(likes);
             postRepository.save(post);
         }
     }
 
     @Transactional
     public void removeLike(PostModel post, Long userId) {
-        List<Long> likes = post.getLikes();
+        List<Long> likes = new ArrayList<>(post.getLikes());
         if (likes.contains(userId)) {
             likes.remove(userId);
+            post.setLikes(likes);
             postRepository.save(post);
         }
     }
