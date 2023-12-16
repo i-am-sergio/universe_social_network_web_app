@@ -1,61 +1,66 @@
 pipeline {
     agent any
-    environment {
-        SONAR_TOKEN_BACKEND = 'sqp_b2872ad27625f15ff27b1e0b1204bc12b355c9cd'
-        SONAR_TOKEN_CLIENT = 'sqp_58e7210fe555a54e4e45daacda3304374aa78774'
-    }
-    stages {
-        stage("SonarQube analysis for Backend") {
-            steps {
-                script {
-                    withSonarQubeEnv('sonarqube') {
-                        dir("D:\\Proyects\\fullstack_project_soft_engineering_ii\\backend") {
-                            bat "sonar-scanner -Dsonar.projectKey=SocialMedia_Backend -Dsonar.projectName=SocialMedia_Backend -Dsonar.host.url=http://localhost:9000 -Dsonar.login=%SONAR_TOKEN_BACKEND% -Dsonar.java.binaries=target/classes -Dsonar.sources=."
-                        }
-                    }
-                }
-            }
-        }
-        stage("SonarQube analysis for Client") {
-            steps {
-                script {
-                    withSonarQubeEnv('sonarqube') {
-                        dir("D:\\Proyects\\fullstack_project_soft_engineering_ii\\client") {
-                            bat "sonar-scanner -Dsonar.projectKey=SocialMedia_Client -Dsonar.projectName=SocialMedia_Client -Dsonar.host.url=http://localhost:9000 -Dsonar.login=%SONAR_TOKEN_CLIENT% -Dsonar.exclusions=node_modules/** -Dsonar.sources=."
-                        }
-                    }
-                }
-            }
-        }
-        stage("Build") {
-            steps {
-                script {
-                    // Ejecutar comandos en el directorio del proyecto backend
-                    dir("D:\\Proyects\\fullstack_project_soft_engineering_ii\\backend") {
-                        bat 'echo Hello Build from Jenkins in Backend!'
-                        bat 'mvn clean package'
-                    }
 
-                    // Ejecutar comandos en el directorio del proyecto cliente
-                    dir("D:\\Proyects\\fullstack_project_soft_engineering_ii\\client") {
-                        bat 'echo Hello Build from Jenkins in Client!'
-                        bat 'npm install'
+    environment {
+        SONAR_SCANNER_BIN = "/opt/sonar-scanner/bin"
+        PATH = "${SONAR_SCANNER_BIN}:${env.PATH}"
+        PROJECT_DIR = "/home/neodev/Develop/fullstack_project_soft_engineering_ii"
+        BACKEND_DIR = "${PROJECT_DIR}/backend"
+    }
+
+    stages {
+        stage("Automatic Build") {
+            steps {
+                script {
+                    dir(BACKEND_DIR) {
+                        sh "mvn --version"
+                        //sh "mvn clean install" //con tests // funciona
+                        //sh "mvn clean install -DskipTests" // sin tests // funciona
                     }
                 }
             }
         }
-        stage("Test"){
+        stage("SonarQube Static Analysis") {
             steps {
-                bat 'echo Hello Test from Jenkins!'
-                dir("D:\\Proyects\\fullstack_project_soft_engineering_ii\\backend") {
-                    bat 'echo Hello Build from Jenkins in Backend!'
-                    bat 'mvn test'
+                script {
+                    dir(PROJECT_DIR) {
+                        //sh "sonar-scanner" // Funciona
+                    }
                 }
             }
         }
-        stage("Deploy"){
+        stage("Unit Testing") {
             steps {
-                bat 'echo Hello Deploy from Jenkins!'
+                echo "junit + mockito tests..."
+            }
+        }
+        stage("Functional Testing"){
+            steps {
+                echo "Selenium..."
+            }
+        }
+        stage("Performance Testing"){
+            steps {
+                echo "Jmeter..."
+            }
+        }
+        stage("Security Testing"){
+            steps {
+                echo "OWASP..."
+            }
+        }
+        stage("Docker Image"){
+            steps {
+                script {
+                    dir(PROJECT_DIR) {
+                        sh "docker --version"
+                        // sh "docker compose build" // construye los contenedores // funciona
+                        // sh "docker compose up -d" // ejecuta los contenedores
+                        // sleep(time: 2, unit: 'MINUTES') // espera 1 minuto
+                        // sh "docker compose down" // detiene los contenedores
+                        // sh "docker compose down --volumes --rmi all" // elimina contenedores
+                    }
+                }
             }
         }
     }
