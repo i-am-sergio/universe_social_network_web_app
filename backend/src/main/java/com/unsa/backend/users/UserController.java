@@ -21,18 +21,27 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/user")
 @AllArgsConstructor
 public class UserController {
-    
+
     final UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<UserModel>> getUser(){
+    public ResponseEntity<List<UserModel>> getUser() {
         return ResponseEntity.ok(userService.getUsers());
     }
 
     // SOLO 1 USUARIO
     @GetMapping("/{id}")
     public ResponseEntity<UserModel> getUser(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUser(id));
+        try {
+            UserModel user = userService.getUser(id);
+            if (user != null) {
+                return new ResponseEntity<>(user, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     @PutMapping("/{id}")
@@ -71,7 +80,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}/unfollow")
-    public ResponseEntity<String> unfollowUser(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<String> unfollowUser(@PathVariable Long id,
+            @AuthenticationPrincipal UserDetails userDetails) {
         try {
             Long followerId = ((UserModel) userDetails).getId();
             userService.unfollowUser(followerId, id);
