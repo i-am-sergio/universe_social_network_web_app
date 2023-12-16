@@ -4,23 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
-public class ChatService {
-    @Autowired
-    ChatRepository chatRepository;
+import lombok.RequiredArgsConstructor;
 
-    @Autowired
-    private MessageRepository messageRepository;
+@Service
+@RequiredArgsConstructor
+public class ChatService {
+    
+    private final ChatRepository chatRepository;
+
+    private final MessageRepository messageRepository;
 
     public List<ChatModel> obtenerChats(){
         return (ArrayList<ChatModel>)chatRepository.findAll();
-    }
-
-    public ChatService(ChatRepository chatRepository) {
-        this.chatRepository = chatRepository;
     }
 
     public ChatModel createChat(ChatModel newChat) {

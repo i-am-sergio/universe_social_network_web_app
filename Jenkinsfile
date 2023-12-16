@@ -1,57 +1,86 @@
 pipeline {
     agent any
-    stages {
-        stage("SonarQube analysis for Backend") {
-            steps {
-                script {
-                    withSonarQubeEnv('sonarqube') {
-                        dir("D:\\Proyects\\fullstack_project_soft_engineering_ii\\backend") {
-                            bat 'sonar-scanner.bat -D"sonar.projectKey=SocialMediaII" -D"sonar.sources=." -D"sonar.host.url=http://localhost:9000" -D"sonar.token=sqp_e7dc35d2f7f50c2a2847eef4d29c77f0eb3347e8"'
-                        }
-                    }
-                }
-            }
-        }
-        stage("SonarQube analysis for Client") {
-            steps {
-                script {
-                    withSonarQubeEnv('sonarqube') {
-                        dir("D:\\Proyects\\fullstack_project_soft_engineering_ii\\client") {
-                            bat 'sonar-scanner.bat -D"sonar.projectKey=SocialMedia" -D"sonar.sources=." -D"sonar.host.url=http://localhost:9000" -D"sonar.token=sqp_b72523254b10d5f541905cbb08f019c1bbbfb1d7"'
-                        }
-                    }
-                }
-            }
-        }
-        stage("Build") {
-            steps {
-                script {
-                    // Ejecutar comandos en el directorio del proyecto backend
-                    dir("D:\\Proyects\\fullstack_project_soft_engineering_ii\\backend") {
-                        bat 'echo Hello Build from Jenkins in Backend!'
-                        bat 'mvn clean package'
-                    }
 
-                    // Ejecutar comandos en el directorio del proyecto cliente
-                    dir("D:\\Proyects\\fullstack_project_soft_engineering_ii\\client") {
-                        bat 'echo Hello Build from Jenkins in Client!'
-                        bat 'npm install'
+    environment {
+        SONAR_SCANNER_BIN = "/opt/sonar-scanner/bin"
+        PATH = "${SONAR_SCANNER_BIN}:${env.PATH}"
+        PROJECT_DIR = "/home/neodev/Develop/fullstack_project_soft_engineering_ii"
+        BACKEND_DIR = "${PROJECT_DIR}/backend"
+        JMETER_RESULTS_DIR = "${PROJECT_DIR}/backend/src/test/resources/jmeter"
+        SELENIUM_RESULTS_DIR = "${PROJECT_DIR}/backend/src/test/resources/selenium"
+    }
+
+    stages {
+        stage("Automatic Build") {
+            steps {
+                script {
+                    dir(BACKEND_DIR) {
+                        sh "mvn --version"
+                        //sh "mvn clean install" //con tests // funciona
+                        //sh "mvn clean install -DskipTests" // sin tests // funciona
                     }
                 }
             }
         }
-        stage("Test"){
+        stage("SonarQube Static Analysis") {
             steps {
-                bat 'echo Hello Test from Jenkins!'
-                dir("D:\\Proyects\\fullstack_project_soft_engineering_ii\\backend") {
-                    bat 'echo Hello Build from Jenkins in Backend!'
-                    bat 'mvn test'
+                script {
+                    dir(PROJECT_DIR) {
+                        sh "sonar-scanner --version"
+                        //sh "sonar-scanner" // Funciona
+                    }
                 }
             }
         }
-        stage("Deploy"){
+        stage("Unit Testing") {
             steps {
-                bat 'echo Hello Deploy from Jenkins!'
+                echo "junit + mockito tests..."
+                script {
+                    dir(BACKEND_DIR) {
+                        sh "mvn --version"
+                        // sh "mvn test" // funciona
+                    }
+                }
+            }
+        }
+        stage("Functional Testing"){
+            steps {
+                echo "Selenium..."
+                script {
+                    dir(SELENIUM_RESULTS_DIR) {
+                        sh "python --version"
+                        // sh "python ./login_test.py --verbose" // funciona
+                    }
+                }
+            }
+        }
+        stage("Performance Testing"){
+            steps {
+                script {
+                    dir(JMETER_RESULTS_DIR) {
+                        sh "jmeter --version"  
+                        // sh "jmeter -n -t ./PerformanceTests.jmx -l results.csv -e -o report"
+                    }
+                }
+            }
+        }
+        stage("Security Testing"){
+            steps {
+                echo "OWASP..."
+            }
+        }
+        stage("Docker Image"){
+            steps {
+                script {
+                    dir(PROJECT_DIR) {
+                        sh "docker --version"
+                        //sh "docker compose build" // construye los contenedores // funciona
+                        //sh "docker compose up -d" // ejecuta los contenedores
+                        //sleep(time: 2, unit: 'MINUTES') // espera 1 minuto
+                        //sh "docker compose down" // detiene los contenedores
+                        //sh "docker compose down --volumes --rmi all" // elimina contenedores
+                    }
+                }
             }
         }
     }

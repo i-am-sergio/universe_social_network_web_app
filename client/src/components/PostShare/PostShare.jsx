@@ -9,6 +9,27 @@ import {
 } from "@iconscout/react-unicons";
 import { useDispatch, useSelector } from "react-redux";
 import { uploadImage, uploadPost } from "../../actions/UploadAction";
+import PropTypes from "prop-types";
+
+const OptionButton = ({ icon, color, onClick, children }) => {
+  return (
+    <button
+      className="option"
+      style={{ color, cursor: "pointer" }}
+      onClick={onClick}
+    >
+      {icon}
+      {children}
+    </button>
+  );
+};
+
+OptionButton.propTypes = {
+  icon: PropTypes.element,
+  color: PropTypes.string,
+  onClick: PropTypes.func,
+  children: PropTypes.node,
+};
 
 const PostShare = () => {
   const dispatch = useDispatch();
@@ -25,13 +46,9 @@ const PostShare = () => {
   }
 
   // handle Image Change
-  // if (event.target.files && event.target.files[0]) {
   const onImageChange = (event) => {
-    console.log("onImageChange called");
     if (event.target.files?.[0]) {
-      let img = event.target.files[0];
-      console.log("Image selected:", img);
-      setImage(img);
+      setImage(event.target.files[0]);
     }
   };
 
@@ -43,20 +60,27 @@ const PostShare = () => {
       desc: desc.current.value,
     };
     const formData = new FormData();
-    if (image) {
-      const fileName = Date.now() + image.name;
-      formData.append("name", fileName);
-      formData.append("file", image);
-      newPost.image = fileName;
-      try {
-        dispatch(uploadImage(formData));
-      } catch (err) {
-        console.log(err);
+    try {
+      if (image) {
+        const fileName = Date.now() + image.name;
+        formData.append("name", fileName);
+        formData.append("file", image);
+        dispatch(uploadImage(formData))
+          .then((response) => {
+            newPost.image = response;
+            dispatch(uploadPost(newPost));
+            resetShare();
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      } else {
+        dispatch(uploadPost(newPost));
+        resetShare();
       }
+    } catch (error) {
+      console.error("Error:", error);
     }
-
-    dispatch(uploadPost(newPost));
-    resetShare();
   };
 
   // Reset Post Share
@@ -82,32 +106,25 @@ const PostShare = () => {
           ref={desc}
         />
         <div className="postOptions">
-          <div
-            className="option"
-            style={{ color: "var(--photo)", cursor: "pointer" }}
+          <OptionButton
+            icon={<UilScenery />}
+            color="var(--photo)"
             onClick={() => imageRef.current.click()}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                imageRef.current.click();
-              }
-            }}
           >
-            <UilScenery />
             Photo
-          </div>
+          </OptionButton>
 
-          <div className="option" style={{ color: "var(--video)" }}>
-            <UilPlayCircle />
+          <OptionButton icon={<UilPlayCircle />} color="var(--video)">
             Video
-          </div>
-          <div className="option" style={{ color: "var(--location)" }}>
-            <UilLocationPoint />
+          </OptionButton>
+
+          <OptionButton icon={<UilLocationPoint />} color="var(--location)">
             Location
-          </div>
-          <div className="option" style={{ color: "var(--shedule)" }}>
-            <UilSchedule />
-            Shedule
-          </div>
+          </OptionButton>
+
+          <OptionButton icon={<UilSchedule />} color="var(--shedule)">
+            Schedule
+          </OptionButton>
           <button
             className="button ps-button"
             onClick={handleUpload}

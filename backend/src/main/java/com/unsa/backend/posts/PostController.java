@@ -17,7 +17,6 @@ import com.unsa.backend.services.TimelineService;
 
 import lombok.RequiredArgsConstructor;
 
-
 @RestController
 @RequestMapping("/posts")
 @RequiredArgsConstructor
@@ -25,7 +24,6 @@ public class PostController {
 
     private final PostService postService;
     private final TimelineService timelineService;
-
 
     @GetMapping
     public ResponseEntity<List<PostModel>> getPosts() {
@@ -82,7 +80,7 @@ public class PostController {
             } else {
                 return new ResponseEntity<>("Post not found", HttpStatus.NOT_FOUND);
             }
-            
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
@@ -90,9 +88,9 @@ public class PostController {
 
     @DeleteMapping("/{postId}")
     public ResponseEntity<String> deletePost(@PathVariable Long postId) {
-        try{
+        try {
             if (postService.deletePost(postId)) {
-                return new ResponseEntity<>("Post eliminado correctamente", HttpStatus.OK);
+                return new ResponseEntity<>("Post deleted!", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("No se pudo encontrar el post con ID: " + postId, HttpStatus.NOT_FOUND);
             }
@@ -105,19 +103,19 @@ public class PostController {
     public ResponseEntity<String> likePost(@PathVariable Long id, @RequestBody LikeRequest likeRequest) {
         try {
             PostModel post = postService.getPostById(id);
-            if(post == null){
+            if (post == null) {
                 return new ResponseEntity<>("Post not found", HttpStatus.NOT_FOUND);
             }
 
             if (post.getLikes().contains(likeRequest.getUserId())) {
                 postService.removeLike(post, likeRequest.getUserId());
-                return new ResponseEntity<>("Post disliked", HttpStatus.OK);
+                return new ResponseEntity<>("Post disliked!", HttpStatus.OK);
             } else {
                 postService.addLike(post, likeRequest.getUserId());
-                return new ResponseEntity<>("Post liked", HttpStatus.OK);
+                return new ResponseEntity<>("Post liked!", HttpStatus.OK);
             }
         } catch (Exception e) {
-           return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
