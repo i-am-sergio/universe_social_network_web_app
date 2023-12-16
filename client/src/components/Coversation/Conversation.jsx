@@ -51,7 +51,7 @@ Conversation.propTypes = {
     members: PropTypes.arrayOf(PropTypes.string),
   }),
   currentUser: PropTypes.string.isRequired,
-  online: PropTypes.bool.isRequired,
+  online: PropTypes.bool.isRequired,//
 };
 
 
