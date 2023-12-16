@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import "./Post.css";
 import Comment from "../../img/comment.png";
 import Share from "../../img/share.png";
@@ -9,13 +10,11 @@ import { useSelector } from "react-redux";
 import { format } from "timeago.js";
 
 const Post = ({ data }) => {
+
   const user = useSelector((state) => state.authReducer.authData);
-  // const [liked, setLiked] = useState(data.likes.includes(user._id));
-  const [liked, setLiked] = useState(
-    data.likes && data.likes.includes(user._id)
-  );
-  // const [likes, setLikes] = useState(data.likes.length)
+  const [liked, setLiked] = useState(data.likes?.includes(user._id));
   const [likes, setLikes] = useState(data.likes ? data.likes.length : 0);
+
   const [createdAt, setCreatedAt] = useState(null);
 
   useEffect(() => {
@@ -30,6 +29,7 @@ const Post = ({ data }) => {
     setLiked((prev) => !prev);
     liked ? setLikes((prev) => prev - 1) : setLikes((prev) => prev + 1);
   };
+
   return (
     <div className="Post">
       <img
@@ -38,12 +38,14 @@ const Post = ({ data }) => {
       />
 
       <div className="postReact">
-        <img
-          src={liked ? Heart : NotLike}
-          alt=""
-          style={{ cursor: "pointer" }}
-          onClick={handleLike}
-        />
+        <button onClick={handleLike}>
+          <img
+            src={liked ? Heart : NotLike}
+            alt=""
+            style={{ cursor: "pointer" }}
+          />
+        </button>
+        
         <img src={Comment} alt="" />
         <img src={Share} alt="" />
       </div>
@@ -63,6 +65,17 @@ const Post = ({ data }) => {
       </div>
     </div>
   );
+};
+
+Post.propTypes = {
+  data: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    desc: PropTypes.string.isRequired,
+    image: PropTypes.string,
+    likes: PropTypes.arrayOf(PropTypes.string),
+    createdAt: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default Post;
