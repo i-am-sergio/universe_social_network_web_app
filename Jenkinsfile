@@ -14,8 +14,8 @@ pipeline {
                 script {
                     dir(BACKEND_DIR) {
                         sh "mvn --version"
-                        //sh "mvn clean install" //con tests (funciona)
-                        //sh "mvn clean install -DskipTests" // sin tests (funciona)
+                        //sh "mvn clean install" //con tests // funciona
+                        //sh "mvn clean install -DskipTests" // sin tests // funciona
                     }
                 }
             }
@@ -53,10 +53,19 @@ pipeline {
             steps {
                 script {
                     dir(PROJECT_DIR) {
-                        // sh "docker compose build" // construye los contenedores (funciona)
-                        // sh "docker compose up" // ejecuta los contenedores
+                        sh "docker --version"
+                        // sh "docker compose build" // construye los contenedores // funciona
+                        // sh "docker compose up -d" // ejecuta los contenedores
+                        // sleep(time: 2, unit: 'MINUTES') // espera 1 minuto
+                        // sh "docker compose down" // detiene los contenedores
+                        // sh "docker compose down --volumes --rmi all" // elimina contenedores
                     }
                 }
+            }
+        }
+        stage("Final") {
+            steps {
+                echo "final"
             }
         }
     }
