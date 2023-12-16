@@ -8,7 +8,9 @@ API.interceptors.request.use((req) => {
       JSON.parse(localStorage.getItem("profile")).token
     }`;
   }
+
   return req;
 });
-export const uploadImage = (data) => API.post("/upload", data);
+
+export const uploadImage = (data) => API.post("/upload/", data);
 export const uploadPost = (data) => API.post("/posts", data);
