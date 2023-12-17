@@ -66,7 +66,13 @@ pipeline {
         }
         stage("Security Testing"){
             steps {
-                echo "OWASP..."
+                script {
+                    dir(PROJECT_DIR) {
+                        sh "dependency-check.sh --version"  
+                        // sh "dependency-check.sh --scan ./client --format HTML --out ./client/reporte_dependency_check.html"
+                        // sh "dependency-check.sh --scan ./backend --format HTML --out ./backend/reporte_dependency_check.html"
+                    }
+                }
             }
         }
         stage("Docker Image"){
