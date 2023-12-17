@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 import { Modal, useMantineTheme } from "@mantine/core";
 import PostShare from "../PostShare/PostShare";
 
@@ -20,6 +21,11 @@ const ShareModal = ({modalOpened, setModalOpened}) => {
       <PostShare/>
     </Modal>
   );
+};
+
+ShareModal.propTypes = {
+  modalOpened: PropTypes.bool,
+  setModalOpened: PropTypes.func,
 };
 
 export default ShareModal;
