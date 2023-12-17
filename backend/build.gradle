@@ -1,0 +1,51 @@
+plugins {
+	id 'java'
+	id 'war'
+	id 'org.springframework.boot' version '3.2.0'
+	id 'io.spring.dependency-management' version '1.1.4'
+}
+
+group = 'com.unsa'
+version = '0.0.1-SNAPSHOT'
+
+java {
+	sourceCompatibility = '17'
+}
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compileOnly 'org.projectlombok:lombok'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor 'org.projectlombok:lombok'
+	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
+	// Nuevas dependencias proporcionadas
+	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+	implementation 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
+	implementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
+	implementation 'org.junit.jupiter:junit-jupiter-params:5.9.1'
+	implementation 'org.mockito:mockito-core:5.8.0'
+	implementation 'org.projectlombok:lombok-maven-plugin:1.18.20.0'
+	implementation 'com.cloudinary:cloudinary-http44:1.32.2'
+	implementation 'com.cloudinary:cloudinary-taglib:1.32.2'
+	implementation 'io.github.cdimascio:dotenv-java:2.2.4'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
