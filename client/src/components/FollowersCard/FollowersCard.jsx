@@ -35,8 +35,9 @@ const FollowersCard = ({ location }) => {
   }, []);
 
   return (
-  <div className="FollowersCard">
-    <h3>Personas que quizás conozcas</h3>
+    <div className="FollowersCard">
+      <h3>Personas que quizás conozcas</h3>
+
 
     {persons.map((person, id) => {
       if (person.id !== user.id) return <User person={person} key={person.id} />;
@@ -66,11 +67,11 @@ const FollowersCard = ({ location }) => {
       ""
     )}
 
-    <FollowersModal
-      modalOpened={modalOpened}
-      setModalOpened={setModalOpened}
-    />
-  </div>
+      <FollowersModal
+        modalOpened={modalOpened}
+        setModalOpened={setModalOpened}
+      />
+    </div>
   );
 
 };
