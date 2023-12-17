@@ -4,15 +4,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.cloudinary.Cloudinary;
+
+import io.github.cdimascio.dotenv.Dotenv;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class CloudinaryConfig {
 
-    private static final String CLOUD_NAME = "ddto4lnfz";
-    private static final String API_KEY = "321291374866932";
-    private static final String API_SECRET = "G2gxrLA7VxiwNXpgUO_8MPDR_vs";
+    public static final String CLOUD_NAME = Dotenv.configure().load().get("CLOUDINARY_CLOUD_NAME");
+    public static final String API_KEY = Dotenv.configure().load().get("CLOUDINARY_API_KEY");
+    private static final String API_SECRET = Dotenv.configure().load().get("CLOUDINARY_API_SECRET");
 
     @Bean
     public Cloudinary cloudinary() {
