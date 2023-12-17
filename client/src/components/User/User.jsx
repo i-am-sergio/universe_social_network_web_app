@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import { followUser, unfollowUser } from "../../actions/UserAction";
 const User = ({ person }) => {
-  console.log("PERSON IN USER => ", person)
+  console.log("PERSON IN USER => ", person);
   const publicFolder = process.env.REACT_APP_PUBLIC_FOLDER;
   const user = useSelector((state) => state.authReducer.authData);
   const dispatch = useDispatch();
@@ -50,9 +50,9 @@ User.propTypes = {
   person: PropTypes.shape({
     firstname: PropTypes.string,
     username: PropTypes.string.isRequired,
-    followers: PropTypes.string,
+    followers: PropTypes.array,
     profilePicture: PropTypes.string,
-    id: PropTypes.string,
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   }),
 };
 

@@ -53,10 +53,13 @@ const Conversation = ({ data, currentUser, online }) => {
 
 Conversation.propTypes = {
   data: PropTypes.shape({
-    members: PropTypes.arrayOf(PropTypes.string),
+    members: PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    ),
   }),
-  currentUser: PropTypes.string.isRequired,
-  online: PropTypes.bool.isRequired, //
+  currentUser: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    .isRequired,
+  online: PropTypes.bool,
 };
 
 export default Conversation;
