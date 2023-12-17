@@ -3,6 +3,7 @@ plugins {
 	id 'war'
 	id 'org.springframework.boot' version '3.2.0'
 	id 'io.spring.dependency-management' version '1.1.4'
+	id 'jacoco'
 }
 
 group = 'com.unsa'
@@ -46,6 +47,28 @@ dependencies {
 	implementation 'io.github.cdimascio:dotenv-java:2.2.4'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
+// tasks.named('test') {
+// 	useJUnitPlatform()
+// 	finalizedBy jacocoTestReport
+// }
+
+
+test {
+    useJUnitPlatform()
+	finalizedBy jacocoTestReport // report is always generated after tests run
+}
+
+
+jacocoTestReport {
+    dependsOn test // tests are required to run before generating the report
+	reports {
+        xml.required = true
+        csv.required = true
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.9"
+    reportsDirectory = layout.buildDirectory.dir('jacoco/test/jacocoTestReport')
 }
