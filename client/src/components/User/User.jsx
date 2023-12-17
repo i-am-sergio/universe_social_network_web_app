@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from "react-redux";
 import { followUser, unfollowUser } from "../../actions/UserAction";
 const User = ({ person }) => {
@@ -43,6 +44,16 @@ const User = ({ person }) => {
       </button>
     </div>
   );
+};
+
+User.propTypes = {
+  person: PropTypes.shape({
+    firstname: PropTypes.string,
+    username: PropTypes.string.isRequired,
+    followers: PropTypes.string,
+    profilePicture: PropTypes.string,
+    id: PropTypes.string,
+  }),
 };
 
 export default User;
