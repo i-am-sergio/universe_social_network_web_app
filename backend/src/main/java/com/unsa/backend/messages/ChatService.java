@@ -42,7 +42,6 @@ public class ChatService {
                     .filter(chatModel -> chatModel.getMembers().contains(userId))
                     .collect(Collectors.toList());
         } catch (Exception e) {
-            e.printStackTrace();
             throw new UserChatException("Error al obtener los chats del usuario.");
         }
     }
@@ -57,7 +56,6 @@ public class ChatService {
                     .findFirst()
                     .orElse(null);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new UserChatException("Error al obtener el chat entre los usuarios.");
         }
     }
@@ -71,7 +69,6 @@ public class ChatService {
             messagesToDelete.forEach(messageRepository::delete);
             chatRepository.deleteById(chatId);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new UserChatException("Error al eliminar el chat.");
         }
     }

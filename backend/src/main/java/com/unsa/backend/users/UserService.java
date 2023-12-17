@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 @AllArgsConstructor
@@ -25,7 +27,8 @@ public class UserService {
                 return user;
             }
         } catch (Exception e) {
-            e.printStackTrace(); // Imprime el error para fines de depuración
+            Logger logger = LoggerFactory.getLogger(UserService.class);
+            logger.error(e.getMessage());
         }
         return null;
     }
@@ -44,7 +47,8 @@ public class UserService {
                 return updatedUserResult;
             }
         } catch (Exception e) {
-            e.printStackTrace(); // Imprime el error para fines de depuración
+            Logger logger = LoggerFactory.getLogger(UserService.class);
+            logger.error(e.getMessage());
         }
         return null;
     }
@@ -58,7 +62,8 @@ public class UserService {
                 return user;
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger logger = LoggerFactory.getLogger(UserService.class);
+            logger.error(e.getMessage());
         }
         return null;
     }
