@@ -28,7 +28,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.unsa.backend.users.Role;
 import com.unsa.backend.users.UserModel;
 import com.unsa.backend.users.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -48,8 +47,7 @@ class UserControllerTest {
     }
 
     /**
-     * Test case for finding a user by ID from the Controller when the post is not
-     * found.
+     * Test case for finding a user by ID from the Controller.
      */
     @DisplayName("Test get user by id")
     @Test
@@ -78,7 +76,6 @@ class UserControllerTest {
                 .andExpect(status().isNotFound());
     }
 
-
     /*
      * Deleteuser test:
      * Verify if a user is deleted correctly.
@@ -88,16 +85,29 @@ class UserControllerTest {
 
     @Test
     @DisplayName("Delete User - Success")
-    void deleteUser_Success() throws Exception {
+    void deleteUserSuccess() throws Exception {
         UserModel userToDelete = new UserModel();
         Long userId = 1L;
 
         when(userService.deleteUser(userId)).thenReturn(userToDelete);
 
         mockMvc.perform(delete(URL_BASE + "/{id}", userId))
-                .andExpect(status().isNoContent()); 
+                .andExpect(status().isNoContent());
 
         verify(userService).deleteUser(userId);
+    }
+
+    /*
+     * Test case for deleting a user by ID from the Controller when the post is not
+     * found.
+     */
+    @Test
+    @DisplayName("Delete User - Not Found")
+    void deleteUserNotFound() throws Exception {
+        Long userId = 1L;
+        when(userService.deleteUser(userId)).thenReturn(null);
+        mockMvc.perform(delete(URL_BASE + "/" + userId))
+                .andExpect(status().isNotFound());
     }
 
     /*
@@ -111,13 +121,12 @@ class UserControllerTest {
 
     @Test
     @DisplayName("Follow User - Success")
-    void followUser_Success() throws Exception {
+    void followUserSuccess() throws Exception {
         Long followerId = 1L;
         Long targetUserId = 2L;
 
         Authentication authentication = mock(Authentication.class);
-        when(authentication.getPrincipal()).thenReturn(new UserModel()); 
-                                                                         
+        when(authentication.getPrincipal()).thenReturn(new UserModel());
 
         SecurityContext securityContext = mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -142,12 +151,12 @@ class UserControllerTest {
 
     @Test
     @DisplayName("Unfollow User - Success")
-    void unfollowUser_Success() throws Exception {
+    void unfollowUserSuccess() throws Exception {
         Long followerId = 1L;
         Long targetUserId = 2L;
 
         Authentication authentication = mock(Authentication.class);
-        when(authentication.getPrincipal()).thenReturn(new UserModel()); 
+        when(authentication.getPrincipal()).thenReturn(new UserModel());
 
         SecurityContext securityContext = mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
@@ -156,10 +165,10 @@ class UserControllerTest {
         doNothing().when(userService).unfollowUser(followerId, targetUserId);
 
         mockMvc.perform(put(URL_BASE + "/{id}/unfollow", targetUserId)
-                .with(csrf()) 
+                .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string("User unfollowed!")); 
+                .andExpect(content().string("User unfollowed!"));
 
     }
 
