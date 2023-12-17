@@ -27,7 +27,6 @@ public class MessageService {
                 .filter(messageModel -> messageModel.getChatId().equals(chatId))
                 .collect(Collectors.toList());
         } catch (Exception e) {
-            e.printStackTrace();
             throw new UserChatException("Error al obtener los mensajes del chat.");
         }
     }
