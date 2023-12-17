@@ -68,11 +68,8 @@ class UserServiceTest {
         Long userId = 1L;
         UserModel user = new UserModel();
         user.setPassword(PASSWORD);
-
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
-
         UserModel result = userService.getUser(userId);
-
         assertNotNull(result);
         assertNull(result.getPassword());
     }

@@ -1,6 +1,7 @@
 package com.unsa.backend.usertest;
 
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,6 +15,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +30,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.unsa.backend.users.Role;
 import com.unsa.backend.users.UserModel;
 import com.unsa.backend.users.UserService;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -88,17 +92,14 @@ class UserControllerTest {
     void deleteUserSuccess() throws Exception {
         UserModel userToDelete = new UserModel();
         Long userId = 1L;
-
         when(userService.deleteUser(userId)).thenReturn(userToDelete);
-
         mockMvc.perform(delete(URL_BASE + "/{id}", userId))
                 .andExpect(status().isNoContent());
-
         verify(userService).deleteUser(userId);
     }
 
     /*
-     * Test case for deleting a user by ID from the Controller when the post is not
+     * Test case for deleting a user by ID from the Controller when the user is not
      * found.
      */
     @Test
@@ -111,28 +112,21 @@ class UserControllerTest {
     }
 
     /*
-     * Test for followuser:
-     * Verify if a user can follow another user.
-     * Try if a successful message is returned (code 200) after the action of
-     * continuing.
-     * Check if an error is obtained (code 404) when the user to follow is not
-     * found.
+     * Test case for following a user by ID from the Controller.
      */
 
     @Test
     @DisplayName("Follow User - Success")
     void followUserSuccess() throws Exception {
-        Long followerId = 1L;
         Long targetUserId = 2L;
-
+        UserModel userModel = mock(UserModel.class);
+        when(userModel.getId()).thenReturn(1L);
         Authentication authentication = mock(Authentication.class);
-        when(authentication.getPrincipal()).thenReturn(new UserModel());
-
+        when(authentication.getPrincipal()).thenReturn(userModel);
         SecurityContext securityContext = mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
-
-        doNothing().when(userService).followUser(followerId, targetUserId);
+        doNothing().when(userService).followUser(anyLong(), anyLong());
 
         mockMvc.perform(put(URL_BASE + "/{id}/follow", targetUserId)
                 .with(csrf())
@@ -141,6 +135,29 @@ class UserControllerTest {
                 .andExpect(content().string("User followed!"));
     }
 
+    /*
+     * Test case for following a user by ID from the Controller when the user is not
+     * found.
+     */
+    @Test
+    @DisplayName("Follow User - Not Found")
+    void followUserNotFound() throws Exception {
+        Long targetUserId = 2L;
+        Authentication authentication = mock(Authentication.class);
+        UserModel userModel = mock(UserModel.class);
+        when(userModel.getId()).thenReturn(1L);
+        when(authentication.getPrincipal()).thenReturn(userModel);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        doThrow(new EntityNotFoundException("User not found"))
+                .when(userService).followUser(anyLong(), anyLong());
+        mockMvc.perform(put(URL_BASE + "/{id}/follow", targetUserId)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string("User not found"));
+    }
     /*
      * Test for unfotolowuser:
      * Verify if a user can stop following another user.
