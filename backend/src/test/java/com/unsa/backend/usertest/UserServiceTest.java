@@ -24,17 +24,21 @@ import java.util.Optional;
 @SpringBootTest
 @DisplayName("Test Service")
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+class UserServiceTest {
+
+    private static final String PASSWORD = "password";
 
     @MockBean
     private UserRepository userRepository;
 
-    @Autowired
     private UserService userService;
 
+    @Autowired
+    public UserServiceTest(UserService userService) {
+        this.userService = userService;
+    }
 
-
-     /*
+    /*
      * Test for getusers:
      * Verify if all users are obtained.
      * Check if the user list is not empty.
@@ -53,19 +57,17 @@ public class UserServiceTest {
         assertEquals(2, result.size());
     }
 
-
-
     /*
-      * Test for Getuser:
-      * Verify if a user is obtained by your ID.
-      * Check if the user password is deleted correctly.
-      */
+     * Test for Getuser:
+     * Verify if a user is obtained by your ID.
+     * Check if the user password is deleted correctly.
+     */
     @Test
     @DisplayName("Test for getUser")
     void testGetUser() {
         Long userId = 1L;
         UserModel user = new UserModel();
-        user.setPassword("password");
+        user.setPassword(PASSWORD);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
@@ -74,8 +76,6 @@ public class UserServiceTest {
         assertNotNull(result);
         assertNull(result.getPassword());
     }
-
-
 
     /*
      * Test for Updateuser:
@@ -89,7 +89,7 @@ public class UserServiceTest {
         UserModel originalUser = new UserModel();
         originalUser.setFirstname("Nel");
         originalUser.setLastname("zon");
-        originalUser.setPassword("password");
+        originalUser.setPassword(PASSWORD);
 
         UserModel updatedUser = new UserModel();
         updatedUser.setFirstname("Updated Nel");
@@ -106,8 +106,6 @@ public class UserServiceTest {
         assertNull(result.getPassword());
     }
 
-
-
     /*
      * Deleteuser test:
      * Verify if a user is deleted correctly.
@@ -120,7 +118,7 @@ public class UserServiceTest {
         UserModel userToDelete = new UserModel();
         userToDelete.setFirstname("Nel");
         userToDelete.setLastname("zon");
-        userToDelete.setPassword("password");
+        userToDelete.setPassword(PASSWORD);
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(userToDelete));
 
@@ -133,12 +131,11 @@ public class UserServiceTest {
         verify(userRepository, times(1)).delete(userToDelete);
     }
 
-
-
-     /*
+    /*
      * Followuser test:
      * Verify if a user can follow another user.
-     * Check if the follower and the user is correctly added to the respective lists.
+     * Check if the follower and the user is correctly added to the respective
+     * lists.
      */
     @Test
     @DisplayName("Test for followUser")
@@ -165,12 +162,11 @@ public class UserServiceTest {
         verify(userRepository, times(1)).save(targetUser);
     }
 
-
-
     /*
      * Test for unfotolowuser:
      * Verify if a user can stop following another user.
-     * Check if the follower and the user are correctly eliminated followed by the respective lists.
+     * Check if the follower and the user are correctly eliminated followed by the
+     * respective lists.
      */
     @Test
     @DisplayName("Test for unfollowUser")
