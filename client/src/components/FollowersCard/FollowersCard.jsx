@@ -34,8 +34,6 @@ const FollowersCard = ({ location }) => {
 
   }, []);
 
-  
-
   return (
   <div className="FollowersCard">
     <h3>Personas que quizás conozcas</h3>
@@ -44,7 +42,16 @@ const FollowersCard = ({ location }) => {
       if (person.id !== user.id) return <User person={person} key={person.id} />;
     })}
     {!location ? (
-      <span
+
+      <button
+        style={{
+          fontSize: "12px",
+          cursor: "pointer",
+          textDecoration: "underline",
+          border: "none",
+          background: "none",
+          padding: "0",
+        }}
         onClick={() => setModalOpened(true)}
         onKeyDown={(e) => {
           if (e.key === 'Enter') {
@@ -53,7 +60,8 @@ const FollowersCard = ({ location }) => {
         }}
       >
         Show more
-      </span>
+      </button>
+
     ) : (
       ""
     )}
