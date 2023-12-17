@@ -2,6 +2,7 @@ package com.unsa.backend.poststest;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
@@ -95,6 +96,17 @@ class PostControllerTest {
         }
 
         /**
+         * Test case for finding all posts from the Controller and give Error 505.
+         */
+        @DisplayName("Test get all posts")
+        @Test
+        void testGetPostsError() throws Exception {
+                when(postService.getPosts()).thenReturn(null);
+                mockMvc.perform(get(URL_BASE))
+                                .andExpect(status().isInternalServerError());
+        }
+
+        /**
          * Test case for finding a post by ID from the Controller.
          */
         @DisplayName("Test get post by id")
@@ -112,13 +124,26 @@ class PostControllerTest {
          * Test case for finding a post by ID from the Controller when the post is not
          * found.
          */
-        @DisplayName("Test get post by id not found")
+        @DisplayName("Test get post by id")
         @Test
         void testGetPostByIdNotFound() throws Exception {
                 Long postId = 1L;
                 when(postService.getPostById(postId)).thenReturn(null);
                 mockMvc.perform(get(BASE_URL_WITH_ID, postId))
                                 .andExpect(status().isNotFound());
+        }
+
+        /**
+         * Test case for finding a post by ID from the Controller and give Error 505.
+         */
+        @DisplayName("Test get post by id")
+        @Test
+        void testGetPostByIdError() throws Exception {
+                Long postId = 1L;
+                when(postService.getPostById(postId)).thenReturn(null);
+                doThrow(new RuntimeException("Internal Server Error")).when(postService).getPostById(postId);
+                mockMvc.perform(get(BASE_URL_WITH_ID, postId))
+                                .andExpect(status().isInternalServerError());
         }
 
         /**
@@ -133,6 +158,19 @@ class PostControllerTest {
                                 .contentType(JSON_CONTENT_TYPE)
                                 .content("{\"desc\": \"desc1\", \"image\": \"image1\"}"))
                                 .andExpect(status().isOk());
+        }
+
+        /**
+         * Test case for creating a post from the Controller and give Error 505.
+         */
+        @DisplayName("Test create post")
+        @Test
+        void testCreatePostError() throws Exception {
+                doThrow(new RuntimeException("Internal Server Error")).when(postService).createPost(any());
+                mockMvc.perform(post(URL_BASE)
+                                .contentType(JSON_CONTENT_TYPE)
+                                .content("{\"desc\": \"desc1\", \"image\": \"image1\"}"))
+                                .andExpect(status().isInternalServerError());
         }
 
         /**
@@ -163,6 +201,33 @@ class PostControllerTest {
         }
 
         /**
+         * Test case for updating a post from the Controller when the post is FORBIDDEN
+         */
+        @DisplayName("Test update post forbidden")
+        @Test
+        void testUpdatePostForbidden() throws Exception {
+                Long postId = 1L;
+                Long userId = 1L;
+                PostModel post = PostModel.builder().id(postId).desc(DESC1).image(IMAGE1).userId(userId).build();
+                PostModel updatedPost = PostModel.builder().id(postId).desc("updated desc").image("updated image")
+                                .userId(2L).build();
+                when(postService.getPostById(postId)).thenReturn(post);
+                doAnswer(invocation -> {
+                        PostModel existingPost = invocation.getArgument(0);
+                        PostModel updated = invocation.getArgument(1);
+                        existingPost.setDesc(updated.getDesc());
+                        existingPost.setImage(updated.getImage());
+                        return null;
+                }).when(postService).updatePost(any(PostModel.class), any(PostModel.class));
+
+                mockMvc.perform(put(BASE_URL_WITH_ID, postId)
+                                .contentType(JSON_CONTENT_TYPE)
+                                .content(new ObjectMapper().writeValueAsString(updatedPost)))
+                                .andExpect(status().isForbidden())
+                                .andExpect(jsonPath("$", is("Authentication failed")));
+        }
+
+        /**
          * Test case for updating a post from the Controller when the post is not found.
          */
         @DisplayName("Test update post not found")
@@ -174,6 +239,26 @@ class PostControllerTest {
                                 .contentType(JSON_CONTENT_TYPE)
                                 .content("{\"desc\": \"desc1\", \"image\": \"image1\"}"))
                                 .andExpect(status().isNotFound());
+        }
+
+        /**
+         * Test case for updating a post from the Controller and give Error 505.
+         */
+        @DisplayName("Test update post")
+        @Test
+        void testUpdatePostError() throws Exception {
+                Long postId = 1L;
+                Long userId = 1L;
+                PostModel post = PostModel.builder().id(postId).desc(DESC1).image(IMAGE1).userId(userId).build();
+                PostModel updatedPost = PostModel.builder().id(postId).desc("updated desc").image("updated image")
+                                .userId(userId).build();
+                when(postService.getPostById(postId)).thenReturn(post);
+                doThrow(new RuntimeException("Internal Server Error")).when(postService).updatePost(any(),
+                                any());
+                mockMvc.perform(put(BASE_URL_WITH_ID, postId)
+                                .contentType(JSON_CONTENT_TYPE)
+                                .content(new ObjectMapper().writeValueAsString(updatedPost)))
+                                .andExpect(status().isInternalServerError());
         }
 
         /**
@@ -205,7 +290,22 @@ class PostControllerTest {
         }
 
         /**
-         * Test case for deleting a likePost from the Controller.
+         * Test case for deleting a post from the Controller and give Error 505.
+         */
+        @DisplayName("Test delete post")
+        @Test
+        void testDeletePostError() throws Exception {
+                Long postId = 1L;
+                PostModel post = PostModel.builder().id(postId).desc(DESC1).image(IMAGE1).build();
+                when(postService.getPostById(postId)).thenReturn(post);
+                when(postService.deletePost(postId)).thenReturn(true);
+                doThrow(new RuntimeException("Internal Server Error")).when(postService).deletePost(postId);
+                mockMvc.perform(delete(BASE_URL_WITH_ID, postId))
+                                .andExpect(status().isInternalServerError());
+        }
+
+        /**
+         * Test case for adding a likePost from the Controller.
          */
         @DisplayName("Test like post")
         @Test
@@ -222,7 +322,7 @@ class PostControllerTest {
         }
 
         /**
-         * Test case for deleting a likePost from the Controller when the post is not
+         * Test case for adding a likePost from the Controller when the post is not
          * found.
          */
         @DisplayName("Test like post not found")
@@ -258,6 +358,24 @@ class PostControllerTest {
         void testDislikePostNotFound() throws Exception {
                 Long postId = 2L;
                 performRequestAndExpectNotFound(postId);
+        }
+
+        /**
+         * Test case for adding or deleting a likePost from the Controller and give
+         * error 505.
+         */
+        @DisplayName("Test like post")
+        @Test
+        void testLikePostError() throws Exception {
+                Long postId = 1L;
+                PostModel post = PostModel.builder().id(postId).desc(DESC1).image(IMAGE1)
+                                .likes(Arrays.asList()).build();
+                when(postService.getPostById(postId)).thenReturn(post);
+                doThrow(new RuntimeException("Internal Server Error")).when(postService).getPostById(postId);
+                mockMvc.perform(put(BASE_URL_ID_WITH_LIKE, postId)
+                                .contentType(JSON_CONTENT_TYPE)
+                                .content(JSON_USER_ID_1))
+                                .andExpect(status().isInternalServerError());
         }
 
         /**
