@@ -62,7 +62,6 @@ public class FileUploadController {
                     Map.of("public_id", fullFileName))
                     .get("url").toString());
         } catch (IOException e) {
-            e.printStackTrace();
             return ResponseEntity.status(500).body("Error uploading file");
         }
     }
