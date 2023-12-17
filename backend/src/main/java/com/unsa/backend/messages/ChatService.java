@@ -11,13 +11,13 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class ChatService {
-    
+
     private final ChatRepository chatRepository;
 
     private final MessageRepository messageRepository;
 
-    public List<ChatModel> obtenerChats(){
-        return (ArrayList<ChatModel>)chatRepository.findAll();
+    public List<ChatModel> obtenerChats() {
+        return (ArrayList<ChatModel>) chatRepository.findAll();
     }
 
     public ChatModel createChat(ChatModel newChat) {
@@ -39,8 +39,8 @@ public class ChatService {
         try {
             List<ChatModel> allChats = (List<ChatModel>) chatRepository.findAll();
             return allChats.stream()
-                .filter(chatModel -> chatModel.getMembers().contains(userId))
-                .collect(Collectors.toList());
+                    .filter(chatModel -> chatModel.getMembers().contains(userId))
+                    .collect(Collectors.toList());
         } catch (Exception e) {
             e.printStackTrace();
             throw new UserChatException("Error al obtener los chats del usuario.");
@@ -51,10 +51,11 @@ public class ChatService {
         try {
             List<ChatModel> chatList = (List<ChatModel>) chatRepository.findAll();
             return chatList
-                .stream()
-                .filter(chatModel -> chatModel.getMembers().contains(firstId) && chatModel.getMembers().contains(secondId))
-                .findFirst()
-                .orElse(null);
+                    .stream()
+                    .filter(chatModel -> chatModel.getMembers().contains(firstId)
+                            && chatModel.getMembers().contains(secondId))
+                    .findFirst()
+                    .orElse(null);
         } catch (Exception e) {
             e.printStackTrace();
             throw new UserChatException("Error al obtener el chat entre los usuarios.");
@@ -65,9 +66,9 @@ public class ChatService {
         try {
             List<MessageModel> allMessages = (List<MessageModel>) messageRepository.findAll();
             List<MessageModel> messagesToDelete = allMessages.stream()
-                .filter(messageModel -> messageModel.getChatId().equals(chatId))
-                .collect(Collectors.toList());
-            messagesToDelete.stream().forEach(message -> messageRepository.delete(message));
+                    .filter(messageModel -> messageModel.getChatId().equals(chatId))
+                    .collect(Collectors.toList());
+            messagesToDelete.forEach(messageRepository::delete);
             chatRepository.deleteById(chatId);
         } catch (Exception e) {
             e.printStackTrace();

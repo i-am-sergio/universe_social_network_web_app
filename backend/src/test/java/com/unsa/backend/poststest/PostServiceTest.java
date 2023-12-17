@@ -27,8 +27,12 @@ class PostServiceTest {
     @MockBean
     private PostRepository postRepository;
 
-    @Autowired
     private PostService postService;
+
+    @Autowired
+    public PostServiceTest(PostService postService) {
+        this.postService = postService;
+    }
 
     /**
      * Test case for finding all posts from the service.

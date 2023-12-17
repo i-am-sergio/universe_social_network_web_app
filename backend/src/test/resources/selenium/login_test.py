@@ -58,7 +58,7 @@ class TestLogin(unittest.TestCase):
 
         print(EXPECTED, "Login")  
         print(RESULT, result)
-        self.assertTrue(result == "Login")
+        self.assertEqual(result, "Login")
 
     def test_login_empty_username(self):
         self.driver.find_element(By.XPATH, self.xpath_username).send_keys("")
@@ -70,7 +70,7 @@ class TestLogin(unittest.TestCase):
 
         print(EXPECTED, "Login")  
         print(RESULT, result)
-        self.assertTrue(result == "Login")
+        self.assertEqual(result, "Login")
 
     def test_login_empty_password(self):
         self.driver.find_element(By.XPATH, self.xpath_username).send_keys(USERNAME)
@@ -82,7 +82,7 @@ class TestLogin(unittest.TestCase):
 
         print(EXPECTED, "Login")
         print(RESULT, result)
-        self.assertTrue(result == "Login")
+        self.assertEqual(result, "Login")
 
 if __name__ == "__main__":
     report_name = 'test_login_report.txt'
