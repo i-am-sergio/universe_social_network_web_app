@@ -68,6 +68,9 @@ pipeline {
             steps {
                 script {
                     dir(PROJECT_DIR) {
+                        sh "zap.sh -version"
+                        // sh "zap.sh -port 7000 -quickurl http://localhost:3000 -quickout ${PROJECT_DIR}/reports/security_testing_report.html -quickprogress" // con interfaz
+                        // sh "zap.sh -daemon -port 7000 -quickurl http://localhost:3000 -quickout ${PROJECT_DIR}/reports/security_testing_report.html -quickprogress" // sin interfaz
                         sh "dependency-check.sh --version"  
                         // sh "dependency-check.sh --scan ./client --format HTML --out ./client/reporte_dependency_check.html"
                         // sh "dependency-check.sh --scan ./backend --format HTML --out ./backend/reporte_dependency_check.html"
