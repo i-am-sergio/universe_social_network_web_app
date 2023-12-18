@@ -14,6 +14,8 @@ import com.unsa.backend.users.UserModel;
 import com.unsa.backend.users.UserRepository;
 import com.unsa.backend.users.UserService;
 
+import jakarta.persistence.EntityNotFoundException;
+
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -25,8 +27,9 @@ import java.util.Optional;
 @DisplayName("Test Service")
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
-
     private static final String PASSWORD = "password";
+    private static final String UPDATED_FIRSTNAME = "Updated Nel";
+    private static final String UPDATED_LASTNAME = "Updated zon";
 
     @MockBean
     private UserRepository userRepository;
@@ -74,6 +77,18 @@ class UserServiceTest {
         assertNull(result.getPassword());
     }
 
+    /**
+     * Test case for finding a user by ID from the Service when the user is not
+     * found.
+     */
+    @Test
+    @DisplayName("Test for getUser")
+    void testGetUserNotFound() {
+        Long userId = 1L;
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class, () -> userService.getUser(userId));
+    }
+
     /*
      * Test for Updateuser:
      * Verify if a user is updated correctly.
@@ -87,20 +102,31 @@ class UserServiceTest {
         originalUser.setFirstname("Nel");
         originalUser.setLastname("zon");
         originalUser.setPassword(PASSWORD);
-
         UserModel updatedUser = new UserModel();
-        updatedUser.setFirstname("Updated Nel");
-        updatedUser.setLastname("Updated zon");
-
+        updatedUser.setFirstname(UPDATED_FIRSTNAME);
+        updatedUser.setLastname(UPDATED_LASTNAME);
         when(userRepository.findById(userId)).thenReturn(Optional.of(originalUser));
         when(userRepository.save(originalUser)).thenReturn(originalUser);
-
         UserModel result = userService.updateUser(userId, updatedUser);
-
         assertNotNull(result);
-        assertEquals("Updated Nel", result.getFirstname());
-        assertEquals("Updated zon", result.getLastname());
+        assertEquals(UPDATED_FIRSTNAME, result.getFirstname());
+        assertEquals(UPDATED_LASTNAME, result.getLastname());
         assertNull(result.getPassword());
+    }
+
+    /**
+     * Test case for updating a user by ID from the Service when the user is not
+     * found.
+     */
+    @Test
+    @DisplayName("Test for updateUser")
+    void testUpdateUserNotFound() {
+        Long userId = 1L;
+        UserModel updatedUser = new UserModel();
+        updatedUser.setFirstname(UPDATED_FIRSTNAME);
+        updatedUser.setLastname(UPDATED_LASTNAME);
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class, () -> userService.updateUser(userId, updatedUser));
     }
 
     /*
