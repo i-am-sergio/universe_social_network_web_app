@@ -14,7 +14,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,6 +27,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+
 import com.unsa.backend.users.Role;
 import com.unsa.backend.users.UserModel;
 import com.unsa.backend.users.UserService;
@@ -34,10 +38,13 @@ import jakarta.persistence.EntityNotFoundException;
 @DisplayName("Test Service")
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
+
     private static final String URL_BASE = "/user";
+    private static final String URL_BASE_ID = "/user/{id}";
     private static final String URL_BASE_ID_FOLLOW = "/user/{id}/follow";
     private static final String USER_NOT_FOUND = "User not found";
     private static final String URL_BASE_ID_UNFOLLOW = "/user/{id}/unfollow";
+    private static final String JSON_BODY = "{ \"firstname\": \"name updated\", \"lastname\": \"lastname updated\", \"role\": \"USER\" }";
 
     @MockBean
     private UserService userService;
@@ -118,20 +125,70 @@ class UserControllerTest {
                 .andExpect(status().isInternalServerError());
     }
 
+    /**
+     * Test case for updating a user by ID from the Controller.
+     */
+    @Test
+    @DisplayName("Test update user")
+    void updateUserSuccess() throws Exception {
+        Long userId = 1L;
+        UserModel userUpdated = new UserModel();
+        userUpdated.setId(userId);
+        userUpdated.setFirstname("name updated");
+        userUpdated.setLastname("lastname updated");
+        userUpdated.setRole(Role.USER);
+        when(userService.updateUser(eq(userId), any(UserModel.class))).thenReturn(userUpdated);
+        mockMvc.perform(put(URL_BASE_ID, userId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(JSON_BODY))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.id", is(1)))
+            .andExpect(jsonPath("$.firstname", is("name updated")))
+            .andExpect(jsonPath("$.lastname", is("lastname updated")));
+    }
+
+    /**
+     * Test case for updating a user by ID from the Controller when the post is not
+     * found.
+     */
+    @Test
+    @DisplayName("Test update user")
+    void updateUserNotFound() throws Exception {
+        Long userId = 1L;
+        when(userService.updateUser(eq(userId), any(UserModel.class))).thenReturn(null);
+        mockMvc.perform(put(URL_BASE_ID, userId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(JSON_BODY))
+            .andExpect(status().isNotFound());
+    }
+    
+    /**
+     * Test case for updating a user by ID from the Controller and give error 500
+     */
+    @DisplayName("Test update user")
+    @Test
+    void testUpdateUserError() throws Exception {
+        Long userId = 1L;
+        when(userService.updateUser(eq(userId), any(UserModel.class))).thenThrow(new RuntimeException());
+        mockMvc.perform(put(URL_BASE_ID, userId)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(JSON_BODY))
+            .andExpect(status().isInternalServerError());
+    }
+    
     /*
      * Deleteuser test:
      * Verify if a user is deleted correctly.
      * Try if a 204 code (without content) is returned after elimination.
      * Check if a code 404 is obtained if the user cannot be found.
      */
-
     @Test
     @DisplayName("Test delete user")
     void deleteUserSuccess() throws Exception {
         UserModel userToDelete = new UserModel();
         Long userId = 1L;
         when(userService.deleteUser(userId)).thenReturn(userToDelete);
-        mockMvc.perform(delete(URL_BASE + "/{id}", userId))
+        mockMvc.perform(delete(URL_BASE_ID, userId))
                 .andExpect(status().isNoContent());
         verify(userService).deleteUser(userId);
     }
