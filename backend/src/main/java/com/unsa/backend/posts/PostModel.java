@@ -23,7 +23,10 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "posts")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class PostModel {
     @Id
@@ -48,8 +51,7 @@ public class PostModel {
     private String image;
 
     @PrePersist
-    protected void onCreate() {
+    public void onCreate() {
         createdAt = new Date();
     }
-
 }
