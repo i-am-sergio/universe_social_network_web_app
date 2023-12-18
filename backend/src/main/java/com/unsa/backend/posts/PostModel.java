@@ -15,13 +15,19 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "posts")
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class PostModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,8 +51,7 @@ public class PostModel {
     private String image;
 
     @PrePersist
-    protected void onCreate() {
+    public void onCreate() {
         createdAt = new Date();
     }
-
 }
