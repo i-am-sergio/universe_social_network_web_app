@@ -14,27 +14,25 @@ const InfoCard = () => {
   const profileUserId = params.id;
   const [profileUser, setProfileUser] = useState({});
   const isMounted = useRef(true);
-  
+
   const user = useSelector((state) => state.authReducer.authData);
 
-  const handleLogOut = ()=> {
-    dispatch(logout())
-  }
-
+  const handleLogOut = () => {
+    dispatch(logout());
+  };
 
   useEffect(() => {
     const fetchProfileUser = async () => {
       isMounted.current = true;
-      if (profileUserId === user.id) {
+      if (profileUserId === user.id.toString()) {
         setProfileUser(user);
       } else {
         console.log("fetching");
         const profileUser = await UserApi.getUser(profileUserId);
-        // setProfileUser(profileUser);
         if (isMounted.current) {
           setProfileUser(profileUser);
         }
-        console.log(profileUser)
+        console.log(profileUser);
       }
     };
     fetchProfileUser();
@@ -47,13 +45,14 @@ const InfoCard = () => {
     <div className="InfoCard">
       <div className="infoHead">
         <h4>Profile Info</h4>
-        {user._id === profileUserId ? (
+        {user.id.toString() === profileUserId ? (
           <div>
             <UilPen
               width="2rem"
               height="1.2rem"
               onClick={() => setModalOpened(true)}
             />
+
             <ProfileModal
               modalOpened={modalOpened}
               setModalOpened={setModalOpened}

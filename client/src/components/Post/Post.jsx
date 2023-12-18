@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import "./Post.css";
 import Comment from "../../img/comment.png";
 import Share from "../../img/share.png";
@@ -9,13 +10,11 @@ import { useSelector } from "react-redux";
 import { format } from "timeago.js";
 
 const Post = ({ data }) => {
+
   const user = useSelector((state) => state.authReducer.authData);
-  // const [liked, setLiked] = useState(data.likes.includes(user._id));
-  const [liked, setLiked] = useState(
-    data.likes && data.likes.includes(user._id)
-  );
-  // const [likes, setLikes] = useState(data.likes.length)
+  const [liked, setLiked] = useState(data.likes?.includes(user._id));
   const [likes, setLikes] = useState(data.likes ? data.likes.length : 0);
+
   const [createdAt, setCreatedAt] = useState(null);
 
   useEffect(() => {
@@ -25,27 +24,30 @@ const Post = ({ data }) => {
     }
   }, [data.createdAt]);
 
-  const handleLike = () => {
+  const updateLikes = () => {
     likePost(data.id, user.id);
     setLiked((prev) => !prev);
     liked ? setLikes((prev) => prev - 1) : setLikes((prev) => prev + 1);
   };
+
+  const renderReactionButton = () => (
+    <button onClick={updateLikes} onKeyDown={updateLikes} tabIndex="0">
+      <img src={liked ? Heart : NotLike} alt="" style={{ cursor: "pointer" }} />
+    </button>
+  );
+
   return (
     <div className="Post">
-      <img
-        src={data.image ? process.env.REACT_APP_PUBLIC_FOLDER + data.image : ""}
-        alt=""
-      />
+      <img src={data.image ? data.image : ""} alt="" />
 
       <div className="postReact">
-        <img
-          src={liked ? Heart : NotLike}
-          alt=""
-          style={{ cursor: "pointer" }}
-          onClick={handleLike}
-        />
-        <img src={Comment} alt="" />
-        <img src={Share} alt="" />
+        {renderReactionButton()}
+        <button>
+          <img src={Comment} alt="" />
+        </button>
+        <button>
+          <img src={Share} alt="" />
+        </button>
       </div>
       <div className="detail">
         <span>
@@ -63,6 +65,10 @@ const Post = ({ data }) => {
       </div>
     </div>
   );
+};
+
+Post.propTypes = {
+  data: PropTypes.object,
 };
 
 export default Post;

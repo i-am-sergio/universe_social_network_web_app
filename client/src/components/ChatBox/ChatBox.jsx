@@ -4,6 +4,7 @@ import { getUser } from "../../api/UserRequests";
 import "./ChatBox.css";
 import { format } from "timeago.js";
 import InputEmoji from "react-input-emoji";
+import PropTypes from "prop-types";
 
 const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
   const [userData, setUserData] = useState(null);
@@ -33,14 +34,16 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
   useEffect(() => {
     const fetchMessages = async () => {
       try {
-        const { data } = await getMessages(chat.id);
-        setMessages(data);
+        if (chat !== null) {
+          const { data } = await getMessages(chat.id);
+          setMessages(data);
+        }
       } catch (error) {
         console.log(error);
       }
     };
 
-    if (chat !== null) fetchMessages();
+    fetchMessages();
   }, [chat]);
 
   // Always scroll to last Message
@@ -71,10 +74,10 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
 
   // Receive Message from parent component
   useEffect(() => {
-    if (receivedMessage !== null && receivedMessage.chatId === chat.id) {
-      setMessages([...messages, receivedMessage]);
+    if (receivedMessage && chat && receivedMessage.chatId === chat.id) {
+      setMessages((prevMessages) => [...prevMessages, receivedMessage]);
     }
-  }, [receivedMessage]);
+  }, [receivedMessage, chat]);
 
   const scroll = useRef();
   const imageRef = useRef();
@@ -116,9 +119,9 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
             </div>
             {/* chat-body */}
             <div className="chat-body">
-              {messages.map((message, index) => (
+              {messages.map((message) => (
                 <div
-                  key={index}
+                  key={message.messageId}
                   ref={scroll}
                   className={
                     message.senderId === currentUser ? "message own" : "message"
@@ -131,10 +134,12 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
             </div>
             {/* chat-sender */}
             <div className="chat-sender">
-              <div onClick={() => imageRef.current.click()}>+</div>
+              <div className="button-container">
+                <button onClick={() => imageRef.current.click()}>+</button>
+              </div>
               <InputEmoji value={newMessage} onChange={handleChange} />
-              <div className="send-button button" onClick={handleSend}>
-                Send
+              <div className="send-button button">
+                <button onClick={handleSend}>Send</button>
               </div>
               <input
                 type="file"
@@ -153,6 +158,13 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
       </div>
     </div>
   );
+};
+
+ChatBox.propTypes = {
+  chat: PropTypes.object,
+  currentUser: PropTypes.number.isRequired,
+  setSendMessage: PropTypes.func.isRequired,
+  receivedMessage: PropTypes.object,
 };
 
 export default ChatBox;

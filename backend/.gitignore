@@ -1,3 +1,11 @@
+### GRADLE ###
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### MAVEN ###
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
@@ -12,12 +20,19 @@ target/
 .settings
 .springBeans
 .sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
 
 ### IntelliJ IDEA ###
 .idea
 *.iws
 *.iml
 *.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
 
 ### NetBeans ###
 /nbproject/private/
@@ -30,4 +45,13 @@ build/
 !**/src/test/**/build/
 
 ### VS Code ###
-.vscode/
+# .vscode/
+.scannerwork
+
+## JMETER ##
+/src/test/resources/jmeter/report/
+/src/test/resources/jmeter/results.csv
+/src/test/resources/jmeter/jmeter.log
+
+## SELERNIUM ##
+/src/test/resources/selenium/reports/

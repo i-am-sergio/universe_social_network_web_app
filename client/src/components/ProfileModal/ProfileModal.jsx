@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { uploadImage } from "../../actions/UploadAction";
 import { updateUser } from "../../actions/UserAction";
+import PropTypes from "prop-types";
 
 const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
   const theme = useMantineTheme();
@@ -19,11 +20,10 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
   };
 
   const onImageChange = (event) => {
-    if (event.target.files?.event.target.files[0]) {
+    if (event.target.files?.[0]) {
       let img = event.target.files[0];
-      event.target.name === "profileImage"
-        ? setProfileImage(img)
-        : setCoverImage(img);
+      const isProfileImage = event.target.name === "profileImage";
+      isProfileImage ? setProfileImage(img) : setCoverImage(img);
     }
   };
 
@@ -76,7 +76,7 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
         <h3>Your Info</h3>
         <div>
           <input
-            value={formData.firstname}
+            value={formData?.firstname || ""}
             onChange={handleChange}
             type="text"
             placeholder="First Name"
@@ -84,7 +84,7 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
             className="infoInput"
           />
           <input
-            value={formData.lastname}
+            value={formData?.lastname || ""}
             onChange={handleChange}
             type="text"
             placeholder="Last Name"
@@ -95,7 +95,7 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
 
         <div>
           <input
-            value={formData.worksAt}
+            value={formData?.worksAt || ""}
             onChange={handleChange}
             type="text"
             placeholder="Works at"
@@ -106,7 +106,7 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
 
         <div>
           <input
-            value={formData.livesIn}
+            value={formData?.livesIn || ""}
             onChange={handleChange}
             type="text"
             placeholder="Lives in"
@@ -114,7 +114,7 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
             className="infoInput"
           />
           <input
-            value={formData.country}
+            value={formData?.country || ""}
             onChange={handleChange}
             type="text"
             placeholder="Country"
@@ -125,7 +125,7 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
 
         <div>
           <input
-            value={formData.relationship}
+            value={formData?.relationship || ""}
             onChange={handleChange}
             type="text"
             className="infoInput"
@@ -135,9 +135,9 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
         </div>
 
         <div>
-          Profile image
-          <input type="file" name="profileImage" onChange={onImageChange} />
-          Cover image
+          Profile image{" "}
+          <input type="file" name="profileImage" onChange={onImageChange} />{" "}
+          Cover image{" "}
           <input type="file" name="coverImage" onChange={onImageChange} />
         </div>
 
@@ -147,6 +147,12 @@ const ProfileModal = ({ modalOpened, setModalOpened, data }) => {
       </form>
     </Modal>
   );
+};
+
+ProfileModal.propTypes = {
+  modalOpened: PropTypes.bool.isRequired,
+  setModalOpened: PropTypes.func.isRequired,
+  data: PropTypes.object.isRequired,
 };
 
 export default ProfileModal;

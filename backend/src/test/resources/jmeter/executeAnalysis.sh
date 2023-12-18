@@ -1,0 +1,2 @@
+jmeter -n -t /home/neodev/Develop/fullstack_project_soft_engineering_ii/backend/src/test/resources/jmeter/PerformanceTests.jmx -l /home/neodev/Develop/fullstack_project_soft_engineering_ii/backend/src/test/resources/jmeter/results.csv -e -o /home/neodev/Develop/fullstack_project_soft_engineering_ii/backend/src/test/resources/jmeter/report
+jmeter -n -t ./PerformanceTests.jmx -l results.csv -e -o report

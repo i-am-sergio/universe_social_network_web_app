@@ -12,6 +12,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.cloudinary.Cloudinary;
+
+import jakarta.annotation.PostConstruct;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/upload")
 public class FileUploadController {
@@ -19,30 +29,45 @@ public class FileUploadController {
     @Value("${file.upload-dir}")
     private String uploadDir;
 
-    @PostMapping
-    public ResponseEntity<String> handleFileUpload(@RequestParam("file") MultipartFile file,
-                                                  @RequestParam("name") String name) {
+    private Path targetPath;
+
+    private final Cloudinary cloudinary;
+
+    public FileUploadController(Cloudinary cloudinary) {
+        this.cloudinary = cloudinary;
+    }
+
+    @PostConstruct
+    public void init() throws IOException {
+        targetPath = new File(uploadDir).toPath().normalize();
+        if (!Files.exists(targetPath)) {
+            Files.createDirectories(targetPath);
+        }
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> handleFileUpload(
+            @RequestParam MultipartFile file,
+            @RequestParam String name) {
+
         try {
-            // Verifica si el directorio de carga existe, si no, créalo
-            File directory = new File(uploadDir);
-            if (!directory.exists()) {
-                directory.mkdirs();
+            if (file.isEmpty()) {
+                return ResponseEntity.badRequest().body("Please select a file");
             }
 
-            // Obtiene la extensión del archivo original
-            String originalFileName = Objects.requireNonNull(file.getOriginalFilename());
-            String fileExtension = originalFileName.substring(originalFileName.lastIndexOf('.'));
-            
-            // Combina el nombre y la extensión para obtener el nombre de archivo completo
-            String fullFileName = name + fileExtension;
+            String fileNameWithoutExtension = name.substring(0, name.lastIndexOf('.'));
+            String fullFileName = fileNameWithoutExtension.replaceAll("[^a-zA-Z0-9.-]", "_");
 
-            // Guarda el archivo en el directorio de carga
-            File uploadedFile = new File(directory.getAbsolutePath() + File.separator + fullFileName);
-            file.transferTo(uploadedFile);
+            Path filePath = targetPath.resolve(fullFileName);
 
-            return ResponseEntity.ok("File uploaded successfully");
+            if (!filePath.normalize().startsWith(targetPath)) {
+                return ResponseEntity.status(400).body("Invalid file path");
+            }
+
+            return ResponseEntity.ok(cloudinary.uploader().upload(file.getBytes(),
+                    Map.of("public_id", fullFileName))
+                    .get("url").toString());
         } catch (IOException e) {
-            e.printStackTrace();
             return ResponseEntity.status(500).body("Error uploading file");
         }
     }
