@@ -89,7 +89,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("Delete User - Success")
-    void deleteUserSuccess() throws Exception {
+    void testDeleteUserSuccess() throws Exception {
         UserModel userToDelete = new UserModel();
         Long userId = 1L;
         when(userService.deleteUser(userId)).thenReturn(userToDelete);
@@ -104,7 +104,7 @@ class UserControllerTest {
      */
     @Test
     @DisplayName("Delete User - Not Found")
-    void deleteUserNotFound() throws Exception {
+    void testDeleteUserNotFound() throws Exception {
         Long userId = 1L;
         when(userService.deleteUser(userId)).thenReturn(null);
         mockMvc.perform(delete(URL_BASE + "/" + userId))
@@ -117,7 +117,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("Follow User - Success")
-    void followUserSuccess() throws Exception {
+    void testFollowUserSuccess() throws Exception {
         Long targetUserId = 2L;
         UserModel userModel = mock(UserModel.class);
         when(userModel.getId()).thenReturn(1L);
@@ -141,7 +141,7 @@ class UserControllerTest {
      */
     @Test
     @DisplayName("Follow User - Not Found")
-    void followUserNotFound() throws Exception {
+    void testFollowUserNotFound() throws Exception {
         Long targetUserId = 2L;
         Authentication authentication = mock(Authentication.class);
         UserModel userModel = mock(UserModel.class);
@@ -168,7 +168,7 @@ class UserControllerTest {
 
     @Test
     @DisplayName("Unfollow User - Success")
-    void unfollowUserSuccess() throws Exception {
+    void testUnfollowUserSuccess() throws Exception {
         Long followerId = 1L;
         Long targetUserId = 2L;
 

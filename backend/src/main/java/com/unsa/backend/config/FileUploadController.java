@@ -41,8 +41,8 @@ public class FileUploadController {
 
     @PostMapping("/upload")
     public ResponseEntity<String> handleFileUpload(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("name") String name) {
+            @RequestParam MultipartFile file,
+            @RequestParam String name) {
 
         try {
             if (file.isEmpty()) {
