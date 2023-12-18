@@ -44,6 +44,10 @@ class PostControllerTest {
         private static final String BASE_URL_ID_WITH_LIKE = "/posts/{id}/like";
         private static final String JSON_CONTENT_TYPE = "application/json";
         private static final String JSON_USER_ID_1 = "{\"userId\": 1}";
+        private static final String INTERNAL_ERROR = "Internal Server Error";
+        private static final String JSON_CONTENT = "{\"desc\": \"desc1\", \"image\": \"image1\"}";
+        private static final String UPDATED_DESC = "updated desc";
+        private static final String UPDATED_IMG = "updated image";
 
         @MockBean
         private PostService postService;
@@ -141,7 +145,7 @@ class PostControllerTest {
         void testGetPostByIdError() throws Exception {
                 Long postId = 1L;
                 when(postService.getPostById(postId)).thenReturn(null);
-                doThrow(new RuntimeException("Internal Server Error")).when(postService).getPostById(postId);
+                doThrow(new RuntimeException(INTERNAL_ERROR)).when(postService).getPostById(postId);
                 mockMvc.perform(get(BASE_URL_WITH_ID, postId))
                                 .andExpect(status().isInternalServerError());
         }
@@ -156,7 +160,7 @@ class PostControllerTest {
                 when(postService.createPost(post)).thenReturn(null);
                 mockMvc.perform(post(URL_BASE)
                                 .contentType(JSON_CONTENT_TYPE)
-                                .content("{\"desc\": \"desc1\", \"image\": \"image1\"}"))
+                                .content(JSON_CONTENT))
                                 .andExpect(status().isOk());
         }
 
@@ -166,10 +170,10 @@ class PostControllerTest {
         @DisplayName("Test create post")
         @Test
         void testCreatePostError() throws Exception {
-                doThrow(new RuntimeException("Internal Server Error")).when(postService).createPost(any());
+                doThrow(new RuntimeException(INTERNAL_ERROR)).when(postService).createPost(any());
                 mockMvc.perform(post(URL_BASE)
                                 .contentType(JSON_CONTENT_TYPE)
-                                .content("{\"desc\": \"desc1\", \"image\": \"image1\"}"))
+                                .content(JSON_CONTENT))
                                 .andExpect(status().isInternalServerError());
         }
 
@@ -182,7 +186,7 @@ class PostControllerTest {
                 Long postId = 1L;
                 Long userId = 1L;
                 PostModel post = PostModel.builder().id(postId).desc(DESC1).image(IMAGE1).userId(userId).build();
-                PostModel updatedPost = PostModel.builder().id(postId).desc("updated desc").image("updated image")
+                PostModel updatedPost = PostModel.builder().id(postId).desc(UPDATED_DESC).image(UPDATED_IMG)
                                 .userId(userId).build();
                 when(postService.getPostById(postId)).thenReturn(post);
                 doAnswer(invocation -> {
@@ -209,7 +213,7 @@ class PostControllerTest {
                 Long postId = 1L;
                 Long userId = 1L;
                 PostModel post = PostModel.builder().id(postId).desc(DESC1).image(IMAGE1).userId(userId).build();
-                PostModel updatedPost = PostModel.builder().id(postId).desc("updated desc").image("updated image")
+                PostModel updatedPost = PostModel.builder().id(postId).desc(UPDATED_DESC).image(UPDATED_IMG)
                                 .userId(2L).build();
                 when(postService.getPostById(postId)).thenReturn(post);
                 doAnswer(invocation -> {
@@ -237,7 +241,7 @@ class PostControllerTest {
                 when(postService.getPostById(postId)).thenReturn(null);
                 mockMvc.perform(put(BASE_URL_WITH_ID, postId)
                                 .contentType(JSON_CONTENT_TYPE)
-                                .content("{\"desc\": \"desc1\", \"image\": \"image1\"}"))
+                                .content(JSON_CONTENT))
                                 .andExpect(status().isNotFound());
         }
 
@@ -250,10 +254,10 @@ class PostControllerTest {
                 Long postId = 1L;
                 Long userId = 1L;
                 PostModel post = PostModel.builder().id(postId).desc(DESC1).image(IMAGE1).userId(userId).build();
-                PostModel updatedPost = PostModel.builder().id(postId).desc("updated desc").image("updated image")
+                PostModel updatedPost = PostModel.builder().id(postId).desc(UPDATED_DESC).image(UPDATED_IMG)
                                 .userId(userId).build();
                 when(postService.getPostById(postId)).thenReturn(post);
-                doThrow(new RuntimeException("Internal Server Error")).when(postService).updatePost(any(),
+                doThrow(new RuntimeException(INTERNAL_ERROR)).when(postService).updatePost(any(),
                                 any());
                 mockMvc.perform(put(BASE_URL_WITH_ID, postId)
                                 .contentType(JSON_CONTENT_TYPE)
@@ -299,7 +303,7 @@ class PostControllerTest {
                 PostModel post = PostModel.builder().id(postId).desc(DESC1).image(IMAGE1).build();
                 when(postService.getPostById(postId)).thenReturn(post);
                 when(postService.deletePost(postId)).thenReturn(true);
-                doThrow(new RuntimeException("Internal Server Error")).when(postService).deletePost(postId);
+                doThrow(new RuntimeException(INTERNAL_ERROR)).when(postService).deletePost(postId);
                 mockMvc.perform(delete(BASE_URL_WITH_ID, postId))
                                 .andExpect(status().isInternalServerError());
         }
@@ -371,7 +375,7 @@ class PostControllerTest {
                 PostModel post = PostModel.builder().id(postId).desc(DESC1).image(IMAGE1)
                                 .likes(Arrays.asList()).build();
                 when(postService.getPostById(postId)).thenReturn(post);
-                doThrow(new RuntimeException("Internal Server Error")).when(postService).getPostById(postId);
+                doThrow(new RuntimeException(INTERNAL_ERROR)).when(postService).getPostById(postId);
                 mockMvc.perform(put(BASE_URL_ID_WITH_LIKE, postId)
                                 .contentType(JSON_CONTENT_TYPE)
                                 .content(JSON_USER_ID_1))

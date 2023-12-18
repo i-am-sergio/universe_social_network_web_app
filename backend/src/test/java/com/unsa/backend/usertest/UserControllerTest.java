@@ -7,16 +7,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import java.util.List;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
-
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.mockito.ArgumentMatchers.anyLong;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -26,11 +24,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-
 import com.unsa.backend.users.Role;
 import com.unsa.backend.users.UserModel;
 import com.unsa.backend.users.UserService;
-
 import jakarta.persistence.EntityNotFoundException;
 
 @SpringBootTest
@@ -39,6 +35,9 @@ import jakarta.persistence.EntityNotFoundException;
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
     private static final String URL_BASE = "/user";
+    private static final String URL_BASE_ID_FOLLOW = "/user/{id}/follow";
+    private static final String USER_NOT_FOUND = "User not found";
+    private static final String URL_BASE_ID_UNFOLLOW = "/user/{id}/unfollow";
 
     @MockBean
     private UserService userService;
@@ -48,6 +47,33 @@ class UserControllerTest {
     @Autowired
     void setMockMvc(MockMvc mockMvc) {
         this.mockMvc = mockMvc;
+    }
+
+    /**
+     * Test case for finding all users from the Controller.
+     */
+    @DisplayName("Test get all users")
+    @Test
+    void testGetAllUsers() throws Exception {
+        UserModel user = UserModel.builder()
+                .id(1L)
+                .role(Role.USER)
+                .build();
+        when(userService.getUsers()).thenReturn(List.of(user));
+        mockMvc.perform(get(URL_BASE))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id", is(1)));
+    }
+
+    /**
+     * Test case for finding all users from the Controller and give error
+     */
+    @DisplayName("Test get all users")
+    @Test
+    void testGetAllUsersError() throws Exception {
+        when(userService.getUsers()).thenThrow(new RuntimeException());
+        mockMvc.perform(get(URL_BASE))
+                .andExpect(status().isInternalServerError());
     }
 
     /**
@@ -80,6 +106,18 @@ class UserControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    /**
+     * Test case for finding a user by ID from the Controller and give error 500
+     */
+    @DisplayName("Test get user by id")
+    @Test
+    void testGetUserByIdError() throws Exception {
+        Long userId = 1L;
+        when(userService.getUser(userId)).thenThrow(new RuntimeException());
+        mockMvc.perform(get(URL_BASE + "/" + userId))
+                .andExpect(status().isInternalServerError());
+    }
+
     /*
      * Deleteuser test:
      * Verify if a user is deleted correctly.
@@ -88,8 +126,8 @@ class UserControllerTest {
      */
 
     @Test
-    @DisplayName("Delete User - Success")
-    void testDeleteUserSuccess() throws Exception {
+    @DisplayName("Test delete user")
+    void deleteUserSuccess() throws Exception {
         UserModel userToDelete = new UserModel();
         Long userId = 1L;
         when(userService.deleteUser(userId)).thenReturn(userToDelete);
@@ -103,12 +141,24 @@ class UserControllerTest {
      * found.
      */
     @Test
-    @DisplayName("Delete User - Not Found")
-    void testDeleteUserNotFound() throws Exception {
+    @DisplayName("Test delete user")
+    void deleteUserNotFound() throws Exception {
         Long userId = 1L;
         when(userService.deleteUser(userId)).thenReturn(null);
         mockMvc.perform(delete(URL_BASE + "/" + userId))
                 .andExpect(status().isNotFound());
+    }
+
+    /**
+     * Test case for deleting a user by ID from the Controller and give error 500
+     */
+    @DisplayName("Test delete user")
+    @Test
+    void testDeleteUserError() throws Exception {
+        Long userId = 1L;
+        when(userService.deleteUser(userId)).thenThrow(new RuntimeException());
+        mockMvc.perform(delete(URL_BASE + "/" + userId))
+                .andExpect(status().isInternalServerError());
     }
 
     /*
@@ -116,8 +166,8 @@ class UserControllerTest {
      */
 
     @Test
-    @DisplayName("Follow User - Success")
-    void testFollowUserSuccess() throws Exception {
+    @DisplayName("Test follow user")
+    void followUserSuccess() throws Exception {
         Long targetUserId = 2L;
         UserModel userModel = mock(UserModel.class);
         when(userModel.getId()).thenReturn(1L);
@@ -127,8 +177,7 @@ class UserControllerTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
         doNothing().when(userService).followUser(anyLong(), anyLong());
-
-        mockMvc.perform(put(URL_BASE + "/{id}/follow", targetUserId)
+        mockMvc.perform(put(URL_BASE_ID_FOLLOW, targetUserId)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -140,8 +189,8 @@ class UserControllerTest {
      * found.
      */
     @Test
-    @DisplayName("Follow User - Not Found")
-    void testFollowUserNotFound() throws Exception {
+    @DisplayName("Test follow user")
+    void followUserNotFound() throws Exception {
         Long targetUserId = 2L;
         Authentication authentication = mock(Authentication.class);
         UserModel userModel = mock(UserModel.class);
@@ -150,14 +199,38 @@ class UserControllerTest {
         SecurityContext securityContext = mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
-        doThrow(new EntityNotFoundException("User not found"))
+        doThrow(new EntityNotFoundException(USER_NOT_FOUND))
                 .when(userService).followUser(anyLong(), anyLong());
-        mockMvc.perform(put(URL_BASE + "/{id}/follow", targetUserId)
+        mockMvc.perform(put(URL_BASE_ID_FOLLOW, targetUserId)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string("User not found"));
+                .andExpect(content().string(USER_NOT_FOUND));
     }
+
+    /*
+     * Test case for following a user by ID from the Controller and give error 500
+     */
+    @DisplayName("Test follow user")
+    @Test
+    void testFollowUserError() throws Exception {
+        Long targetUserId = 2L;
+        Authentication authentication = mock(Authentication.class);
+        UserModel userModel = mock(UserModel.class);
+        when(userModel.getId()).thenReturn(1L);
+        when(authentication.getPrincipal()).thenReturn(userModel);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        doThrow(new RuntimeException())
+                .when(userService).followUser(anyLong(), anyLong());
+        mockMvc.perform(put(URL_BASE_ID_FOLLOW, targetUserId)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Something went wrong"));
+    }
+
     /*
      * Test for unfotolowuser:
      * Verify if a user can stop following another user.
@@ -167,26 +240,71 @@ class UserControllerTest {
      */
 
     @Test
-    @DisplayName("Unfollow User - Success")
-    void testUnfollowUserSuccess() throws Exception {
+    @DisplayName("Test unfollow user")
+    void unfollowUserSuccess() throws Exception {
         Long followerId = 1L;
         Long targetUserId = 2L;
-
+        UserModel userModel = mock(UserModel.class);
+        when(userModel.getId()).thenReturn(followerId);
         Authentication authentication = mock(Authentication.class);
-        when(authentication.getPrincipal()).thenReturn(new UserModel());
-
+        when(authentication.getPrincipal()).thenReturn(userModel);
         SecurityContext securityContext = mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
-
-        doNothing().when(userService).unfollowUser(followerId, targetUserId);
-
-        mockMvc.perform(put(URL_BASE + "/{id}/unfollow", targetUserId)
+        doNothing().when(userService).unfollowUser(anyLong(), anyLong());
+        mockMvc.perform(put(URL_BASE_ID_UNFOLLOW, targetUserId)
                 .with(csrf())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string("User unfollowed!"));
-
     }
 
+    /*
+     * Test case for unfollowing a user by ID from the Controller when the user is
+     * not found.
+     */
+    @Test
+    @DisplayName("Test unfollow user")
+    void unfollowUserNotFound() throws Exception {
+        Long followerId = 1L;
+        Long targetUserId = 2L;
+        Authentication authentication = mock(Authentication.class);
+        UserModel userModel = mock(UserModel.class);
+        when(userModel.getId()).thenReturn(followerId);
+        when(authentication.getPrincipal()).thenReturn(userModel);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        doThrow(new EntityNotFoundException(USER_NOT_FOUND))
+                .when(userService).unfollowUser(anyLong(), anyLong());
+        mockMvc.perform(put(URL_BASE_ID_UNFOLLOW, targetUserId)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(USER_NOT_FOUND));
+    }
+
+    /*
+     * Test case for unfollowing a user by ID from the Controller and give error 500
+     */
+    @DisplayName("Test unfollow user")
+    @Test
+    void testUnfollowUserError() throws Exception {
+        Long followerId = 1L;
+        Long targetUserId = 2L;
+        Authentication authentication = mock(Authentication.class);
+        UserModel userModel = mock(UserModel.class);
+        when(userModel.getId()).thenReturn(followerId);
+        when(authentication.getPrincipal()).thenReturn(userModel);
+        SecurityContext securityContext = mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        doThrow(new RuntimeException())
+                .when(userService).unfollowUser(anyLong(), anyLong());
+        mockMvc.perform(put(URL_BASE_ID_UNFOLLOW, targetUserId)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Something went wrong"));
+    }
 }

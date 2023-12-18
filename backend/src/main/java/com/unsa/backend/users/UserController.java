@@ -26,7 +26,11 @@ public class UserController {
 
     @GetMapping
     public ResponseEntity<List<UserModel>> getUser() {
-        return ResponseEntity.ok(userService.getUsers());
+        try {
+            return ResponseEntity.ok(userService.getUsers());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 
     // SOLO 1 USUARIO
@@ -46,22 +50,29 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UserModel> updateUser(@PathVariable Long id, @RequestBody UserModel updatedUser) {
-        UserModel updated = userService.updateUser(id, updatedUser);
-        if (updated != null) {
-            return ResponseEntity.ok(updated); // Código 200: Actualización exitosa.
-        } else {
-            return ResponseEntity.notFound().build(); // Código 404: Usuario no encontrado.
+        try {
+            UserModel updated = userService.updateUser(id, updatedUser);
+            if (updated != null) {
+                return new ResponseEntity<>(updated, HttpStatus.OK); // Código 200: Actualización exitosa.
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Código 404: Usuario no encontrado.
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // Código 500: Error interno del servidor.
         }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        UserModel deletedUser = userService.deleteUser(id);
-
-        if (deletedUser != null) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Código 204: Recurso eliminado con éxito.
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Código 404: Recurso no encontrado.
+        try {
+            UserModel deletedUser = userService.deleteUser(id);
+            if (deletedUser != null) {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Código 204: Recurso eliminado con éxito.
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Código 404: Recurso no encontrado.
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR); // Código 500: Error interno del servidor.
         }
     }
 
