@@ -16,7 +16,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/message")
 @RequiredArgsConstructor
 public class MessageController {
-    
+
     private final MessageService messageService;
 
     @PostMapping("/")
@@ -30,12 +30,13 @@ public class MessageController {
     }
 
     @GetMapping("/{chatId}")
-    public ResponseEntity<List<MessageModel>> getMessages(@PathVariable Long chatId){
-        try{
+    public ResponseEntity<List<MessageModel>> getMessages(@PathVariable Long chatId) {
+        try {
             List<MessageModel> messages = messageService.getMessages(chatId);
             return new ResponseEntity<>(messages, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 }
