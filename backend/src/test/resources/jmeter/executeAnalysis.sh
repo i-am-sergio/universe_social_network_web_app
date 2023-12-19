@@ -1,2 +1,3 @@
 jmeter -n -t /home/neodev/Develop/fullstack_project_soft_engineering_ii/backend/src/test/resources/jmeter/PerformanceTests.jmx -l /home/neodev/Develop/fullstack_project_soft_engineering_ii/backend/src/test/resources/jmeter/results.csv -e -o /home/neodev/Develop/fullstack_project_soft_engineering_ii/backend/src/test/resources/jmeter/report
-jmeter -n -t ./PerformanceTests.jmx -l results.csv -e -o report
+# in jmeter folder run:
+jmeter -n -t ./Login_PerformanceTest.jmx -l /home/neodev/Develop/fullstack_project_soft_engineering_ii/reports/performance_testing_test_login_report.csv -e -o report
