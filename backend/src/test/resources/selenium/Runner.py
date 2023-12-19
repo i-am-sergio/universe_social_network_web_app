@@ -1,0 +1,50 @@
+from login_test import TestLogin
+from register_test import TestRegister
+from HtmlTestRunner import HTMLTestRunner
+import os
+import unittest
+import argparse
+
+def run_login_test(report_path):
+    report_name = 'functional_testing__test_login_report.txt'
+    full_report_path = os.path.join(report_path, report_name)
+
+    suite = unittest.TestSuite()
+    suite.addTest(TestLogin('test_login_empty_password'))
+    suite.addTest(TestLogin('test_login_invalid_password'))
+    suite.addTest(TestLogin('test_login_invalid_username'))
+    suite.addTest(TestLogin('test_login_empty_username'))
+    suite.addTest(TestLogin('test_login_empty_password'))
+    suite.addTest(TestLogin('test_login_success'))
+
+
+    with open(full_report_path, 'w') as f:
+        runner = HTMLTestRunner(stream=f, verbosity=2, report_name="test_login_report")
+        result = runner.run(suite)
+    print(result)
+
+def run_register_test(report_path):
+    report_name = 'functional_testing__test_register_report.txt'
+    full_report_path = os.path.join(report_path, report_name)
+
+    suite = unittest.TestSuite()
+    suite.addTest(TestRegister("test_register_missing_first_name"))
+    suite.addTest(TestRegister("test_register_missing_last_name"))
+    suite.addTest(TestRegister("test_register_missing_username"))
+    suite.addTest(TestRegister("test_register_missing_password"))
+    suite.addTest(TestRegister("test_register_missing_password_confirm"))
+    suite.addTest(TestRegister("test_register_success"))
+
+    with open(full_report_path, "w") as f:
+        runner = HTMLTestRunner(stream=f,verbosity=2,report_name="test_register_report")
+        result = runner.run(suite)
+    print(result)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description='Run login tests and generate HTML report.')
+    parser.add_argument('report_path', help='Path where the HTML report will be saved.')
+
+    args = parser.parse_args()
+    # run_login_test(args.report_path)
+    run_register_test(args.report_path)

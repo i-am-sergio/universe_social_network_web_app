@@ -16,3 +16,4 @@ OK
 
 Generating HTML reports... 
 reports\reporte_de_pruebas___main__.TestLogin_2023-12-18_16-48-06.html
+
