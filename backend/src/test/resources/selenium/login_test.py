@@ -77,17 +77,18 @@ class TestLogin(unittest.TestCase):
         self.driver.find_element(By.XPATH, self.xpath_logout).click()
 
 
-if __name__ == "__main__":
-    report_name = 'test_login_report.txt'
-    suite = unittest.TestSuite()
-    suite.addTest(TestLogin('test_login_success'))
-    suite.addTest(TestLogin('test_login_invalid_password'))
-    suite.addTest(TestLogin('test_login_invalid_username'))
-    suite.addTest(TestLogin('test_login_empty_username'))
-    suite.addTest(TestLogin('test_login_empty_password'))
+# if __name__ == "__main__":
+#     report_path = ""
+#     report_name = 'test_login_report.txt'
+#     suite = unittest.TestSuite()
+#     suite.addTest(TestLogin('test_login_success'))
+#     suite.addTest(TestLogin('test_login_invalid_password'))
+#     suite.addTest(TestLogin('test_login_invalid_username'))
+#     suite.addTest(TestLogin('test_login_empty_username'))
+#     suite.addTest(TestLogin('test_login_empty_password'))
 
-    with open(report_name, 'w') as f:
-        runner = HTMLTestRunner(stream=f, verbosity=2, report_name="test_login_report")
-        result = runner.run(suite)
-    print(result)
+#     with open(report_name, 'w') as f:
+#         runner = HTMLTestRunner(stream=f, verbosity=2, report_name="test_login_report")
+#         result = runner.run(suite)
+#     print(result)
 

@@ -107,17 +107,17 @@ class TestRegister(unittest.TestCase):
         time.sleep(5)
         self.driver.find_element(By.XPATH, self.xpath_logout).click()
 
-if __name__ == "__main__":
-    report_path = "test_register_report.txt"
-    suite = unittest.TestSuite()
-    suite.addTest(TestRegister("test_register_missing_first_name"))
-    suite.addTest(TestRegister("test_register_missing_last_name"))
-    suite.addTest(TestRegister("test_register_missing_username"))
-    suite.addTest(TestRegister("test_register_missing_password"))
-    suite.addTest(TestRegister("test_register_missing_password_confirm"))
-    suite.addTest(TestRegister("test_register_success"))
+# if __name__ == "__main__":
+#     report_path = "test_register_report.txt"
+#     suite = unittest.TestSuite()
+#     suite.addTest(TestRegister("test_register_missing_first_name"))
+#     suite.addTest(TestRegister("test_register_missing_last_name"))
+#     suite.addTest(TestRegister("test_register_missing_username"))
+#     suite.addTest(TestRegister("test_register_missing_password"))
+#     suite.addTest(TestRegister("test_register_missing_password_confirm"))
+#     suite.addTest(TestRegister("test_register_success"))
 
-    with open(report_path, "w") as f:
-        runner = HTMLTestRunner(stream=f,verbosity=2,report_name="test_register_report")
-        result = runner.run(suite)
-    print(result)
+#     with open(report_path, "w") as f:
+#         runner = HTMLTestRunner(stream=f,verbosity=2,report_name="test_register_report")
+#         result = runner.run(suite)
+#     print(result)

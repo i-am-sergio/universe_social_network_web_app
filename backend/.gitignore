@@ -55,3 +55,4 @@ build/
 
 ## SELERNIUM ##
 /src/test/resources/selenium/reports/
+/src/test/resources/selenium/__pycache__
