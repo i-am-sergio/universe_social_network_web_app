@@ -1,0 +1,16 @@
+
+Running tests... 
+----------------------------------------------------------------------
+ test_post_with_image_success (__main__.TestPost.test_post_with_image_success) ... OK (22.448380)s
+ test_post_without_text (__main__.TestPost.test_post_without_text) ... OK (23.371004)s
+ test_post_success (__main__.TestPost.test_post_success) ... OK (23.332696)s
+
+----------------------------------------------------------------------
+Ran 3 tests in 0:01:15
+
+OK
+
+
+
+Generating HTML reports... 
+reports\reporte_de_pruebas___main__.TestPost_2023-12-18_20-52-05.html

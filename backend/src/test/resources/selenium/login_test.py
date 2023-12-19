@@ -31,9 +31,9 @@ class TestLogin(unittest.TestCase):
         self.driver.implicitly_wait(5)
         
         result = self.driver.find_element(By.XPATH, self.xpath_homename).text
-        print(EXPECTED,"Shinji Ikari")
+        print(EXPECTED,"Shinji up Ikari up")
         print(RESULT, result)
-        self.assertEqual(result, "Shinji Ikari")
+        self.assertEqual(result, "Shinji up Ikari up")
 
     
     def test_login_invalid_password(self):
