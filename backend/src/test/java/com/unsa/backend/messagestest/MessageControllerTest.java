@@ -55,7 +55,7 @@ class MessageControllerTest {
         when(messageService.createMessage(any(MessageModel.class))).thenReturn(newMessage);
         mockMvc.perform(post(URL_BASE + "/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(newMessage)))
+                .content(new ObjectMapper().writeValueAsString(newMessage)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.chatId").value(newMessage.getChatId()))
                 .andExpect(jsonPath("$.senderId").value(newMessage.getSenderId()))
@@ -73,7 +73,7 @@ class MessageControllerTest {
         when(messageService.createMessage(any(MessageModel.class))).thenThrow(new UserChatException("Error"));
         mockMvc.perform(post(URL_BASE + "/")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(newMessage)))
+                .content(new ObjectMapper().writeValueAsString(newMessage)))
                 .andExpect(status().isInternalServerError());
     }
 
@@ -99,14 +99,5 @@ class MessageControllerTest {
         mockMvc.perform(get(URL_BASE + "/{chatId}", chatId))
                 .andExpect(status().isInternalServerError());
 
-    }
-
-    // Utilidad para convertir un objeto a JSON
-    private static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 }

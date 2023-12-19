@@ -154,6 +154,34 @@ class UserServiceTest {
         verify(userRepository, times(1)).delete(userToDelete);
     }
 
+    /**
+     * Test case for deleting a user by ID from the Service when the user is not
+     * found.
+     */
+    @Test
+    @DisplayName("Test for deleteUser")
+    void testDeleteUserNotFound() {
+        Long userId = 1L;
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+        assertThrows(EntityNotFoundException.class, () -> userService.deleteUser(userId));
+    }
+
+    /**
+     * Test case for updating a user by ID from the Service and get error 500.
+     */
+    @Test
+    @DisplayName("Test for deleteUser")
+    void testDeleteUserInternalServerError() {
+        Long userId = 1L;
+        UserModel userToDelete = new UserModel();
+        userToDelete.setFirstname("Nel");
+        userToDelete.setLastname("zon");
+        userToDelete.setPassword(PASSWORD);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(userToDelete));
+        doThrow(new RuntimeException("Internal Server Error")).when(userRepository).delete(userToDelete);
+        assertThrows(IllegalStateException.class, () -> userService.deleteUser(userId));
+    }
+
     /*
      * Followuser test:
      * Verify if a user can follow another user.
@@ -165,24 +193,60 @@ class UserServiceTest {
     void testFollowUser() {
         Long followerId = 1L;
         Long targetUserId = 2L;
-
         UserModel follower = new UserModel();
         follower.setId(followerId);
         follower.setFollowing(new ArrayList<>());
-
         UserModel targetUser = new UserModel();
         targetUser.setId(targetUserId);
         targetUser.setFollowers(new ArrayList<>());
-
         when(userRepository.findById(followerId)).thenReturn(Optional.of(follower));
         when(userRepository.findById(targetUserId)).thenReturn(Optional.of(targetUser));
-
         userService.followUser(followerId, targetUserId);
-
         assertTrue(targetUser.getFollowers().contains(followerId));
         assertTrue(follower.getFollowing().contains(targetUserId));
         verify(userRepository, times(1)).save(follower);
         verify(userRepository, times(1)).save(targetUser);
+    }
+
+    /**
+     * Test case for follow a user by ID from the Service when the user contains in
+     * followers.
+     */
+    @Test
+    @DisplayName("Test for followUser")
+    void testFollowUserAlreadyExists() {
+        Long followerId = 1L;
+        Long targetUserId = 2L;
+        UserModel follower = new UserModel();
+        follower.setId(followerId);
+        follower.setFollowing(new ArrayList<>());
+        UserModel targetUser = new UserModel();
+        targetUser.setId(targetUserId);
+        targetUser.setFollowers(new ArrayList<>(List.of(followerId)));
+        when(userRepository.findById(followerId)).thenReturn(Optional.of(follower));
+        when(userRepository.findById(targetUserId)).thenReturn(Optional.of(targetUser));
+        assertThrows(IllegalStateException.class, () -> userService.followUser(followerId, targetUserId));
+    }
+
+    /**
+     * Test case for follow a user by ID from the Service when the user target
+     * contains in
+     * followers.
+     */
+    @Test
+    @DisplayName("Test for followUser")
+    void testFollowUserAlreadyFollowingTargetUser() {
+        Long followerId = 1L;
+        Long targetUserId = 2L;
+        UserModel follower = new UserModel();
+        follower.setId(followerId);
+        follower.setFollowing(new ArrayList<>(List.of(targetUserId)));
+        UserModel targetUser = new UserModel();
+        targetUser.setId(targetUserId);
+        targetUser.setFollowers(new ArrayList<>());
+        when(userRepository.findById(followerId)).thenReturn(Optional.of(follower));
+        when(userRepository.findById(targetUserId)).thenReturn(Optional.of(targetUser));
+        assertThrows(IllegalStateException.class, () -> userService.followUser(followerId, targetUserId));
     }
 
     /*
@@ -196,20 +260,15 @@ class UserServiceTest {
     void testUnfollowUser() {
         Long followerId = 1L;
         Long targetUserId = 2L;
-
         UserModel follower = new UserModel();
         follower.setId(followerId);
         follower.setFollowing(new ArrayList<>(List.of(targetUserId)));
-
         UserModel targetUser = new UserModel();
         targetUser.setId(targetUserId);
         targetUser.setFollowers(new ArrayList<>(List.of(followerId)));
-
         when(userRepository.findById(followerId)).thenReturn(Optional.of(follower));
         when(userRepository.findById(targetUserId)).thenReturn(Optional.of(targetUser));
-
         userService.unfollowUser(followerId, targetUserId);
-
         assertFalse(targetUser.getFollowers().contains(followerId));
         assertFalse(follower.getFollowing().contains(targetUserId));
         verify(userRepository, times(1)).save(follower);
