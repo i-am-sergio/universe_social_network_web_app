@@ -7,6 +7,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from HtmlTestRunner import HTMLTestRunner
 import os
 import re
+
 EXPECTED = "Expected: "
 RESULT = "|Result: "
 USERNAME = "user1@gmail.com"
@@ -48,7 +49,7 @@ class TestPost(unittest.TestCase):
         input_imagen.send_keys(self.image_path)
         self.driver.find_element(By.XPATH, self.xpath_button_post).click()
         
-        time.sleep(15)
+        time.sleep(12)
         result_text = self.driver.find_element(By.XPATH, self.xpath_text_post_uploaded).text
         result_image = self.driver.find_element(By.XPATH, self.xpath_image_post_uploaded).get_attribute("src")
 
@@ -72,7 +73,7 @@ class TestPost(unittest.TestCase):
         self.driver.find_element(By.XPATH, self.xpath_text_post).send_keys(TEST_POST_SUCCESS)
         self.driver.find_element(By.XPATH, self.xpath_button_post).click()
         
-        time.sleep(15)
+        time.sleep(12)
         result_text = self.driver.find_element(By.XPATH, self.xpath_text_post_uploaded).text
         print(EXPECTED, TEST_POST_SUCCESS)
         print(RESULT, result_text)
@@ -87,7 +88,7 @@ class TestPost(unittest.TestCase):
         wait_element.until(EC.visibility_of_element_located((By.XPATH, self.section_posts)))
         self.driver.find_element(By.XPATH, self.xpath_button_post).click()
         
-        time.sleep(15)
+        time.sleep(12)
         result_text = self.driver.find_element(By.XPATH, self.xpath_text_post_uploaded).text
         print(EXPECTED, "")
         print(RESULT, result_text)
