@@ -36,8 +36,6 @@ class TestLogin(unittest.TestCase):
         self.driver.find_element(By.XPATH, self.xpath_btn_login).click()
         time.sleep(10)
         result = self.driver.find_element(By.XPATH, self.xpath_homename).text
-        print(EXPECTED,"Shinji up Ikari up")
-        print(RESULT, result)
         self.assertEqual(result, "Shinji up Ikari up")
 
     

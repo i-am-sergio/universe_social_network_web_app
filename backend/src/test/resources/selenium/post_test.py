@@ -94,13 +94,3 @@ class TestPost(unittest.TestCase):
         print(RESULT, result_text)
         self.assertEqual(result_text, "")
         
-if __name__ == '__main__':
-    report_name = 'post_test_report.txt'
-    suite = unittest.TestSuite()
-    suite.addTest(TestPost('test_post_with_image_success'))
-    suite.addTest(TestPost('test_post_without_text'))
-    suite.addTest(TestPost('test_post_success'))
-    with open(report_name, 'w') as f:
-        runner = HTMLTestRunner(stream=f, verbosity=2, report_name="reporte_de_pruebas")
-        result = runner.run(suite)
-    print(result)
