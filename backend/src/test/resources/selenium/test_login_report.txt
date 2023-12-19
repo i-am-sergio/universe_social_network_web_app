@@ -1,0 +1,19 @@
+
+Running tests... 
+----------------------------------------------------------------------
+ test_login_success (__main__.TestLogin.test_login_success) ... OK (3.185018)s
+ test_login_invalid_password (__main__.TestLogin.test_login_invalid_password) ... OK (2.191056)s
+ test_login_invalid_username (__main__.TestLogin.test_login_invalid_username) ... OK (2.168408)s
+ test_login_empty_username (__main__.TestLogin.test_login_empty_username) ... OK (2.237842)s
+ test_login_empty_password (__main__.TestLogin.test_login_empty_password) ... OK (2.171226)s
+
+----------------------------------------------------------------------
+Ran 5 tests in 0:00:22
+
+OK
+
+
+
+Generating HTML reports... 
+reports\reporte_de_pruebas___main__.TestLogin_2023-12-18_16-48-06.html
+

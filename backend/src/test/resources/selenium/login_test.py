@@ -36,9 +36,11 @@ class TestLogin(unittest.TestCase):
         self.driver.find_element(By.XPATH, self.xpath_btn_login).click()
         time.sleep(10)
         result = self.driver.find_element(By.XPATH, self.xpath_homename).text
-        self.quit_session()
+        print(EXPECTED,"Shinji up Ikari up")
+        print(RESULT, result)
         self.assertEqual(result, "Shinji up Ikari up")
 
+    
     def test_login_invalid_password(self):
         self.driver.find_element(By.XPATH, self.xpath_username).send_keys(USERNAME)
         self.driver.find_element(By.XPATH, self.xpath_password).send_keys("zxcvb")
@@ -75,20 +77,3 @@ class TestLogin(unittest.TestCase):
         self.driver.find_element(By.XPATH, self.xpath_miperfil).click()
         time.sleep(5)
         self.driver.find_element(By.XPATH, self.xpath_logout).click()
-
-
-# if __name__ == "__main__":
-#     report_path = ""
-#     report_name = 'test_login_report.txt'
-#     suite = unittest.TestSuite()
-#     suite.addTest(TestLogin('test_login_success'))
-#     suite.addTest(TestLogin('test_login_invalid_password'))
-#     suite.addTest(TestLogin('test_login_invalid_username'))
-#     suite.addTest(TestLogin('test_login_empty_username'))
-#     suite.addTest(TestLogin('test_login_empty_password'))
-
-#     with open(report_name, 'w') as f:
-#         runner = HTMLTestRunner(stream=f, verbosity=2, report_name="test_login_report")
-#         result = runner.run(suite)
-#     print(result)
-
