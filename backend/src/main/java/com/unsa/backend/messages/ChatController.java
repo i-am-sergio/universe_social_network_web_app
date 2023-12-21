@@ -26,7 +26,7 @@ public class ChatController {
             ChatModel result = chatService.createChat(chatModel);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(chatModel);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(chatModel);
         }
     }
 
@@ -36,7 +36,7 @@ public class ChatController {
             List<ChatModel> chats = chatService.getUserChats(userId);
             return new ResponseEntity<>(chats, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 
@@ -49,7 +49,7 @@ public class ChatController {
             ChatModel chat = chatService.findChat(firstId, secondId);
             return new ResponseEntity<>(chat, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
     
@@ -59,7 +59,7 @@ public class ChatController {
             chatService.deleteChat(chatId);
             return new ResponseEntity<>("Chat deleted successfully.", HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 }
