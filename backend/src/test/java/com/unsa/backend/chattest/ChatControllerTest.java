@@ -65,7 +65,7 @@ class ChatControllerTest {
         mockMvc.perform(post("/chat")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(chatModel)))
-                .andExpect(status().isInternalServerError())
+                .andExpect(status().isConflict())
                 .andReturn();
     }
 
@@ -93,7 +93,7 @@ class ChatControllerTest {
         when(chatService.getUserChats(userId)).thenThrow(new RuntimeException(ERROR_STRING));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/chat/{userId}", userId))
-                .andExpect(status().isInternalServerError())
+                .andExpect(status().isConflict())
                 .andReturn();
     }
 
@@ -121,7 +121,7 @@ class ChatControllerTest {
         when(chatService.findChat(firstUserId, secondUserId)).thenThrow(new RuntimeException(ERROR_STRING));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/chat/find/{firstId}/{secondId}", firstUserId, secondUserId))
-                .andExpect(status().isInternalServerError())
+                .andExpect(status().isConflict())
                 .andReturn();
     }
 
@@ -144,7 +144,7 @@ class ChatControllerTest {
         doThrow(new RuntimeException(ERROR_STRING)).when(chatService).deleteChat(chatId);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/chat/{chatId}", chatId))
-                .andExpect(status().isInternalServerError())
+                .andExpect(status().isConflict())
                 .andReturn();
     }
 
