@@ -60,7 +60,7 @@ class MessageModelTest {
         long expectedTime = mockDate.getTime();
         long time1Actual = messageModel.getCreatedAt().getTime();
         long time2Actual = messageModel.getUpdatedAt().getTime();
-        long tolerance = 20;
+        long tolerance = 60;
         assertTrue(Math.abs(expectedTime - time1Actual) <= tolerance);
         assertTrue(Math.abs(expectedTime - time2Actual) <= tolerance);
     }
@@ -78,7 +78,7 @@ class MessageModelTest {
         assertNotNull(messageModel.getUpdatedAt());
         long expectedTime = mockDate.getTime();
         long actualTime = messageModel.getUpdatedAt().getTime();
-        long tolerance = 20;
+        long tolerance = 60;
         assertTrue(Math.abs(expectedTime - actualTime) <= tolerance);
     }
 

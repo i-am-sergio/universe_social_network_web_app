@@ -25,19 +25,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unsa.backend.messages.ChatModel;
 import com.unsa.backend.messages.ChatService;
 
-
-
 @SpringBootTest
 @AutoConfigureMockMvc
 @DisplayName("ChatController Tests")
 @ExtendWith(MockitoExtension.class)
 class ChatControllerTest {
-
-    @Autowired
+    private static final String ERROR_STRING = "Simulated error";
     private MockMvc mockMvc;
 
     @MockBean
     private ChatService chatService;
+
+    @Autowired
+    void setMockMvc(MockMvc mockMvc) {
+        this.mockMvc = mockMvc;
+    }
 
     @Test
     @DisplayName("Test create chat")
@@ -73,8 +75,7 @@ class ChatControllerTest {
         Long userId = 1L;
         List<ChatModel> expectedChats = Arrays.asList(
                 ChatModel.builder().id(1L).build(),
-                ChatModel.builder().id(2L).build()
-        );
+                ChatModel.builder().id(2L).build());
 
         when(chatService.getUserChats(userId)).thenReturn(expectedChats);
 
@@ -89,7 +90,7 @@ class ChatControllerTest {
     void testGetUserChatsWithInvalidUser() throws Exception {
         Long userId = 1L;
 
-    when(chatService.getUserChats(userId)).thenThrow(new RuntimeException("Simulated error"));
+        when(chatService.getUserChats(userId)).thenThrow(new RuntimeException(ERROR_STRING));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/chat/{userId}", userId))
                 .andExpect(status().isInternalServerError())
@@ -117,7 +118,7 @@ class ChatControllerTest {
         Long firstUserId = 1L;
         Long secondUserId = 2L;
 
-        when(chatService.findChat(firstUserId, secondUserId)).thenThrow(new RuntimeException("Simulated error"));
+        when(chatService.findChat(firstUserId, secondUserId)).thenThrow(new RuntimeException(ERROR_STRING));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/chat/find/{firstId}/{secondId}", firstUserId, secondUserId))
                 .andExpect(status().isInternalServerError())
@@ -135,13 +136,12 @@ class ChatControllerTest {
                 .andReturn();
     }
 
-
     @Test
     @DisplayName("Test delete chat with invalid ID")
     void testDeleteChatWithInvalidID() throws Exception {
         Long chatId = 1L;
 
-        doThrow(new RuntimeException("Simulated error")).when(chatService).deleteChat(chatId);
+        doThrow(new RuntimeException(ERROR_STRING)).when(chatService).deleteChat(chatId);
 
         mockMvc.perform(MockMvcRequestBuilders.delete("/chat/{chatId}", chatId))
                 .andExpect(status().isInternalServerError())
