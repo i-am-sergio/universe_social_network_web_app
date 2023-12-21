@@ -103,8 +103,7 @@ class ChatServiceTest {
         List<ChatModel> allChats = Arrays.asList(
                 ChatModel.builder().id(1L).members(Arrays.asList(1L, 2L)).build(),
                 ChatModel.builder().id(2L).members(Arrays.asList(1L, 3L)).build(),
-                ChatModel.builder().id(3L).members(Arrays.asList(2L, 3L)).build()
-        );
+                ChatModel.builder().id(3L).members(Arrays.asList(2L, 3L)).build());
         when(chatRepository.findAll()).thenReturn(allChats);
 
         List<ChatModel> userChats = chatService.getUserChats(1L);
@@ -122,8 +121,7 @@ class ChatServiceTest {
     void testGetUserChatsNonexistentUser() {
         List<ChatModel> allChats = Arrays.asList(
                 ChatModel.builder().id(1L).members(Arrays.asList(2L, 3L)).build(),
-                ChatModel.builder().id(2L).members(Arrays.asList(4L, 5L)).build()
-        );
+                ChatModel.builder().id(2L).members(Arrays.asList(4L, 5L)).build());
         when(chatRepository.findAll()).thenReturn(allChats);
 
         List<ChatModel> userChats = chatService.getUserChats(1L);
@@ -140,8 +138,7 @@ class ChatServiceTest {
         List<ChatModel> chatList = Arrays.asList(
                 ChatModel.builder().id(1L).members(Arrays.asList(1L, 2L)).build(),
                 ChatModel.builder().id(2L).members(Arrays.asList(2L, 3L)).build(),
-                ChatModel.builder().id(3L).members(Arrays.asList(1L, 3L)).build()
-        );
+                ChatModel.builder().id(3L).members(Arrays.asList(1L, 3L)).build());
         when(chatRepository.findAll()).thenReturn(chatList);
 
         ChatModel result = chatService.findChat(1L, 2L);
@@ -158,8 +155,7 @@ class ChatServiceTest {
         List<ChatModel> chatList = Arrays.asList(
                 ChatModel.builder().id(1L).members(Arrays.asList(1L, 2L)).build(),
                 ChatModel.builder().id(2L).members(Arrays.asList(2L, 3L)).build(),
-                ChatModel.builder().id(3L).members(Arrays.asList(1L, 3L)).build()
-        );
+                ChatModel.builder().id(3L).members(Arrays.asList(1L, 3L)).build());
         when(chatRepository.findAll()).thenReturn(chatList);
 
         ChatModel result = chatService.findChat(4L, 5L);
@@ -173,10 +169,9 @@ class ChatServiceTest {
     @Test
     void testDeleteChatSuccessful() {
         List<MessageModel> allMessages = Arrays.asList(
-            MessageModel.builder().chatId(1L).text("Hola").build(),
-            MessageModel.builder().chatId(1L).text("Cómo estás").build(),
-            MessageModel.builder().chatId(2L).text("Mensaje en otro chat").build()
-        );
+                MessageModel.builder().chatId(1L).text("Hola").build(),
+                MessageModel.builder().chatId(1L).text("Cómo estás").build(),
+                MessageModel.builder().chatId(2L).text("Mensaje en otro chat").build());
         when(messageRepository.findAll()).thenReturn(allMessages);
 
         chatService.deleteChat(1L);
