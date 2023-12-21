@@ -1,10 +1,15 @@
 package com.unsa.backend.configtest;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +19,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
+
 import com.cloudinary.Cloudinary;
 import com.unsa.backend.config.FileUploadController;
 
 import io.jsonwebtoken.io.IOException;
-
-
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -48,6 +52,17 @@ public class FileUploadControllerTest {
 
         ReflectionTestUtils.setField(controller, "uploadDir", uploadDir);
     }
+
+    @DisplayName("TestInitMethod")
+    @Test
+    void testInitMethod_createsUploadDirectory() throws Exception {
+        controller.init();
+
+        String uploadDir = (String) ReflectionTestUtils.getField(controller, "uploadDir");
+        Path directoryPath = Paths.get(uploadDir);
+        assertTrue(Files.exists(directoryPath) && Files.isDirectory(directoryPath));
+    }
+
 
 }
 
