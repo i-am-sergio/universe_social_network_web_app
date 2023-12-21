@@ -1,13 +1,12 @@
 package com.unsa.backend.configtest;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import org.junit.jupiter.api.BeforeEach;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,64 +14,107 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.ResponseEntity;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.cloudinary.Cloudinary;
-import com.unsa.backend.config.FileUploadController;
+import com.cloudinary.Uploader;
 
-import io.jsonwebtoken.io.IOException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import static org.hamcrest.Matchers.containsString;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @DisplayName("TestUploadController")
 @ExtendWith(MockitoExtension.class)
-public class FileUploadControllerTest {
+class FileUploadControllerTest {
+    private static final String IMAGE = "test.txt";
+    private static final String TYPE = "text/plain";
+    private static final String PATH = "/upload";
 
+    @MockBean
     private Cloudinary cloudinary;
+
     private MockMvc mockMvc;
-    private FileUploadController controller;
 
     @Autowired
-    public void setMockMvc(MockMvc mockMvc) {
+    void setMockMvc(MockMvc mockMvc) {
         this.mockMvc = mockMvc;
     }
 
-    @BeforeEach
-    void setUp() throws IOException, java.io.IOException {
-        Path tempDir = Files.createTempDirectory("test-upload-dir");
-
-        String uploadDir = tempDir.toString();
-
-        this.cloudinary = new Cloudinary();
-
-        this.controller = new FileUploadController(cloudinary);
-
-        ReflectionTestUtils.setField(controller, "uploadDir", uploadDir);
+    /**
+     * Test case for upload a file to cloudinary from the Controller.
+     */
+    @DisplayName("Test upload file")
+    @Test
+    void testUploadFile() throws Exception {
+        byte[] fileContent = "Archivo de prueba".getBytes();
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", IMAGE, TYPE, fileContent);
+        Uploader uploaderMock = mock(Uploader.class);
+        Map<String, String> cloudinaryResponse = new HashMap<>();
+        cloudinaryResponse.put("url", "https://cloudinary.com/your_image.jpg");
+        when(cloudinary.uploader()).thenReturn(uploaderMock);
+        when(uploaderMock.upload(any(byte[].class), any())).thenReturn(cloudinaryResponse);
+        mockMvc.perform(multipart(PATH)
+                .file(mockMultipartFile)
+                .param("name", IMAGE))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("https://cloudinary.com/your_image.jpg")));
+        verify(uploaderMock, times(1)).upload(any(byte[].class), any());
     }
 
-    @DisplayName("TestInitMethod")
+    /**
+     * Test case for upload a file to cloudinary from the Controller and dont select
+     * a File.
+     */
+    @DisplayName("Test upload file without select a file")
     @Test
-    void testInitMethod_createsUploadDirectory() throws Exception {
-        controller.init();
-
-        String uploadDir = (String) ReflectionTestUtils.getField(controller, "uploadDir");
-        Path directoryPath = Paths.get(uploadDir);
-        assertTrue(Files.exists(directoryPath) && Files.isDirectory(directoryPath));
+    void testUploadFileWithoutSelectFile() throws Exception {
+        MockMultipartFile mockEmptyFile = new MockMultipartFile("file", new byte[0]);
+        mockMvc.perform(multipart(PATH)
+                .file(mockEmptyFile)
+                .param("name", "empty_file.txt"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Please select a file"));
     }
 
-    @DisplayName("TestHandleFileUploadEmptyFile")
+    /**
+     * Test case for upload a file to cloudinary from the Controller and the name
+     * doesn't have a dot.
+     */
+    @DisplayName("Test upload file without dot in the name")
     @Test
-    void testHandleFileUpload_emptyFile() throws Exception {
-        MultipartFile emptyFile = new MockMultipartFile("file", "filename.txt", "text/plain", new byte[0]);
+    void testUploadFileWithoutDotInTheName() throws Exception {
+        byte[] fileContent = "image".getBytes();
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test", TYPE, fileContent);
+        mockMvc.perform(multipart(PATH)
+                .file(mockMultipartFile)
+                .param("name", "test"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("File name doesn't contain an extension"));
+    }
 
-        ResponseEntity<String> response = controller.handleFileUpload(emptyFile, "filename.txt");
+    /**
+     * Test case for upload a file to cloudinary from the Controller adn get error
+     * 500.
+     */
+    @DisplayName("Test upload file with error 500")
+    @Test
+    void testUploadFileWithIOException() throws Exception {
+        byte[] fileContent = "Archivo de prueba".getBytes();
+        MockMultipartFile mockMultipartFile = new MockMultipartFile("file", IMAGE, TYPE, fileContent);
 
-        assertEquals("Please select a file", response.getBody());
+        Uploader uploaderMock = mock(Uploader.class);
+        when(cloudinary.uploader()).thenReturn(uploaderMock);
+        when(uploaderMock.upload(any(byte[].class), any())).thenThrow(IOException.class);
+        mockMvc.perform(multipart(PATH)
+                .file(mockMultipartFile)
+                .param("name", IMAGE))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string("Error uploading file"));
     }
 
 }
-
