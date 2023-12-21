@@ -1,7 +1,7 @@
 package com.unsa.backend.configtest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,10 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
-
+import org.springframework.web.multipart.MultipartFile;
 
 import com.cloudinary.Cloudinary;
 import com.unsa.backend.config.FileUploadController;
@@ -63,6 +64,15 @@ public class FileUploadControllerTest {
         assertTrue(Files.exists(directoryPath) && Files.isDirectory(directoryPath));
     }
 
+    @DisplayName("TestHandleFileUploadEmptyFile")
+    @Test
+    void testHandleFileUpload_emptyFile() throws Exception {
+        MultipartFile emptyFile = new MockMultipartFile("file", "filename.txt", "text/plain", new byte[0]);
+
+        ResponseEntity<String> response = controller.handleFileUpload(emptyFile, "filename.txt");
+
+        assertEquals("Please select a file", response.getBody());
+    }
 
 }
 
