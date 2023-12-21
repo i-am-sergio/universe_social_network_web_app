@@ -71,19 +71,6 @@ class ChatServiceTest {
         verify(chatRepository, times(1)).save(newChat);
     }
 
-    @DisplayName("Test createChat - Invalid Data")
-    @Test
-    void testCreateChatInvalidData() {
-        ChatModel existingChat = ChatModel.builder().members(Arrays.asList(1L, 2L)).build();
-        when(chatRepository.findAll()).thenReturn(Arrays.asList(existingChat));
-
-        ChatModel newChat = ChatModel.builder().members(Arrays.asList(1L, 2L)).build();
-
-        assertThrows(UserChatException.class, () -> chatService.createChat(newChat));
-
-        verify(chatRepository, times(1)).findAll();
-    }
-
     @DisplayName("Test createChat - Chat Already Exists")
     @Test
     void testCreateChatChatAlreadyExists() {
