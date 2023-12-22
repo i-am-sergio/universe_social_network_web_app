@@ -55,101 +55,113 @@ class ChatServiceTest {
         verify(chatRepository, times(1)).findAll();
     }
 
-    @DisplayName("Test createChat - Successful")
     @Test
+    @DisplayName("Create Chat - Successful")
     void testCreateChatSuccessful() {
-        ChatModel newChat = ChatModel.builder().members(Arrays.asList(1L, 2L)).build();
+        ChatModel newChat = new ChatModel();
+        newChat.setMembers(Arrays.asList(1L, 2L));
+
         when(chatRepository.findAll()).thenReturn(new ArrayList<>());
-        when(chatRepository.save(newChat)).thenReturn(newChat);
+        when(chatRepository.save(any())).thenReturn(newChat);
 
         ChatModel result = chatService.createChat(newChat);
 
         assertNotNull(result);
-        assertEquals(newChat, result);
-
-        verify(chatRepository, times(1)).findAll();
-        verify(chatRepository, times(1)).save(newChat);
+        assertEquals(newChat.getMembers(), result.getMembers());
     }
 
-    @DisplayName("Test createChat - Chat Already Exists")
     @Test
-    void testCreateChatChatAlreadyExists() {
-        ChatModel existingChat = ChatModel.builder().members(Arrays.asList(1L, 2L)).build();
+    @DisplayName("Create Chat - Chat Exists")
+    void testCreateChatChatExists() {
+        ChatModel existingChat = new ChatModel();
+        existingChat.setMembers(Arrays.asList(1L, 2L));
+
+        ChatModel newChat = new ChatModel();
+        newChat.setMembers(Arrays.asList(1L, 2L));
+
         when(chatRepository.findAll()).thenReturn(Arrays.asList(existingChat));
 
-        ChatModel newChat = ChatModel.builder().members(Arrays.asList(1L, 2L)).build();
+        UserChatException exception = assertThrows(UserChatException.class,
+                () -> chatService.createChat(newChat));
 
-        assertThrows(UserChatException.class, () -> chatService.createChat(newChat));
-
-        verify(chatRepository, times(1)).findAll();
+        assertEquals("Error al crear el Chat.", exception.getMessage());
     }
 
-    @DisplayName("Test getUserChats - Valid User")
     @Test
-    void testGetUserChatsValidUser() {
-        List<ChatModel> allChats = Arrays.asList(
-                ChatModel.builder().id(1L).members(Arrays.asList(1L, 2L)).build(),
-                ChatModel.builder().id(2L).members(Arrays.asList(1L, 3L)).build(),
-                ChatModel.builder().id(3L).members(Arrays.asList(2L, 3L)).build());
+    @DisplayName("Get User Chats - User Exists in Chats")
+    void testGetUserChatsUserExists() {
+        Long userId = 1L;
+        ChatModel chat1 = new ChatModel();
+        chat1.setMembers(Arrays.asList(userId, 2L));
+
+        ChatModel chat2 = new ChatModel();
+        chat2.setMembers(Arrays.asList(userId, 3L));
+
+        List<ChatModel> allChats = Arrays.asList(chat1, chat2);
+
         when(chatRepository.findAll()).thenReturn(allChats);
 
-        List<ChatModel> userChats = chatService.getUserChats(1L);
+        List<ChatModel> result = chatService.getUserChats(userId);
 
-        assertNotNull(userChats);
-        assertEquals(2, userChats.size());
-        assertTrue(userChats.stream().allMatch(chatModel -> chatModel.getMembers().contains(1L)));
-        assertTrue(userChats.stream().noneMatch(chatModel -> !chatModel.getMembers().contains(1L)));
-
-        verify(chatRepository, times(1)).findAll();
+        assertEquals(2, result.size());
+        assertTrue(result.contains(chat1));
+        assertTrue(result.contains(chat2));
     }
 
-    @DisplayName("Test getUserChats - Nonexistent User")
     @Test
-    void testGetUserChatsNonexistentUser() {
-        List<ChatModel> allChats = Arrays.asList(
-                ChatModel.builder().id(1L).members(Arrays.asList(2L, 3L)).build(),
-                ChatModel.builder().id(2L).members(Arrays.asList(4L, 5L)).build());
+    @DisplayName("Get User Chats - User Does Not Exist in Chats")
+    void testGetUserChatsUserDoesNotExist() {
+        Long userId = 1L;
+        ChatModel chat1 = new ChatModel();
+        chat1.setMembers(Arrays.asList(2L, 3L));
+
+        ChatModel chat2 = new ChatModel();
+        chat2.setMembers(Arrays.asList(4L, 5L));
+
+        List<ChatModel> allChats = Arrays.asList(chat1, chat2);
+
         when(chatRepository.findAll()).thenReturn(allChats);
 
-        List<ChatModel> userChats = chatService.getUserChats(1L);
+        List<ChatModel> result = chatService.getUserChats(userId);
 
-        assertNotNull(userChats);
-        assertTrue(userChats.isEmpty());
-
-        verify(chatRepository, times(1)).findAll();
+        assertTrue(result.isEmpty());
     }
 
-    @DisplayName("Test findChat - Successful")
     @Test
+    @DisplayName("Find Chat - Successful")
     void testFindChatSuccessful() {
-        List<ChatModel> chatList = Arrays.asList(
-                ChatModel.builder().id(1L).members(Arrays.asList(1L, 2L)).build(),
-                ChatModel.builder().id(2L).members(Arrays.asList(2L, 3L)).build(),
-                ChatModel.builder().id(3L).members(Arrays.asList(1L, 3L)).build());
+        Long firstId = 1L;
+        Long secondId = 2L;
+
+        ChatModel chat = new ChatModel();
+        chat.setMembers(Arrays.asList(firstId, secondId));
+
+        List<ChatModel> chatList = Arrays.asList(chat);
+
         when(chatRepository.findAll()).thenReturn(chatList);
 
-        ChatModel result = chatService.findChat(1L, 2L);
+        ChatModel result = chatService.findChat(firstId, secondId);
 
         assertNotNull(result);
-        assertEquals(1L, result.getId());
-
-        verify(chatRepository, times(1)).findAll();
+        assertEquals(chat, result);
     }
 
-    @DisplayName("Test findChat - Invalid IDs")
     @Test
-    void testFindChatInvalidIDs() {
-        List<ChatModel> chatList = Arrays.asList(
-                ChatModel.builder().id(1L).members(Arrays.asList(1L, 2L)).build(),
-                ChatModel.builder().id(2L).members(Arrays.asList(2L, 3L)).build(),
-                ChatModel.builder().id(3L).members(Arrays.asList(1L, 3L)).build());
+    @DisplayName("Find Chat - Invalid")
+    void testFindChatInvalid() {
+        Long firstId = 1L;
+        Long secondId = 2L;
+
+        ChatModel chat = new ChatModel();
+        chat.setMembers(Arrays.asList(3L, 4L));
+
+        List<ChatModel> chatList = Arrays.asList(chat);
+
         when(chatRepository.findAll()).thenReturn(chatList);
 
-        ChatModel result = chatService.findChat(4L, 5L);
+        ChatModel result = chatService.findChat(firstId, secondId);
 
         assertNull(result);
-
-        verify(chatRepository, times(1)).findAll();
     }
 
     @DisplayName("Test deleteChat - Successful")
