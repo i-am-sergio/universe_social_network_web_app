@@ -58,7 +58,6 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receivedMessage }) => {
       senderId: currentUser,
       text: newMessage,
       chatId: chat.id,
-      messageId: Math.floor(Math.random() * 100000),
     };
     const receiverId = chat.members.find((id) => id !== currentUser);
     // send message to socket server
