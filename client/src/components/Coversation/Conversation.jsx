@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 import { getUser } from "../../api/UserRequests";
 import PropTypes from "prop-types";
@@ -6,20 +6,31 @@ import PropTypes from "prop-types";
 const Conversation = ({ data, currentUser, online }) => {
   const [userData, setUserData] = useState(null);
   const dispatch = useDispatch();
+  const isMounted = useRef(true);
 
   useEffect(() => {
+    console.log("DATA => ", data);
+    console.log("CURRENT USER => ", currentUser);
+    console.log("ONLINE => ", online);
     const userId = data.members.find((id) => id !== currentUser);
     const getUserData = async () => {
       try {
         const { data } = await getUser(userId);
-        setUserData(data);
-        dispatch({ type: "SAVE_USER", data: data });
+        if (isMounted.current) {
+          setUserData(data);
+          dispatch({ type: "SAVE_USER", data: data });
+        }
       } catch (error) {
         console.log(error);
       }
     };
 
     getUserData();
+
+    return () => {
+      isMounted.current = false;
+    };
+
   }, [currentUser, data.members, dispatch]);
   return (
     <>
@@ -59,7 +70,7 @@ Conversation.propTypes = {
   }),
   currentUser: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     .isRequired,
-  online: PropTypes.bool,
+  online: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
 };
 
 export default Conversation;

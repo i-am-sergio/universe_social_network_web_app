@@ -42,8 +42,6 @@ const authReducer = (
       };
 
     case "FOLLOW_USER":
-      console.log("state.authdata => ", state.authData); // objeto con los datos del usuario actual
-      console.log("action.data => ", action.data); // 2 id dek usuario a seguir
       return {
         ...state,
         authData: {
