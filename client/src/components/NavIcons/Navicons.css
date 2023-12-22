@@ -2,3 +2,21 @@
     color:rgb(161, 2, 2);
     font-size: 25px;
 }
+
+.logout_span{
+    font-size: 15px;
+    color:rgb(161, 2, 2);
+    font-weight: bold;
+    align-items: center;
+    padding-right: 8px;
+}
+
+.div_logout{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-left: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+}
