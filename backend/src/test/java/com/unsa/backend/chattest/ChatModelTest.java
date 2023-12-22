@@ -46,7 +46,6 @@ class ChatModelTest {
         assertNotNull(chatModel.getUpdatedAt());
 
         assertEquals(chatModel.getCreatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                     chatModel.getUpdatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                chatModel.getUpdatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
     }
 }
-
