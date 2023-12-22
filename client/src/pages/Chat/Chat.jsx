@@ -67,7 +67,6 @@ const Chat = () => {
           <h2>Chats</h2>
           <div className="Chat-list">
             {chats.map((chat) => {
-              console.log("Chat ID:", chat.id);
               return (
                 <button
                   key={chat.id}

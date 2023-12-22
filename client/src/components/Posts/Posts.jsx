@@ -20,9 +20,13 @@ const Posts = () => {
   if (!posts) {
     return <div>No Posts</div>;
   }
+  const postsWithUniqueIds = posts.data.map((post, index) => ({
+    ...post,
+    id: index + 1,
+  }));
   let postsToDisplay = params.id
-    ? posts.data.filter((post) => post.userId === params.id)
-    : posts.data;
+    ? postsWithUniqueIds.filter((post) => post.userId === params.id)
+    : postsWithUniqueIds;
   return (
     <div className="Posts">
       {loading ? (

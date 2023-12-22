@@ -9,19 +9,13 @@ import PropTypes from "prop-types";
 const FollowersCard = ({ location }) => {
   const [modalOpened, setModalOpened] = useState(false);
   const [persons, setPersons] = useState([]);
-  console.log("PERSONS => ", persons);
   const user = useSelector((state) => state.authReducer.authData);
   const isMounted = useRef(true);
-
-  console.log("USER FollowersCard => ", user);
-  console.log(user.token);
   useEffect(() => {
     const fetchPersons = async () => {
       isMounted.current = true;
       const response = await getAllUser();
       const data = response.data;
-      console.log("DATA ALL USERS => ", data);
-
       if (isMounted.current) {
         setPersons(data);
       }
