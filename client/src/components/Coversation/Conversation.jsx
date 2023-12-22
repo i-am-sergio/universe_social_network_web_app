@@ -9,9 +9,6 @@ const Conversation = ({ data, currentUser, online }) => {
   const isMounted = useRef(true);
 
   useEffect(() => {
-    console.log("DATA => ", data);
-    console.log("CURRENT USER => ", currentUser);
-    console.log("ONLINE => ", online);
     const userId = data.members.find((id) => id !== currentUser);
     const getUserData = async () => {
       try {
@@ -30,7 +27,6 @@ const Conversation = ({ data, currentUser, online }) => {
     return () => {
       isMounted.current = false;
     };
-
   }, [currentUser, data.members, dispatch]);
   return (
     <>
@@ -70,7 +66,11 @@ Conversation.propTypes = {
   }),
   currentUser: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
     .isRequired,
-  online: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.object]),
+  online: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.object,
+  ]),
 };
 
 export default Conversation;
