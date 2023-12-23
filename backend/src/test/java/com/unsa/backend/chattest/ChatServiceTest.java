@@ -24,7 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.unsa.backend.messages.ChatModel;
 import com.unsa.backend.messages.ChatRepository;
-import com.unsa.backend.messages.ChatService;
+import com.unsa.backend.messages.ChatServiceImpl;
 import com.unsa.backend.messages.MessageModel;
 import com.unsa.backend.messages.MessageRepository;
 import com.unsa.backend.messages.UserChatException;
@@ -40,7 +40,7 @@ class ChatServiceTest {
     private MessageRepository messageRepository;
 
     @InjectMocks
-    private ChatService chatService;
+    private ChatServiceImpl chatService;
 
     @DisplayName("Test obtenerChats")
     @Test
