@@ -1,4 +1,4 @@
-package com.unsa.backend.messages;
+package com.unsa.backend.chat;
 
 import java.util.List;
 
@@ -13,4 +13,3 @@ public interface ChatService {
 
     void deleteChat(Long chatId);
 }
-

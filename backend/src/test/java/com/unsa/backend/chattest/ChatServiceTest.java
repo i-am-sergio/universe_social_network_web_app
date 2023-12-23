@@ -23,9 +23,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import com.unsa.backend.messages.ChatModel;
-import com.unsa.backend.messages.ChatRepository;
-import com.unsa.backend.messages.ChatService;
+import com.unsa.backend.chat.ChatModel;
+import com.unsa.backend.chat.ChatRepository;
+import com.unsa.backend.chat.ChatService;
 import com.unsa.backend.messages.MessageModel;
 import com.unsa.backend.messages.MessageRepository;
 import com.unsa.backend.messages.UserChatException;

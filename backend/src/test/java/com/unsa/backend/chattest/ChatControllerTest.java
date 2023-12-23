@@ -23,8 +23,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.unsa.backend.messages.ChatModel;
-import com.unsa.backend.messages.ChatService;
+import com.unsa.backend.chat.ChatModel;
+import com.unsa.backend.chat.ChatService;
 
 @SpringBootTest
 @AutoConfigureMockMvc

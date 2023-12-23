@@ -1,4 +1,4 @@
-package com.unsa.backend.messages;
+package com.unsa.backend.chat;
 
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/chat")
 @AllArgsConstructor
 public class ChatController {
-    
+
     private final ChatService chatService;
 
     @PostMapping
@@ -42,9 +42,8 @@ public class ChatController {
 
     @GetMapping("/find/{firstId}/{secondId}")
     public ResponseEntity<ChatModel> findChat(
-        @PathVariable Long firstId,
-        @PathVariable Long secondId
-    ) {
+            @PathVariable Long firstId,
+            @PathVariable Long secondId) {
         try {
             ChatModel chat = chatService.findChat(firstId, secondId);
             return new ResponseEntity<>(chat, HttpStatus.OK);
@@ -52,7 +51,7 @@ public class ChatController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
-    
+
     @DeleteMapping("/{chatId}")
     public ResponseEntity<String> deleteChat(@PathVariable Long chatId) {
         try {
