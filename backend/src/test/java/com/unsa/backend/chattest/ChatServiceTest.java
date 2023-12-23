@@ -114,6 +114,15 @@ class ChatServiceTest {
     }
 
     @Test
+    @DisplayName("Get User Chats - User Does Not Exist")
+    void testGetUserChatsUserDoesNotExistInChats() {
+        Long userId = 1L;
+        when(chatRepository.findAll()).thenThrow(new RuntimeException("Simulated repository exception"));
+        UserChatException exception = assertThrows(UserChatException.class, () -> chatService.getUserChats(userId));
+        assertEquals("Error al obtener los chats del usuario.", exception.getMessage());
+    }
+
+    @Test
     @DisplayName("Find Chat - Successful")
     void testFindChatSuccessful() {
         Long firstId = 1L;
@@ -138,6 +147,31 @@ class ChatServiceTest {
         when(chatRepository.findAll()).thenReturn(chatList);
         ChatModel result = chatService.findChat(firstId, secondId);
         assertNull(result);
+    }
+
+    @Test
+    @DisplayName("Find Chat - secondId Invalid")
+    void testFindChatSecondIdInvalid() {
+        Long firstId = 1L;
+        Long secondId = 2L;
+        Long differentSecondId = 3L;
+        ChatModel chat = new ChatModel();
+        chat.setMembers(Arrays.asList(firstId, differentSecondId));
+        List<ChatModel> chatList = Arrays.asList(chat);
+        when(chatRepository.findAll()).thenReturn(chatList);
+        ChatModel result = chatService.findChat(firstId, secondId);
+        assertNull(result);
+    }
+
+    @Test
+    @DisplayName("Find Chat - Exception Handling")
+    void testFindChatExceptionHandling() {
+        Long firstId = 1L;
+        Long secondId = 2L;
+        when(chatRepository.findAll()).thenThrow(new RuntimeException("Simulated repository exception"));
+        UserChatException exception = assertThrows(UserChatException.class,
+                () -> chatService.findChat(firstId, secondId));
+        assertEquals("Error al obtener el chat entre los usuarios.", exception.getMessage());
     }
 
     @DisplayName("Test deleteChat - Successful")
