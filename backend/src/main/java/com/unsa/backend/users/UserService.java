@@ -2,14 +2,8 @@ package com.unsa.backend.users;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
 
-import jakarta.persistence.EntityNotFoundException;
-import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-public class UserService {
+public interface UserService {
     public List<UserModel> getUsers();
 
     public UserModel getUser(Long id);

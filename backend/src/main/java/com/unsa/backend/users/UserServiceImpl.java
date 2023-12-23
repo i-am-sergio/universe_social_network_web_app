@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 
 @Service
 @AllArgsConstructor
-public class UserService {
+public class UserServiceImpl implements UserService{
     private static final String USER_NOT_FOUND_MESSAGE = "User not found";
     final UserRepository userRepository;
 
