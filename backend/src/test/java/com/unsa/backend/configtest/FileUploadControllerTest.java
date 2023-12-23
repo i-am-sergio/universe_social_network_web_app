@@ -33,7 +33,7 @@ import static org.hamcrest.Matchers.containsString;
 class FileUploadControllerTest {
     private static final String IMAGE = "test.txt";
     private static final String TYPE = "text/plain";
-    private static final String PATH = "/upload";
+    private static final String URL_BASE = "/upload";
 
     @MockBean
     private Cloudinary cloudinary;
@@ -58,7 +58,7 @@ class FileUploadControllerTest {
         cloudinaryResponse.put("url", "https://cloudinary.com/your_image.jpg");
         when(cloudinary.uploader()).thenReturn(uploaderMock);
         when(uploaderMock.upload(any(byte[].class), any())).thenReturn(cloudinaryResponse);
-        mockMvc.perform(multipart(PATH)
+        mockMvc.perform(multipart(URL_BASE)
                 .file(mockMultipartFile)
                 .param("name", IMAGE))
                 .andExpect(status().isOk())
@@ -74,7 +74,7 @@ class FileUploadControllerTest {
     @Test
     void testUploadFileWithoutSelectFile() throws Exception {
         MockMultipartFile mockEmptyFile = new MockMultipartFile("file", new byte[0]);
-        mockMvc.perform(multipart(PATH)
+        mockMvc.perform(multipart(URL_BASE)
                 .file(mockEmptyFile)
                 .param("name", "empty_file.txt"))
                 .andExpect(status().isBadRequest())
@@ -90,7 +90,7 @@ class FileUploadControllerTest {
     void testUploadFileWithoutDotInTheName() throws Exception {
         byte[] fileContent = "image".getBytes();
         MockMultipartFile mockMultipartFile = new MockMultipartFile("file", "test", TYPE, fileContent);
-        mockMvc.perform(multipart(PATH)
+        mockMvc.perform(multipart(URL_BASE)
                 .file(mockMultipartFile)
                 .param("name", "test"))
                 .andExpect(status().isBadRequest())
@@ -110,7 +110,7 @@ class FileUploadControllerTest {
         Uploader uploaderMock = mock(Uploader.class);
         when(cloudinary.uploader()).thenReturn(uploaderMock);
         when(uploaderMock.upload(any(byte[].class), any())).thenThrow(IOException.class);
-        mockMvc.perform(multipart(PATH)
+        mockMvc.perform(multipart(URL_BASE)
                 .file(mockMultipartFile)
                 .param("name", IMAGE))
                 .andExpect(status().isInternalServerError())
