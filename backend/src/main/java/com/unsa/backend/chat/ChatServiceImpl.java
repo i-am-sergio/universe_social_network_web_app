@@ -1,10 +1,14 @@
-package com.unsa.backend.messages;
+package com.unsa.backend.chat;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+
+import com.unsa.backend.messages.MessageModel;
+import com.unsa.backend.messages.MessageRepository;
+import com.unsa.backend.messages.UserChatException;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.unsa.backend.messages;
+package com.unsa.backend.chat;
 
 import java.util.List;
 import java.util.Date;
@@ -18,7 +18,8 @@ import lombok.Setter;
 
 @Entity
 @Table(name = "chat")
-@Getter @Setter
+@Getter
+@Setter
 public class ChatModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +28,10 @@ public class ChatModel {
 
     @ElementCollection
     private List<Long> members;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
-    
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
 
