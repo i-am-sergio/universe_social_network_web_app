@@ -10,24 +10,29 @@ import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.unsa.backend.messages.MessageModel;
 import com.unsa.backend.messages.MessageRepository;
 import com.unsa.backend.messages.MessageService;
 import com.unsa.backend.messages.UserChatException;
 
+@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 @DisplayName("Message Service Test")
 class MessageServiceTest {
 
-    @Mock
+    @MockBean
     private MessageRepository messageRepository;
-
-    @InjectMocks
     private MessageService messageService;
+
+    @Autowired
+    public MessageServiceTest(MessageService messageService) {
+        this.messageService = messageService;
+    }
 
     @Test
     @DisplayName("Create Message - Success")
