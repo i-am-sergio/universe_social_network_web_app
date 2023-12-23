@@ -25,7 +25,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.unsa.backend.messages.ChatModel;
 import com.unsa.backend.messages.ChatRepository;
-import com.unsa.backend.messages.ChatServiceImpl;
+import com.unsa.backend.messages.ChatService;
 import com.unsa.backend.messages.MessageModel;
 import com.unsa.backend.messages.MessageRepository;
 import com.unsa.backend.messages.UserChatException;
@@ -40,7 +40,7 @@ class ChatServiceTest {
 
     @MockBean
     private MessageRepository messageRepository;
-  
+
     private ChatService chatService;
 
     @Autowired
