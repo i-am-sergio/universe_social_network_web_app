@@ -11,7 +11,9 @@ import { format } from "timeago.js";
 
 const Post = ({ data }) => {
   const user = useSelector((state) => state.authReducer.authData);
-  const [liked, setLiked] = useState(data.likes?.includes(user._id));
+  const [liked, setLiked] = useState(data.likes?.includes(user.id));
+  console.log("Likes: ", data.likes);
+  console.log("Liked: ", liked);
   const [likes, setLikes] = useState(data.likes ? data.likes.length : 0);
 
   const [createdAt, setCreatedAt] = useState(null);
