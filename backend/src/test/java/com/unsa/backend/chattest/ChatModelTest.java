@@ -1,12 +1,10 @@
 package com.unsa.backend.chattest;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
+import java.time.ZoneId;
 import java.util.Date;
-import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,58 +20,32 @@ import com.unsa.backend.messages.ChatModel;
 @DisplayName("Test Model")
 @ExtendWith(MockitoExtension.class)
 class ChatModelTest {
-    /*
-     * @MockBean
-     * private DateTimeProvider dateTimeProviderMock;
-     * 
-     * @DisplayName("Test create a chat")
-     * 
-     * @Test
-     * void testCreateChat() {
-     * Date mockDate = new Date();
-     * when(dateTimeProviderMock.getNow()).thenReturn(Optional.of(mockDate.toInstant
-     * ()));
-     * 
-     * ChatModel chatModel = ChatModel.builder().members(Arrays.asList(1L,
-     * 2L)).build();
-     * chatModel.onCreate();
-     * 
-     * assertNotNull(chatModel.getCreatedAt());
-     * assertNotNull(chatModel.getUpdatedAt());
-     * 
-     * long expectedTime = mockDate.getTime();
-     * 
-     * // Check createdAt
-     * long actualCreateTime = chatModel.getCreatedAt().getTime();
-     * long toleranceCreateTime = 20;
-     * assertTrue(Math.abs(expectedTime - actualCreateTime) <= toleranceCreateTime);
-     * 
-     * // Check updatedAt (should be the same as createdAt during creation)
-     * long actualUpdateTime = chatModel.getUpdatedAt().getTime();
-     * long toleranceUpdateTime = 20;
-     * assertTrue(Math.abs(expectedTime - actualUpdateTime) <= toleranceUpdateTime);
-     * }
-     * 
-     * @DisplayName("Test update a chat")
-     * 
-     * @Test
-     * void testUpdateChat() {
-     * Date mockDate = new Date();
-     * when(dateTimeProviderMock.getNow()).thenReturn(Optional.of(mockDate.toInstant
-     * ()));
-     * 
-     * ChatModel chatModel = ChatModel.builder().members(Arrays.asList(1L,
-     * 2L)).build();
-     * chatModel.onUpdate();
-     * 
-     * assertNotNull(chatModel.getUpdatedAt());
-     * 
-     * long expectedTime = mockDate.getTime();
-     * 
-     * // Check updatedAt
-     * long actualUpdateTime = chatModel.getUpdatedAt().getTime();
-     * long toleranceUpdateTime = 20;
-     * assertTrue(Math.abs(expectedTime - actualUpdateTime) <= toleranceUpdateTime);
-     * }
-     */
+
+    @MockBean
+    private DateTimeProvider dateTimeProviderMock;
+
+    @Test
+    @DisplayName("onCreate - Sets Creation and Update Dates")
+    void testOnCreate() {
+        ChatModel chatModel = new ChatModel();
+        chatModel.onCreate();
+
+        assertNotNull(chatModel.getCreatedAt());
+        assertNotNull(chatModel.getUpdatedAt());
+        assertEquals(chatModel.getCreatedAt(), chatModel.getUpdatedAt());
+    }
+
+    @Test
+    @DisplayName("onUpdate - Sets Update Date Different from Creation Date")
+    void testOnUpdate() {
+        ChatModel chatModel = new ChatModel();
+        chatModel.setCreatedAt(new Date());
+
+        chatModel.onUpdate();
+
+        assertNotNull(chatModel.getUpdatedAt());
+
+        assertEquals(chatModel.getCreatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                chatModel.getUpdatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+    }
 }
