@@ -4,10 +4,13 @@ import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import com.unsa.backend.users.UserModel;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,8 +22,8 @@ public class JwtService {
 
     private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    public String getToken(UserDetails user){
-        return getToken(new HashMap<>(),user);
+    public String getToken(UserDetails userDetails){
+        return getToken(new HashMap<>(),userDetails);
     }
 
     private String getToken(Map<String, Object> extraClaims, UserDetails user) {
@@ -62,6 +65,10 @@ public class JwtService {
 
     private boolean isTokenExpired(String token){
         return getExpiration(token).before(new Date());
+    }
+
+    public Object getToken(Optional<UserModel> userDetails) {
+        return null;
     }
 
 }
