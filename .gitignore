@@ -3,3 +3,4 @@ client@tmp/
 .scannerwork/
 jmeter.log
 /reports/*.html
+.vim

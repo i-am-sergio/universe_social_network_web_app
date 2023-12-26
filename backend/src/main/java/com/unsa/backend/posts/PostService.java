@@ -1,71 +1,19 @@
 package com.unsa.backend.posts;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-import org.springframework.stereotype.Service;
+public interface PostService {
+    public List<PostModel> getPosts();
 
-import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+    public PostModel getPostById(Long id);
 
-@Service
-@AllArgsConstructor
-public class PostService {
+    public PostModel createPost(PostModel newPost);
 
-    private final PostRepository postRepository;
+    public void updatePost(PostModel existingPost, PostModel updatedPost);
 
-    public List<PostModel> getPosts() {
+    public boolean deletePost(Long postId);
 
-        return postRepository.findAll();
-    }
+    public void addLike(PostModel post, Long userId);
 
-    public PostModel getPostById(Long id) {
-        Optional<PostModel> optionalPost = postRepository.findById(id);
-        return optionalPost.orElse(null);
-    }
-
-    public PostModel createPost(PostModel newPost) {
-        return postRepository.save(newPost);
-    }
-
-    public void updatePost(PostModel existingPost, PostModel updatedPost) {
-        // Actualizar el post existente con los datos del post actualizado
-        existingPost.setDesc(updatedPost.getDesc());
-        existingPost.setLikes(updatedPost.getLikes());
-        existingPost.setImage(updatedPost.getImage());
-        // Guardar el post actualizado en la base de datos
-        postRepository.save(existingPost);
-    }
-
-    public boolean deletePost(Long postId) {
-        Optional<PostModel> postOptional = postRepository.findById(postId);
-        if (postOptional.isPresent()) {
-            postRepository.delete(postOptional.get());
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    @Transactional
-    public void addLike(PostModel post, Long userId) {
-        List<Long> likes = new ArrayList<>(post.getLikes());
-        if (!likes.contains(userId)) {
-            likes.add(userId);
-            post.setLikes(likes);
-            postRepository.save(post);
-        }
-    }
-
-    @Transactional
-    public void removeLike(PostModel post, Long userId) {
-        List<Long> likes = new ArrayList<>(post.getLikes());
-        if (likes.contains(userId)) {
-            likes.remove(userId);
-            post.setLikes(likes);
-            postRepository.save(post);
-        }
-    }
-
+    public void removeLike(PostModel post, Long userId);
 }

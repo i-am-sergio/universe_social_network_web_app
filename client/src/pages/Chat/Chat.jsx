@@ -66,20 +66,22 @@ const Chat = () => {
         <div className="Chat-container">
           <h2>Chats</h2>
           <div className="Chat-list">
-            {chats.map((chat) => (
-              <button
-                key={chat.id}
-                onClick={() => {
-                  setCurrentChat(chat);
-                }}
-              >
-                <Conversation
-                  data={chat}
-                  currentUser={user.id}
-                  online={checkOnlineStatus(chat)}
-                />
-              </button>
-            ))}
+            {chats.map((chat) => {
+              return (
+                <button
+                  key={chat.id}
+                  onClick={() => {
+                    setCurrentChat(chat);
+                  }}
+                >
+                  <Conversation
+                    data={chat}
+                    currentUser={user.id}
+                    online={checkOnlineStatus(chat)}
+                  />
+                </button>
+              );
+            })}
           </div>
         </div>
       </div>

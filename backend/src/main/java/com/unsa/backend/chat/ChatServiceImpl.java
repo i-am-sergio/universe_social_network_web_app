@@ -1,4 +1,4 @@
-package com.unsa.backend.messages;
+package com.unsa.backend.chat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,20 +6,26 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.unsa.backend.messages.MessageModel;
+import com.unsa.backend.messages.MessageRepository;
+import com.unsa.backend.messages.UserChatException;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ChatService {
+public class ChatServiceImpl implements ChatService {
 
     private final ChatRepository chatRepository;
 
     private final MessageRepository messageRepository;
 
+    @Override
     public List<ChatModel> obtenerChats() {
         return (ArrayList<ChatModel>) chatRepository.findAll();
     }
 
+    @Override
     public ChatModel createChat(ChatModel newChat) {
         try {
             List<Long> members = newChat.getMembers();
@@ -35,6 +41,7 @@ public class ChatService {
         }
     }
 
+    @Override
     public List<ChatModel> getUserChats(Long userId) {
         try {
             List<ChatModel> allChats = (List<ChatModel>) chatRepository.findAll();
@@ -46,6 +53,7 @@ public class ChatService {
         }
     }
 
+    @Override
     public ChatModel findChat(Long firstId, Long secondId) {
         try {
             List<ChatModel> chatList = (List<ChatModel>) chatRepository.findAll();
@@ -60,6 +68,7 @@ public class ChatService {
         }
     }
 
+    @Override
     public void deleteChat(Long chatId) {
         try {
             List<MessageModel> allMessages = (List<MessageModel>) messageRepository.findAll();

@@ -11,12 +11,19 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Table(name = "message")
-@Getter @Setter
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class MessageModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,14 +38,15 @@ public class MessageModel {
     private Date createdAt;
     @Temporal(TemporalType.TIMESTAMP)
     private Date updatedAt;
+
     @PrePersist
-    protected void onCreate() {
+    public void onCreate() {
         createdAt = new Date();
         updatedAt = new Date();
     }
 
     @PreUpdate
-    protected void onUpdate() {
+    public void onUpdate() {
         updatedAt = new Date();
     }
 }
