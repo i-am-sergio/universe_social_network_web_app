@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://roundhouse.proxy.rlwy.net:16404/railway
+    url: jdbc:mysql://roundhouse.proxy.rlwy.net:45842/railway
     username: root
-    password: FBEE2cccFCFAcGe55hdfD1DAahbGgC1F
+    password: BbaGC3GAf51FC2-BBfEdCCbcHd5a-df3
   devtools:
     restart:
       enabled: false

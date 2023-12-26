@@ -42,7 +42,7 @@ public class AuthService {
                 .lastname(request.getLastname())
                 .role(Role.USER)
                 .build();
-
+                
         userRepository.save(user);
         return AuthUserResponse.from(user, jwtService.getToken(user));
     }
