@@ -19,8 +19,8 @@ public class JwtService {
 
     private static final Key SECRET_KEY = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-    public String getToken(UserDetails user){
-        return getToken(new HashMap<>(),user);
+    public String getToken(UserDetails userDetails){
+        return getToken(new HashMap<>(),userDetails);
     }
 
     private String getToken(Map<String, Object> extraClaims, UserDetails user) {

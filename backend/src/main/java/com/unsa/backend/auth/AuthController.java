@@ -21,7 +21,7 @@ public class AuthController {
     public ResponseEntity<AuthUserResponse> login(@RequestBody LoginRequest request) {
         try {
             AuthUserResponse response = authService.login(request);
-            return ResponseEntity.ok(response);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         } catch (Exception e) {
@@ -31,6 +31,13 @@ public class AuthController {
     
     @PostMapping("/register")
     public ResponseEntity<AuthUserResponse> register(@RequestBody RegisterRequest request){
-        return ResponseEntity.ok(authService.register(request));
+        try {
+            AuthUserResponse response = authService.register(request);
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }catch (AuthenticationException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }
