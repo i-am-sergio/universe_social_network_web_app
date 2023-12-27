@@ -36,7 +36,7 @@ class TestLogin(unittest.TestCase):
         self.driver.find_element(By.XPATH, self.xpath_btn_login).click()
         time.sleep(10)
         result = self.driver.find_element(By.XPATH, self.xpath_homename).text
-        self.assertEqual(result, "Shinji up Ikari up")
+        self.assertEqual(result, "name1 lastname1")
 
     
     def test_login_invalid_password(self):

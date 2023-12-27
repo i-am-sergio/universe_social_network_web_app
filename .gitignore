@@ -2,5 +2,5 @@ backend@tmp/
 client@tmp/
 .scannerwork/
 jmeter.log
-/reports/*.html
+/reports/*
 .vim

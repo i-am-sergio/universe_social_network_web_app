@@ -216,9 +216,9 @@ Las pruebas unitarias se llevaron a cabo utilizando JUnit y Mockito, aplicando d
 
 - **Pruebas de cobertura de código**: Se abarcaron múltiples rutas de ejecución dentro del código, incluyendo casos de éxito, escenarios de error y excepciones, para asegurar que cada porción de código se ejecute y se evalúe correctamente.
 
-- **Mocking y Stubbing**: Se utilizó Mockito para crear mocks y stubs de dependencias externas, permitiendo simular el comportamiento de objetos y métodos durante las pruebas y enfocarse en la lógica específica de la unidad bajo prueba.
+- **Mocking**: Se utilizó Mockito para crear mocks y stubs de dependencias externas, permitiendo simular el comportamiento de objetos y métodos durante las pruebas y enfocarse en la lógica específica de la unidad bajo prueba.
 
-- **Pruebas de estado y comportamiento**: Se verificaron tanto el estado como el comportamiento del código. Las pruebas de estado aseguran que el estado interno de los objetos se modifique correctamente, mientras que las pruebas de comportamiento validan que los métodos se llamen con los parámetros esperados y la frecuencia adecuada.
+- **Pruebas de estado y comportamiento**: Se evaluaron tanto el estado interno como el comportamiento de los componentes clave de la aplicación, incluyendo controllers, services y models. Las pruebas de estado garantizan que las modificaciones al estado interno de los objetos se realicen correctamente. Por otro lado, las pruebas de comportamiento aseguran que los métodos se invoquen con los parámetros esperados y con la frecuencia adecuada, validando así el correcto funcionamiento de la lógica de la aplicación en distintos niveles.
 
 En los siguientes segmentos de pruebas se muestran cómo se aplicaron estas técnicas para garantizar una cobertura exhaustiva y rigurosa de los diferentes componentes del código, asegurando su funcionamiento correcto en una variedad de situaciones y escenarios.
 
@@ -382,7 +382,7 @@ Se empleó la interfaz gráfica de usuario de JMeter para crear y configurar los
 Para ejecutar solo las pruebas de performance, utiliza el siguiente comando en el directorio raíz del proyecto:
 
 ```bash
-pendiente
+jmeter -n -t ./Login_PerformanceTest.jmx -l 1.csv -e -o ${PROJECT_DIR}/reports/performance_testing_report
 ```
 
 - Ejecución de Prueba de Performance:
@@ -446,11 +446,14 @@ FROM openjdk:17-jdk-alpine
 
 WORKDIR /app
 
+COPY .env .
+
 COPY target/backend-0.0.1-SNAPSHOT.war .
 
 EXPOSE 5000
 
 CMD ["java", "-jar", "backend-0.0.1-SNAPSHOT.war"]
+
 
 ```
 
@@ -500,15 +503,27 @@ services:
 
 El archivo `docker-compose.yml` se encarga de orquestar y levantar los servicios de backend y frontend. Define dos servicios (`backend` y `frontend`) basados en los Dockerfiles correspondientes. Especifica los puertos a mapear y la dependencia del frontend respecto al backend.
 
-#### Ejecución de Pruebas de Seguridad
+#### Ejecución de Dockerizacion
 
 Este enfoque permite levantar todo el stack de la aplicación con un solo comando (`docker-compose up`) y garantiza la consistencia y portabilidad del entorno de desarrollo y producción. Para ejecutar utiliza el siguiente comando en el directorio raíz del proyecto:
+- Para construir los contenedores
+  ```bash
+  docker compose up --build
+  ```
+- Para levantar la aplicacion desde los contenedores 
+  ```bash
+  docker compose up -d
+  ```
+- Para detener los contenedores
+  ```bash
+  docker compose down
+  ```
 
-```bash
-docker compose up --build
-```
+- Construccion de contenedores
+![Resultado de Docker](.Captures/docker.png)
 
-![Resultado de Docker](.Captures/)
+- Ejecucion de los contenedores
+![Contenedores](.Captures/containers.png)
 
 ### Gestión de Issues con Trello
 

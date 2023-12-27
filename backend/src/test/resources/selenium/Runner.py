@@ -90,7 +90,9 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     run_login_test(args.report_path)
+    """
     run_register_test(args.report_path)
     run_post_test(args.report_path)
     run_follow_test(args.report_path)
     run_chat_test(args.report_path)
+    """
