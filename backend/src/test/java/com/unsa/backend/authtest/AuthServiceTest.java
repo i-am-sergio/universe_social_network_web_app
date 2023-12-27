@@ -50,11 +50,13 @@ class AuthServiceTest {
     @MockBean
     private PasswordEncoder passwordEncoder;
 
+    private static final String USER = "usuario";
+
 
     @DisplayName("Test valid login")
     @Test
     void testSuccessfulLogin() {
-        LoginRequest validRequest = new LoginRequest("usuario", "contrasena");
+        LoginRequest validRequest = new LoginRequest(USER, "contrasena");
         UserModel userModel = new UserModel();
         userModel.setUsername(validRequest.getUsername());
         userModel.setPassword("hashedPassword");
@@ -67,7 +69,7 @@ class AuthServiceTest {
 
         AuthUserResponse authUserResponse = authService.login(validRequest);
         assertNotNull(authUserResponse);
-        assertEquals("usuario", authUserResponse.getUsername());
+        assertEquals(USER, authUserResponse.getUsername());
         assertEquals(expectedToken, authUserResponse.getToken());
 
         verify(authenticationManager, times(1)).authenticate(any());
@@ -77,7 +79,7 @@ class AuthServiceTest {
 
     @Test
     void testFailedLogin() {
-        LoginRequest invalidRequest = new LoginRequest("usuario", "contrasena_incorrecta");
+        LoginRequest invalidRequest = new LoginRequest(USER, "contrasena_incorrecta");
         when(authenticationManager.authenticate(any()))
                 .thenThrow(new RuntimeException("Bad Credentials"));
         AuthUserResponse authUserResponse;

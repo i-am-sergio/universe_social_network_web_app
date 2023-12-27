@@ -26,6 +26,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AuthControllerTest {
 
     private static final String URL_BASE = "/auth";
+    private static final String URL_LOGIN = "/login";
+    private static final String URL_REGISTER = "/register";
     private static final String JSON_CONTENT_TYPE = "application/json";
     private static final String JSON_CONTENT = "{\"username\": \"user1@gmail.com\", \"password\": \"admin\"}";
     private static final String JSON_REGISTER_CONTENT = "{\"username\": \"user200@gmail.com\", \"password\": \"admin200\", \"firstname\": \"John\", \"lastname\": \"Doe\", \"country\": \"Yugoslavia\"}";
@@ -46,7 +48,7 @@ class AuthControllerTest {
     void testValidLogin() throws Exception {
         LoginRequest loginRequest = LoginRequest.builder().username("user1@gmail.com").password("admin").build();
         when(authService.login(loginRequest)).thenReturn(null);
-        mockMvc.perform(post(URL_BASE + "/login")
+        mockMvc.perform(post(URL_BASE + URL_LOGIN)
                 .contentType(JSON_CONTENT_TYPE)
                 .content(JSON_CONTENT))
                 .andExpect(status().isOk());
@@ -56,7 +58,7 @@ class AuthControllerTest {
     @Test
     void testInvalidLogin() throws Exception {
         doThrow(new RuntimeException(INTERNAL_ERROR)).when(authService).login(any(LoginRequest.class));
-        mockMvc.perform(post(URL_BASE + "/login")
+        mockMvc.perform(post(URL_BASE + URL_LOGIN)
                 .contentType(JSON_CONTENT_TYPE)
                 .content(JSON_CONTENT))
                 .andExpect(status().isInternalServerError());
@@ -68,7 +70,7 @@ class AuthControllerTest {
         RegisterRequest registerRequest = RegisterRequest.builder().username("user200@gmail.com")
         .password("admin200").firstname("John").lastname("Doe").country("Yugoslavia").build();
         when(authService.register(registerRequest)).thenReturn(null);
-        mockMvc.perform(post(URL_BASE + "/register")
+        mockMvc.perform(post(URL_BASE + URL_REGISTER)
             .contentType(JSON_CONTENT_TYPE)
             .content(JSON_REGISTER_CONTENT))
             .andExpect(status().isOk());
@@ -78,7 +80,7 @@ class AuthControllerTest {
     @Test
     void testInvalidRegister() throws Exception {
         doThrow(new RuntimeException(INTERNAL_ERROR)).when(authService).register(any(RegisterRequest.class));
-        mockMvc.perform(post(URL_BASE + "/register")
+        mockMvc.perform(post(URL_BASE + URL_REGISTER)
             .contentType(JSON_CONTENT_TYPE)
             .content(JSON_REGISTER_CONTENT))
             .andExpect(status().isInternalServerError());
@@ -87,7 +89,7 @@ class AuthControllerTest {
     @DisplayName("Test Incorrect Login")
     @Test
     void testIncorrectLogin() throws Exception {
-        mockMvc.perform(post(URL_BASE + "/login")
+        mockMvc.perform(post(URL_BASE + URL_LOGIN)
                 .contentType(JSON_CONTENT_TYPE)
                 .content("null"))
                 .andExpect(status().isBadRequest());
