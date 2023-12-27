@@ -38,8 +38,12 @@ class AuthServiceTest {
     @MockBean
     private UserRepository userRepository;
 
-    @Autowired
     private AuthService authService;
+
+    @Autowired
+    public AuthServiceTest(AuthService authService) {
+        this.authService = authService;
+    }
 
     @MockBean
     private AuthenticationManager authenticationManager;
