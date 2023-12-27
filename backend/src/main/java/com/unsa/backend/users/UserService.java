@@ -16,3 +16,4 @@ public interface UserService {
 
     public void unfollowUser(Long followerId, Long targetUserId);
 }
+
