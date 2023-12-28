@@ -17,4 +17,5 @@ spring:
 file:
   upload-dir: src/main/resources/images
 server:
+  address: 0.0.0.0
   port: 5000
