@@ -16,18 +16,11 @@ pipeline {
                 script {
                     dir(BACKEND_DIR) {
                         sh "mvn --version"
+                        sh "gradle --version"
+                        //sh "gradle clean build"
                         //sh "mvn clean install" //con tests // funciona
-                        //sh "mvn clean install -DskipTests" // sin tests // funciona
-                    }
-                }
-            }
-        }
-        stage("SonarQube Static Analysis") {
-            steps {
-                script {
-                    dir(PROJECT_DIR) {
-                        sh "sonar-scanner --version"
-                        //sh "sonar-scanner" // Funciona
+                        //sh "mvn clean install -DskipTests" // funciona
+                        sh "gradle clean build -x test" // funciona
                     }
                 }
             }
@@ -38,7 +31,18 @@ pipeline {
                 script {
                     dir(BACKEND_DIR) {
                         sh "mvn --version"
+                        sh "gradle test"
                         // sh "mvn test" // funciona
+                    }
+                }
+            }
+        }
+        stage("SonarQube Static Analysis") {
+            steps {
+                script {
+                    dir(PROJECT_DIR) {
+                        sh "sonar-scanner --version"
+                        sh "sonar-scanner" // Funciona
                     }
                 }
             }
@@ -49,7 +53,7 @@ pipeline {
                 script {
                     dir(SELENIUM_RESULTS_DIR) {
                         sh "python --version"
-                        // sh "python ./login_test.py --verbose" // funciona
+                        sh "python Runner.py ${PROJECT_DIR}/reports"
                     }
                 }
             }
@@ -59,7 +63,8 @@ pipeline {
                 script {
                     dir(JMETER_RESULTS_DIR) {
                         sh "jmeter --version"  
-                        // sh "jmeter -n -t ./PerformanceTests.jmx -l results.csv -e -o report"
+                        sh "jmeter -n -t ./Login_PerformanceTest.jmx -l 1.csv -e -o ${PROJECT_DIR}/reports/performance_testing_report"
+                        
                     }
                 }
             }
@@ -69,11 +74,11 @@ pipeline {
                 script {
                     dir(PROJECT_DIR) {
                         sh "zap.sh -version"
-                        // sh "zap.sh -port 7000 -quickurl http://localhost:3000 -quickout ${PROJECT_DIR}/reports/security_testing_report.html -quickprogress" // con interfaz
-                        // sh "zap.sh -daemon -port 7000 -quickurl http://localhost:3000 -quickout ${PROJECT_DIR}/reports/security_testing_report.html -quickprogress" // sin interfaz
+                        sh "zap.sh -port 7000 -quickurl http://localhost:3000 -quickout ${PROJECT_DIR}/reports/security_testing__zaproxy_report.html -quickprogress" // con interfaz
+                        // sh "zap.sh -daemon -port 7000 -quickurl http://localhost:3000 -quickout ${PROJECT_DIR}/reports/security_testing__zaproxy_report.html -quickprogress" // sin interfaz
                         sh "dependency-check.sh --version"  
-                        // sh "dependency-check.sh --scan ./client --format HTML --out ./client/reporte_dependency_check.html"
-                        // sh "dependency-check.sh --scan ./backend --format HTML --out ./backend/reporte_dependency_check.html"
+                        sh "dependency-check.sh --scan ./backend --format HTML --out ./reports/security_testing__dependency_check_report.html --disableAssembly"
+                        sh "dependency-check.sh --scan ./client --format HTML --out ./reports/security_testing__dependency_check_frontend_report.html --disableAssembly --disableYarnAudit --exclude 'node_modules/**'"
                     }
                 }
             }
@@ -83,10 +88,10 @@ pipeline {
                 script {
                     dir(PROJECT_DIR) {
                         sh "docker --version"
-                        //sh "docker compose build" // construye los contenedores // funciona
-                        //sh "docker compose up -d" // ejecuta los contenedores
-                        //sleep(time: 2, unit: 'MINUTES') // espera 1 minuto
-                        //sh "docker compose down" // detiene los contenedores
+                        sh "docker compose build" // construye los contenedores // funciona
+                        sh "docker compose up -d" // ejecuta los contenedores
+                        sleep(time: 2, unit: 'MINUTES') // espera 1 minuto
+                        sh "docker compose down" // detiene los contenedores
                         //sh "docker compose down --volumes --rmi all" // elimina contenedores
                     }
                 }

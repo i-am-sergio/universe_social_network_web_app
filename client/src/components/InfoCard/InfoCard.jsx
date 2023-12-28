@@ -27,12 +27,10 @@ const InfoCard = () => {
       if (profileUserId === user.id.toString()) {
         setProfileUser(user);
       } else {
-        console.log("fetching");
         const profileUser = await UserApi.getUser(profileUserId);
         if (isMounted.current) {
           setProfileUser(profileUser);
         }
-        console.log(profileUser);
       }
     };
     fetchProfileUser();

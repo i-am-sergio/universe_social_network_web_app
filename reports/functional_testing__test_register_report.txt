@@ -1,0 +1,19 @@
+
+Running tests... 
+----------------------------------------------------------------------
+ test_register_missing_first_name (register_test.TestRegister.test_register_missing_first_name) ... OK (3.712685)s
+ test_register_missing_last_name (register_test.TestRegister.test_register_missing_last_name) ... OK (2.710606)s
+ test_register_missing_username (register_test.TestRegister.test_register_missing_username) ... OK (2.580926)s
+ test_register_missing_password (register_test.TestRegister.test_register_missing_password) ... OK (2.625185)s
+ test_register_missing_password_confirm (register_test.TestRegister.test_register_missing_password_confirm) ... OK (2.639518)s
+ test_register_success (register_test.TestRegister.test_register_success) ... OK (16.862097)s
+
+----------------------------------------------------------------------
+Ran 6 tests in 0:00:32
+
+OK
+
+
+
+Generating HTML reports... 
+reports/test_register_report_register_test.TestRegister_2023-12-18_23-41-29.html

@@ -7,8 +7,6 @@ const postReducer = (
     case "UPLOAD_START":
       return { ...state, error: false, uploading: true };
     case "UPLOAD_SUCCESS":
-      console.log("action.data => ",action.data)
-      console.log("state.posts => ", state.posts)
       return { ...state, posts: {...state.posts, data: [action.data, ...state.posts.data]}, uploading: false, error: false };
     case "UPLOAD_FAIL":
       return { ...state, uploading: false, error: true };

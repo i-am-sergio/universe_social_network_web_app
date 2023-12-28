@@ -1,4 +1,4 @@
-package com.unsa.backend.messages;
+package com.unsa.backend.chat;
 
 import java.util.List;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ import lombok.AllArgsConstructor;
 @RequestMapping("/chat")
 @AllArgsConstructor
 public class ChatController {
-    
+
     private final ChatService chatService;
 
     @PostMapping
@@ -26,7 +26,7 @@ public class ChatController {
             ChatModel result = chatService.createChat(chatModel);
             return ResponseEntity.ok(result);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(chatModel);
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(chatModel);
         }
     }
 
@@ -36,30 +36,29 @@ public class ChatController {
             List<ChatModel> chats = chatService.getUserChats(userId);
             return new ResponseEntity<>(chats, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 
     @GetMapping("/find/{firstId}/{secondId}")
     public ResponseEntity<ChatModel> findChat(
-        @PathVariable Long firstId,
-        @PathVariable Long secondId
-    ) {
+            @PathVariable Long firstId,
+            @PathVariable Long secondId) {
         try {
             ChatModel chat = chatService.findChat(firstId, secondId);
             return new ResponseEntity<>(chat, HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
-    
+
     @DeleteMapping("/{chatId}")
     public ResponseEntity<String> deleteChat(@PathVariable Long chatId) {
         try {
             chatService.deleteChat(chatId);
             return new ResponseEntity<>("Chat deleted successfully.", HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 }
