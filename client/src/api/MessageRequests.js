@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const baseURL = process.env.BACKEND_URL;
 
-const API = axios.create({ baseURL: baseURL });
+const API = axios.create({ baseURL: baseURL, withCredentials: true, });
 
 export const getMessages = (id) => API.get(`/message/${id}`);
 
